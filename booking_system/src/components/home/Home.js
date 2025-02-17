@@ -1,4 +1,5 @@
 import "./Home.css";
+import Hotels from "./Hotels";
 import Tours from "./Tours";
 
 const Home = () => {
@@ -25,6 +26,7 @@ const Home = () => {
       </div>
       <div>
         <Tours></Tours>
+        <Hotels></Hotels>
       </div>
     </div>
   );

@@ -9,24 +9,25 @@
   background: white;
   width: 80%;
   margin: 0 auto;
-  padding: 20px;
+  padding: 40px;
   box-shadow: #0c2012 0px 0px 10px;
   border-radius: 20px;
+  max-width: 1280px;
 }
 
 .tours__title {
   color: #0c2012;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "Courier Prime", Courier, monospace;
   text-align: left;
   font-size: 2.3rem;
-  line-height: 10px;
+  line-height: 5px;
+  font-weight: 500;
 }
 
 .tours {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.5fr 1fr;
   gap: 20px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .column.left {
@@ -38,16 +39,15 @@
 .column.right {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  max-height: 450px;
+  gap: 18px;
+  max-height: 500px;
   overflow-y: auto;
   overflow-x: hidden;
+  padding-right: 10px;
 }
 
 /* Tour Card Styling */
 .tour {
-  width: 100%;
-  height: 190px;
   background-size: cover;
   background-position: center;
   border-radius: 10px;
@@ -57,12 +57,14 @@
   flex-direction: column;
   color: white;
   text-align: center;
-  padding: 20px;
+  padding: 40px;
 }
 
 /* First Tour - Larger */
 .column.left .tour {
-  height: 400px;
+  width: 100%;
+  height: 466px;
+  padding: 20px;
 }
 
 /* Dark Overlay */
@@ -75,10 +77,9 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  transition: background 0.3s ease-in-out;
 }
 
-.tour:hover::before {
+.tour::before {
   background: rgba(0, 0, 0, 0.7);
 }
 
@@ -89,11 +90,25 @@
   transition: opacity 0.3s ease-in-out;
   position: relative;
   z-index: 2;
+  opacity: 1;
+  font-family: "Courier Prime", Courier, monospace;
 }
 
-.tour:hover h3,
-.tour:hover p {
-  opacity: 1;
+.tour h3 {
+  font-size: 28px;
+  line-height: 0;
+}
+
+.tour p {
+  font-size: 20px;
+}
+
+#main-image-title {
+  font-size: 36px;
+}
+
+#main-image-desc {
+  font-size: 24px;
 }
 
 /* Responsive Design */
