@@ -10,43 +10,34 @@ const Hotels = () => {
         {
           id: 1,
           title: "Carolina Hotel",
-          description: "Explore the breathtaking mountains.",
           price: 50,
           image:
-            "https://www.zicasso.com/static/f0a152d1bc93dc1a7b2fd97679e949b2/304cc/f0a152d1bc93dc1a7b2fd97679e949b2.jpg",
-          stars: 5,
+            "https://www.carolina.ee/photos/Fassaad%20%202009.jpg?1389297182377",
+          stars: 3.2,
         },
         {
           id: 2,
           title: "Springfield at Sea Resort & Spa",
           price: 50,
           image:
-            "https://cdn.togethertowherever.com/wp-content/uploads/2024/04/Gates-of-Old-Town-Tallinn.jpeg",
-          stars: 5,
+            "https://cf.bstatic.com/xdata/images/hotel/max1280x900/266923700.jpg?k=3306fa6ad63862f227d83f51a825e2d6255cd15de37217a470ae94813d5e3d2a&o=&hp=1",
+          stars: 5.0,
         },
         {
           id: 3,
-          title: "Paris Getaway",
+          title: "Hotel Soho",
           price: 50,
           image:
-            "https://travel.usnews.com/dims4/USNEWS/f6017b9/2147483647/resize/600x400%5E%3E/crop/600x400/quality/85/?url=https%3A%2F%2Ftravel.usnews.com%2Fimages%2FNew_Paris_pic_jw04ZlH.jpg",
-          stars: 5,
+            "https://cf.bstatic.com/xdata/images/hotel/square600/371896039.webp?k=6386b5949904e76fedbf862547d98b6be1143175f423f1a711ec9a62bb1d6e43&o=",
+          stars: 4.6,
         },
         {
           id: 4,
-          title: "Pyramids",
+          title: "Draakon Hotel",
           price: 50,
           image:
-            "https://afar.brightspotcdn.com/dims4/default/9bb38bd/2147483647/strip/true/crop/2000x1061+0+14/resize/1440x764!/quality/90/?url=https%3A%2F%2Fk3-prod-afar-media.s3.us-west-2.amazonaws.com%2Fbrightspot%2F0f%2F2c%2F6f2efc02b5ba681dadbfa694f856%2Foriginal-egypt.jpg",
-          stars: 5,
-        },
-        {
-          id: 5,
-          title: "Paris Getaway",
-          price: 50,
-          image:
-            "https://travel.usnews.com/dims4/USNEWS/f6017b9/2147483647/resize/600x400%5E%3E/crop/600x400/quality/85/?url=https%3A%2F%2Ftravel.usnews.com%2Fimages%2FNew_Paris_pic_jw04ZlH.jpg",
-          stars: 5,
+            "https://cf.bstatic.com/xdata/images/hotel/max1024x768/2753125.jpg?k=f8215e38aa420367f9196cd5619fcfa5157a1fda084466bcb803eda031c6e93a&o=&hp=1",
+          stars: 3.5,
         },
       ]);
     }, 1000);
@@ -57,12 +48,17 @@ const Hotels = () => {
       <div className="hotels-container">
         <h2 className="hotels__title">Best hotels</h2>
         <div className="hotels">
-          {hotels.slice(1).map((hotel) => (
+          {hotels.slice(0).map((hotel) => (
             <div key={hotel.id} className="hotel">
-              <img src={`${hotel.image}`}></img>
+              <img alt="" src={`${hotel.image}`}></img>
               <h3>{hotel.title}</h3>
-              <p>{"⭐".repeat(hotel.stars)}</p>
-              <p>${hotel.price} Starting</p>
+              <div className="detail-container">
+                <p>${hotel.price} Starting</p>
+                <p>
+                  <i class="fa fa-star"></i>
+                  {hotel.stars}
+                </p>
+              </div>
             </div>
           ))}
         </div>

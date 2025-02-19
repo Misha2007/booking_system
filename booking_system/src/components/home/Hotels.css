@@ -25,23 +25,33 @@
 }
 
 .hotel img {
-  height: 60%;
+  height: 70%;
   width: 100%;
   object-fit: cover;
   border-radius: 10px;
 }
 
 .hotel h3 {
-  font-family: "Courier Prime", Courier, monospace;
-  font-size: 23px;
+  font-size: 24px;
   text-wrap: wrap;
+  margin-bottom: 0;
 }
 
 .hotels__title {
-  font-family: "Courier Prime", Courier, monospace;
   text-align-last: left;
   font-size: 36px;
   padding: 10px;
   line-height: 0;
   font-weight: normal;
+}
+
+.detail-container {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+}
+
+.fa-star {
+  color: #ffce31;
+  margin-right: 10px;
 }
