@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Header.css";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -26,21 +27,21 @@ const Header = () => {
         <button id="mobile-menu-btn" onClick={toggleMenuClose}>
           <i className="fa-solid fa-xmark" style={{ color: "#fff" }}></i>
         </button>
-        <a href="/" className="menuItem">
+        <Link to="/" className="menuItem">
           Main
-        </a>
-        <a href="#" className="menuItem">
+        </Link>
+        <Link to="/" className="menuItem">
           Countries
-        </a>
-        <a href="#" className="menuItem">
+        </Link>
+        <Link to="/" className="menuItem">
           Search
-        </a>
-        <a href="#" className="menuItem">
+        </Link>
+        <Link to="/" className="menuItem">
           Benefits
-        </a>
-        <a href="#" className="menuItem">
+        </Link>
+        <Link to="/login" className="menuItem">
           Account
-        </a>
+        </Link>
       </nav>
 
       <button id="mobile-menu-btn" onClick={toggleMenuOpen}>

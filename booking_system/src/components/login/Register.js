@@ -1,11 +1,13 @@
-import "./Login.css";
+import "./Register.css";
 import { useState, useRef } from "react";
 
-const Login = () => {
+const Register = () => {
   const [error, setError] = useState(null);
 
+  const nameInputRef = useRef();
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+  const passwordConfInputRef = useRef();
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -22,21 +24,39 @@ const Login = () => {
   };
 
   const sumbitHandler = (event) => {
+    const enteredName = nameInputRef.current.value;
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
+    const enteredPasswordConf = passwordConfInputRef.current.value;
     const rememberMeValue = rememberMe;
     event.preventDefault();
 
-    if (enteredEmail.trim().length == 0 || enteredPassword.trim().length == 0) {
+    if (
+      enteredName.trim().length == 0 ||
+      enteredEmail.trim().length == 0 ||
+      enteredPassword.trim().length == 0 ||
+      enteredPasswordConf.trim().length == 0
+    ) {
+      console.log(enteredPasswordConf);
+      console.log(enteredPassword);
       setError({
         title: "Invalid input",
         message:
-          "Please enter a valid title or amount or date (non-empty values)",
+          "Please enter a valid name or email or password (non-empty values)",
+      });
+      return;
+    }
+
+    if (enteredPasswordConf != enteredPassword) {
+      setError({
+        title: "Invalid input",
+        message: "Your passwords are not matching. Please try again.",
       });
       return;
     }
 
     const expenseData = {
+      name: enteredName,
       email: enteredEmail,
       password: enteredPassword,
       rememberMe: rememberMeValue,
@@ -48,6 +68,19 @@ const Login = () => {
   return (
     <form onSubmit={sumbitHandler}>
       <div className="form-group">
+        <div className="input-container">
+          <i className="fa fa-user"></i>
+          <input
+            type="text"
+            id="user"
+            name="name"
+            placeholder=" "
+            required
+            ref={nameInputRef}
+          />
+          <label htmlFor="name">Name</label>
+        </div>
+
         <div className="input-container">
           <i className="fa fa-envelope"></i>
           <input
@@ -77,6 +110,22 @@ const Login = () => {
           />
           <label htmlFor="password">Password</label>
         </div>
+        <div className="input-container">
+          <i
+            className={`fa ${showPassword ? "fa-unlock" : "fa-lock"}`}
+            onClick={togglePasswordVisibility}
+            style={{ cursor: "pointer" }}
+          ></i>
+          <input
+            type={showPassword ? "text" : "password"}
+            id="passwordConfirm"
+            name="password"
+            placeholder=" "
+            required
+            ref={passwordConfInputRef}
+          />
+          <label htmlFor="password">Confirm Password</label>
+        </div>
 
         <div className="remember-container">
           <div>
@@ -88,7 +137,7 @@ const Login = () => {
             />
             <label htmlFor="remember_me">Remember me</label>
           </div>
-          <a href="#">Forgot password?</a>
+          <a>Forgot password?</a>
         </div>
 
         <button type="submit" className="login_button">
@@ -99,4 +148,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

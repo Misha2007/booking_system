@@ -3,6 +3,8 @@
 var Type = require('../type');
 
 function resolveYamlNull(data) {
+  if (data === null) return true;
+
   var max = data.length;
 
   return (max === 1 && data === '~') ||
@@ -14,7 +16,7 @@ function constructYamlNull() {
 }
 
 function isNull(object) {
-  return null === object;
+  return object === null;
 }
 
 module.exports = new Type('tag:yaml.org,2002:null', {
