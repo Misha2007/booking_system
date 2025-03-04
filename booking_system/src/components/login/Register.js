@@ -1,7 +1,7 @@
 import "./Register.css";
 import { useState, useRef } from "react";
 
-const Register = () => {
+const Register = (props) => {
   const [error, setError] = useState(null);
 
   const nameInputRef = useRef();
@@ -21,6 +21,14 @@ const Register = () => {
 
   const toggleRememberMe = () => {
     setRememberMe((prev) => !prev);
+  };
+
+  const saveUserDataHandler = (enteredUserData) => {
+    const userData = {
+      ...enteredUserData,
+      id: Math.random().toString(),
+    };
+    props.onAddUser(userData);
   };
 
   const sumbitHandler = (event) => {
@@ -59,10 +67,13 @@ const Register = () => {
       name: enteredName,
       email: enteredEmail,
       password: enteredPassword,
-      rememberMe: rememberMeValue,
     };
 
     console.log(expenseData);
+    saveUserDataHandler(expenseData);
+    // titleInputRef.current.value = "";
+    // amountInputRef.current.value = "";
+    // dateInputRef.current.value = "";
   };
 
   return (
