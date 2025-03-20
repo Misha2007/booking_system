@@ -2,7 +2,7 @@ import "./App.css";
 import Home from "./components/home/Home";
 import Header from "./components/Header";
 import LoginBlock from "./components/login/LoginBlock";
-import Search from "./components/search/Search"
+import Search from "./components/search/Search";
 import Account from "./components/account/Account";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
