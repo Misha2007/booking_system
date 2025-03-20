@@ -1,7 +1,8 @@
 import "./Login.css";
 import { useState, useRef } from "react";
+import Error from "../UI/Error";
 
-const Login = () => {
+const Login = (props) => {
   const [error, setError] = useState(null);
 
   const emailInputRef = useRef();
@@ -9,7 +10,7 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const errorHandler = () => {
+  const handleCloseError = () => {
     setError(null);
   };
 
@@ -19,6 +20,13 @@ const Login = () => {
 
   const toggleRememberMe = () => {
     setRememberMe((prev) => !prev);
+  };
+
+  const saveUserDataHandler = (enteredUserData) => {
+    const userData = {
+      ...enteredUserData,
+    };
+    props.onLoginUser(userData);
   };
 
   const sumbitHandler = (event) => {
@@ -39,14 +47,23 @@ const Login = () => {
     const expenseData = {
       email: enteredEmail,
       password: enteredPassword,
-      rememberMe: rememberMeValue,
     };
 
     console.log(expenseData);
+    saveUserDataHandler(expenseData);
+    localStorage.setItem("userEmail", expenseData.email);
+    localStorage.setItem("userPassword", expenseData.password);
   };
 
   return (
     <form onSubmit={sumbitHandler}>
+      {error && (
+        <Error
+          title={error.title}
+          message={error.message}
+          onConfirm={handleCloseError}
+        />
+      )}
       <div className="form-group">
         <div className="input-container">
           <i className="fa fa-envelope"></i>
@@ -55,7 +72,6 @@ const Login = () => {
             id="email"
             name="email"
             placeholder=" "
-            required
             ref={emailInputRef}
           />
           <label htmlFor="email">Email</label>
@@ -72,7 +88,6 @@ const Login = () => {
             id="password"
             name="password"
             placeholder=" "
-            required
             ref={passwordInputRef}
           />
           <label htmlFor="password">Password</label>

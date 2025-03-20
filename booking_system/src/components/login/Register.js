@@ -71,9 +71,10 @@ const Register = (props) => {
 
     console.log(expenseData);
     saveUserDataHandler(expenseData);
-    // titleInputRef.current.value = "";
-    // amountInputRef.current.value = "";
-    // dateInputRef.current.value = "";
+    nameInputRef.current.value = "";
+    emailInputRef.current.value = "";
+    passwordInputRef.current.value = "";
+    passwordConfInputRef.current.value = "";
   };
 
   return (
