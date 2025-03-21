@@ -9,10 +9,10 @@
   font-size: 4rem;
   font-weight: bold;
   font-family: "Courier Prime", Courier, monospace;
-  color: #0c2012; 
-  padding: 0;  
-  opacity: 1;  
-  letter-spacing: normal;  
+  color: #0c2012;
+  padding: 0;
+  opacity: 1;
+  letter-spacing: normal;
 }
 
 .header-subtitle {
@@ -30,25 +30,28 @@
 }
 
 .search-wrapper input {
-  padding: 14px 20px 14px 40px;
+  padding: 40px 20px 40px 100px;
   width: 100%;
   border-radius: 25px;
-  border: 1px solid #0c2012;
-  font-size: 1rem;
+  border: none;
+  filter: drop-shadow(5px 5px 4px #363636);
+  font-size: 1.2em;
   font-family: "Courier Prime", Courier, monospace;
   box-sizing: border-box;
+  outline: none;
 }
 
-.search-icon {
+.search-wrapper .search-icon {
   position: absolute;
   top: 50%;
-  left: 15px;
+  left: 12px;
   transform: translateY(-50%);
   color: #0c2012;
-  font-size: 1.1rem;
   border-radius: 50%;
-  background-color: #1e73be; /* Blue circle */
-  padding: 5px;
+  background-color: #87f; /* Blue circle */
+  padding: 20px;
+  color: #fff;
+  font-size: 1.5rem;
 }
 
 /* Hero Section with Overlapping Images */
