@@ -1,5 +1,8 @@
 import { User } from "../models/user.js";
 
+// import sequelize from "./util/db.js";
+// const models = require("../models");
+
 class userController {
   constructor() {
     this.USERS = [];
