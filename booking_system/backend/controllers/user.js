@@ -54,19 +54,33 @@ class userController {
 
 
   getUser(req, res) {
-    const user = this.USERS.find((user) => user.email === req.body.email);
+    console.log("Found user: ")
+    const project = Clients.findOne({ where: { email: req.body.email } }).then((newUser) => {
+      // Send back the successful response
+      console.log(newUser)
+    
+    // console.log(project)
+    const user = req.body.email
+    const storedHashedPassword = newUser.password
+    const userInputPassword = req.body.password
 
-    if (this.USERS.length == 0 || !user) {
-      return res.status(404).json({ message: "user not found" });
-    }
-    if (user.password === req.body.password) {
-      console.log("[Server]: user logged in");
+    bcrypt.compare(userInputPassword, storedHashedPassword, (err, result) => {
+      if (err) {
+        console.error('Error comparing passwords: ', err);
+        return;
+      }
+
+    if (result) {
+      console.log('[Server]: User logged in');
       return res.json({
         user: user,
-      });
-    }
-    console.log("[Server]: User not found");
-    return res.status(400).json({ message: "wrong password" });
+      }); 
+    } else {
+      console.log('[Server]: Passwords do not match! Auth failed.');
+      res.status(500).send("Passwords dont match" );
+    } 
+    });
+  })
   }
 }
 
