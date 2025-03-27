@@ -52,13 +52,10 @@ const LoginBlock = () => {
   };
 
   const loginUserHandler = (user) => {
-    console.log("it is working");
 
     const getUser = async (user) => {
-      console.log("it is working");
 
       try {
-        console.log(JSON.stringify(user));
         const response = await fetch("http://localhost:3002/user/login", {
           method: "POST",
           body: JSON.stringify(user),
@@ -71,6 +68,8 @@ const LoginBlock = () => {
 
         if (!response.ok) {
           const errorMessage = await response.text();
+          console.log(errorMessage);
+
           setError({
             title: "An error occurred",
             message: errorMessage || "Invalid email or password.",

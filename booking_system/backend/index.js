@@ -1,9 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
-import userRoutes from "./routes/user.js";
 import cors from "cors";
-import sequelize from "./util/db.js";
-import * as dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+import sequelize from "./util/db.js"; // Ensure db.js exports sequelize properly
+import userRoutes from "./routes/user.js"; // Ensure .js extensions are included
+// import { Clients } from "./models/clients.js"; 
+
 dotenv.config();
 
 const app = express();
