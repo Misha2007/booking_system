@@ -29,7 +29,7 @@ const LoginBlock = () => {
           },
         });
         console.log("sad");
-        console.log(response);
+        localStorage.setItem("authToken", response.token);
         if (!response.ok) {
           const errorMessage = await response.text();
           setError({
@@ -52,9 +52,8 @@ const LoginBlock = () => {
   };
 
   const loginUserHandler = (user) => {
-
+    console.log(user);
     const getUser = async (user) => {
-
       try {
         const response = await fetch("http://localhost:3002/user/login", {
           method: "POST",
@@ -63,8 +62,9 @@ const LoginBlock = () => {
             "Content-Type": "application/json",
           },
         });
-        console.log("sad");
-        console.log(response);
+        const data = await response.json();
+        console.log("Response Data:", data.accessToken);
+        localStorage.setItem("authToken", data.accessToken);
 
         if (!response.ok) {
           const errorMessage = await response.text();

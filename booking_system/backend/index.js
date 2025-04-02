@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import sequelize from "./util/db.js"; // Ensure db.js exports sequelize properly
 import userRoutes from "./routes/user.js"; // Ensure .js extensions are included
-// import { Clients } from "./models/clients.js"; 
+// import { Clients } from "./models/clients.js";
 
 dotenv.config();
 

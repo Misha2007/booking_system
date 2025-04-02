@@ -1,13 +1,38 @@
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from "bcrypt";
 import { User } from "../models/user.js";
-import Clients from '../models/clients.js';
+import Clients from "../models/clients.js";
+import jwt from "jsonwebtoken";
+import authConfig from "../config/auth.config.js";
 import "../util/db.js";
-// import * as models from "../models"
 
 class userController {
   constructor() {
     this.USERS = [];
   }
+
+  getUserProfile = async (req, res) => {
+    try {
+      const user = await Clients.findOne({
+        where: {
+          clientId: req.user.clientId,
+        },
+      });
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const userData = {
+        ...user.get(),
+        password: undefined,
+      };
+
+      res.json({ user: userData });
+    } catch (err) {
+      console.error("Error fetching user profile:", err);
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
+  };
 
   createUser(req, res) {
     const saltRounds = 10;
@@ -18,16 +43,18 @@ class userController {
     // Use bcrypt to hash the password first
     bcrypt.genSalt(saltRounds, (err, salt) => {
       if (err) {
-          return res.status(500).json({ message: "Error generating salt" });
+        return res.status(500).json({ message: "Error generating salt" });
       }
-      console.log("[Server]: Salt generation successful, proceeding to hash the password");
+      console.log(
+        "[Server]: Salt generation successful, proceeding to hash the password"
+      );
 
       bcrypt.hash(password, salt, (err, hash) => {
         if (err) {
-            return res.status(500).json({ message: "Error hashing password" });
+          return res.status(500).json({ message: "Error hashing password" });
         }
-    
-        console.log('[Server]: Hashed password:', hash);
+
+        console.log("[Server]: Hashed password:", hash);
 
         // Create the new user with the hashed password
         Clients.create({
@@ -35,52 +62,71 @@ class userController {
           email: email,
           password: hash, // Pass the hashed password to the database
         })
-        .then((newUser) => {
-          // Send back the successful response
-          res.json({
-            message: "Created new user",
-            newUser: newUser,
+          .then((newUser) => {
+            // Send back the successful response
+            res.json({
+              message: "Created new user",
+              newUser: newUser,
+            });
+            console.log(newUser);
+            console.log(`[Server]: ${newUser.firstName} signed up`);
+          })
+          .catch((err) => {
+            // Handle errors from Sequelize
+            res
+              .status(500)
+              .json({ message: "Error creating user", error: err.message });
           });
-          console.log(newUser);
-          console.log(`[Server]: ${newUser.firstName} signed up`);
-        })
-        .catch((err) => {
-          // Handle errors from Sequelize
-          res.status(500).json({ message: "Error creating user", error: err.message });
-        });
       });
     });
-}
-
+  }
 
   getUser(req, res) {
-    console.log("Found user: ")
-    const project = Clients.findOne({ where: { email: req.body.email } }).then((newUser) => {
-      // Send back the successful response
-      console.log(newUser)
-    
-    // console.log(project)
-    const user = req.body.email
-    const storedHashedPassword = newUser.password
-    const userInputPassword = req.body.password
+    console.log("Found user: ");
+    const project = Clients.findOne({ where: { email: req.body.email } }).then(
+      (newUser) => {
+        // Send back the successful response
+        console.log(newUser);
 
-    bcrypt.compare(userInputPassword, storedHashedPassword, (err, result) => {
-      if (err) {
-        console.error('Error comparing passwords: ', err);
-        return;
+        // console.log(project)
+        const user = req.body.email;
+        const storedHashedPassword = newUser.password;
+        const userInputPassword = req.body.password;
+
+        bcrypt.compare(
+          userInputPassword,
+          storedHashedPassword,
+          (err, result) => {
+            if (err) {
+              console.error("Error comparing passwords: ", err);
+              return;
+            }
+
+            const token = jwt.sign(
+              { clientId: newUser.clientId },
+              authConfig.secret,
+              {
+                noTimestamp: true,
+                expiresIn: 86400, // 24 hours
+              }
+            );
+
+            console.log("login user token", newUser.clientId);
+
+            if (result) {
+              console.log("[Server]: User logged in");
+              return res.json({
+                user: newUser,
+                accessToken: token,
+              });
+            } else {
+              console.log("[Server]: Passwords do not match! Auth failed.");
+              res.status(500).send("Passwords dont match");
+            }
+          }
+        );
       }
-
-    if (result) {
-      console.log('[Server]: User logged in');
-      return res.json({
-        user: user,
-      }); 
-    } else {
-      console.log('[Server]: Passwords do not match! Auth failed.');
-      res.status(500).send("Passwords dont match" );
-    } 
-    });
-  })
+    );
   }
 }
 
