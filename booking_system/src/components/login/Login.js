@@ -51,8 +51,6 @@ const Login = (props) => {
 
     console.log(expenseData);
     saveUserDataHandler(expenseData);
-    localStorage.setItem("userEmail", expenseData.email);
-    localStorage.setItem("userPassword", expenseData.password);
   };
 
   return (

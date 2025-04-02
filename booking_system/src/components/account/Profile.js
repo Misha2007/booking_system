@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import Error from "../UI/Error";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const [hotels, setHotels] = useState([]);
   const [error, setError] = useState(null);
+  const [token, setToken] = useState("");
+  const navigate = useNavigate();
 
   const handleCloseError = () => {
     setError(null);
   };
 
   const [fields, setFields] = useState([
-    { id: 1, label: "Name", name: "name", type: "text", value: "" },
+    { id: 1, label: "Name", name: "firstName", type: "text", value: "" },
     { id: 2, label: "Surname", name: "surname", type: "text", value: "" },
     { id: 3, label: "Email", name: "email", type: "email", value: "" },
     { id: 4, label: "Phone number", name: "number", type: "phone", value: "" },
@@ -21,24 +23,20 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const userEmail = localStorage.getItem("userEmail");
-      const userPassword = localStorage.getItem("userPassword");
-      console.log(userEmail);
-      if (!userEmail || !userPassword) {
-        setError({
-          title: "Login error",
-          message: "No logged-in user found.",
-        });
-        return;
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        navigate("/login");
+        return null;
       }
 
       try {
-        const response = await fetch("http://localhost:3002/user/login", {
-          method: "POST",
+        const response = await fetch("http://localhost:3002/user/profile", {
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ email: userEmail, password: userPassword }),
         });
 
         if (!response.ok) {
@@ -51,6 +49,8 @@ const Profile = () => {
 
         const data = await response.json();
         console.log("Fetched user:", data);
+        setToken(token);
+
 
         setUserData(data.user);
       } catch (error) {
@@ -81,6 +81,12 @@ const Profile = () => {
     );
   };
 
+  const logoutHandler = () => {
+    setToken("");
+    localStorage.removeItem("authToken");
+    navigate("/login");
+  };
+
   return (
     <div className="profile-container">
       {error && (
@@ -106,6 +112,7 @@ const Profile = () => {
           ))}
           <button className="login_button">Edit</button>
         </form>
+        <a onClick={logoutHandler}>Logout</a>
       </div>
     </div>
   );
