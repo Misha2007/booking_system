@@ -50,7 +50,7 @@ const Profile = () => {
         }
 
         const data = await response.json();
-        console.log("Fetched user:", data.user);
+        console.log("Fetched user:", data);
 
         setUserData(data.user);
       } catch (error) {
