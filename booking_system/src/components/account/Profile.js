@@ -51,6 +51,7 @@ const Profile = () => {
         console.log("Fetched user:", data);
         setToken(token);
 
+
         setUserData(data.user);
       } catch (error) {
         console.error("Error fetching user:", error);
