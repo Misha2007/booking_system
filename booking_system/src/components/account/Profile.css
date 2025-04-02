@@ -88,3 +88,10 @@ li .fa {
   padding-right: 10px;
   margin-right: 10px;
 }
+
+.red-link {
+  color: #ff0000;
+  text-align: left;
+  font-size: 22px;
+  cursor: pointer;
+}
