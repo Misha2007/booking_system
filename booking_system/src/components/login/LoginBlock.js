@@ -1,5 +1,5 @@
 import Login from "./Login";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Register from "./Register";
 import { useNavigate } from "react-router-dom";
 import Error from "../UI/Error";
@@ -8,6 +8,7 @@ const LoginBlock = () => {
   const [login, setLogin] = useState(true);
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const [token, setToken] = useState("");
 
   const toggleLogin = () => {
     setLogin((prev) => !prev);
@@ -87,6 +88,17 @@ const LoginBlock = () => {
     };
     getUser(user);
   };
+
+  useState(() => {
+    setToken(localStorage.getItem("authToken"));
+    return null;
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      navigate("/account");
+    }
+  }, [token, navigate]);
 
   return (
     <section className="dsa">

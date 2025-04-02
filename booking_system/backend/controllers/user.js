@@ -85,11 +85,8 @@ class userController {
     console.log("Found user: ");
     const project = Clients.findOne({ where: { email: req.body.email } }).then(
       (newUser) => {
-        // Send back the successful response
         console.log(newUser);
 
-        // console.log(project)
-        const user = req.body.email;
         const storedHashedPassword = newUser.password;
         const userInputPassword = req.body.password;
 
@@ -107,7 +104,7 @@ class userController {
               authConfig.secret,
               {
                 noTimestamp: true,
-                expiresIn: 86400, // 24 hours
+                expiresIn: 86400,
               }
             );
 
@@ -128,6 +125,39 @@ class userController {
       }
     );
   }
+
+  editUser = async (req, res) => {
+    try {
+      const updatedRows = await Clients.update(
+        {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName || null,
+          email: req.body.email,
+          phoneNumber: req.body.phoneNumber || null,
+        },
+        {
+          where: {
+            clientId: req.user.clientId,
+          },
+        }
+      );
+
+      if (updatedRows[0] === 0) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const updatedUser = await Clients.findOne({
+        where: {
+          clientId: req.user.clientId,
+        },
+      });
+
+      res.json({ message: "User updated successfully" });
+    } catch (err) {
+      console.error("Error fetching user profile:", err);
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
+  };
 }
 
 export const UserController = new userController();

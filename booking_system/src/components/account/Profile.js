@@ -14,18 +14,24 @@ const Profile = () => {
 
   const [fields, setFields] = useState([
     { id: 1, label: "Name", name: "firstName", type: "text", value: "" },
-    { id: 2, label: "Surname", name: "surname", type: "text", value: "" },
+    { id: 2, label: "Surname", name: "lastName", type: "text", value: "" },
     { id: 3, label: "Email", name: "email", type: "email", value: "" },
-    { id: 4, label: "Phone number", name: "number", type: "phone", value: "" },
+    {
+      id: 4,
+      label: "Phone number",
+      name: "phoneNumber",
+      type: "phone",
+      value: "",
+    },
   ]);
 
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem("authToken");
+      const storedToken = localStorage.getItem("authToken");
 
-      if (!token) {
+      if (!storedToken) {
         navigate("/login");
         return null;
       }
@@ -35,7 +41,7 @@ const Profile = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${storedToken}`,
           },
         });
 
@@ -49,7 +55,7 @@ const Profile = () => {
 
         const data = await response.json();
         console.log("Fetched user:", data);
-        setToken(token);
+        setToken(storedToken);
 
 
         setUserData(data.user);
@@ -58,7 +64,7 @@ const Profile = () => {
       }
     };
 
-    fetchUserData();
+    fetchUserData(token, navigate);
   }, []);
 
   useEffect(() => {
@@ -87,6 +93,54 @@ const Profile = () => {
     navigate("/login");
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const updatedFields = fields
+      .map((field) => ({
+        name: field.name,
+        value: field.value === "clear" ? "" : field.value,
+      }))
+      .filter((field) => field.value !== "" || field.value === "");
+
+    const updatedData = {
+      ...userData,
+      ...updatedFields.reduce(
+        (acc, field) => ({
+          ...acc,
+          [field.name]: field.value,
+        }),
+        {}
+      ),
+    };
+
+    if (!updatedData.email) {
+      updatedData.email = userData.email;
+    }
+    if (!updatedData.firstName) {
+      updatedData.firstName = userData.firstName;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3002/user/profile/edit", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="profile-container">
       {error && (
@@ -96,9 +150,9 @@ const Profile = () => {
           onConfirm={handleCloseError}
         />
       )}
-      <h2 className="profile__title">Hei, user</h2>
+      <h2 className="profile__title">Hei, {fields[0].value}</h2>
       <div className="profile">
-        <form>
+        <form method="patch" onSubmit={handleSubmit}>
           {fields.map((field) => (
             <div key={field.id} className="field">
               <label htmlFor={field.name}>{field.label}:</label>
@@ -112,7 +166,9 @@ const Profile = () => {
           ))}
           <button className="login_button">Edit</button>
         </form>
-        <a onClick={logoutHandler}>Logout</a>
+        <a onClick={logoutHandler} className="red-link">
+          Logout
+        </a>
       </div>
     </div>
   );

@@ -166,6 +166,7 @@ h1 {
 
 .container {
   margin: 100px;
+  text-align: center;
 }
 
 .container p {
