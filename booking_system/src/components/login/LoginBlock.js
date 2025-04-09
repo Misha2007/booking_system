@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Register from "./Register";
 import { useNavigate } from "react-router-dom";
 import Error from "../UI/Error";
+import data_file from "../../data.json";
 
 const LoginBlock = () => {
   const [login, setLogin] = useState(true);
@@ -22,13 +23,16 @@ const LoginBlock = () => {
     const addUser = async (user) => {
       try {
         console.log(JSON.stringify(user));
-        const response = await fetch("http://localhost:3002/user/new-user", {
-          method: "POST",
-          body: JSON.stringify(user),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `http://${data_file.ip}:${data_file.port}/user/new-user`,
+          {
+            method: "POST",
+            body: JSON.stringify(user),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         console.log("sad");
         localStorage.setItem("authToken", response.token);
         if (!response.ok) {
@@ -56,13 +60,16 @@ const LoginBlock = () => {
     console.log(user);
     const getUser = async (user) => {
       try {
-        const response = await fetch("http://localhost:3002/user/login", {
-          method: "POST",
-          body: JSON.stringify(user),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `http://${data_file.ip}:${data_file.port}/user/login`,
+          {
+            method: "POST",
+            body: JSON.stringify(user),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const data = await response.json();
         console.log("Response Data:", data.accessToken);
         localStorage.setItem("authToken", data.accessToken);

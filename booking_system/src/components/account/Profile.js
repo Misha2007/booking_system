@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import Error from "../UI/Error";
 import { useNavigate } from "react-router-dom";
+import data_file from "../../data.json";
 
 const Profile = () => {
   const [error, setError] = useState(null);
@@ -37,13 +38,16 @@ const Profile = () => {
       }
 
       try {
-        const response = await fetch("http://localhost:3002/user/profile", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-        });
+        const response = await fetch(
+          `http://${data_file.ip}:${data_file.port}/user/profile`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${storedToken}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           setError({
@@ -56,7 +60,6 @@ const Profile = () => {
         const data = await response.json();
         console.log("Fetched user:", data);
         setToken(storedToken);
-
 
         setUserData(data.user);
       } catch (error) {
@@ -122,14 +125,17 @@ const Profile = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3002/user/profile/edit", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(updatedData),
-      });
+      const response = await fetch(
+        `http://${data_file.ip}:${data_file.port}/user/profile/edit`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(updatedData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(response.statusText);

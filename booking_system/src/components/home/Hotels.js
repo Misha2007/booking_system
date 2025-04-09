@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Hotels.css";
+import data_file from "../../data.json";
 
 const Hotels = () => {
   const [hotels, setHotels] = useState([]);
@@ -7,14 +8,16 @@ const Hotels = () => {
   useEffect(() => {
     const fetchHotels = async () => {
       try {
-        const response = await fetch('http://localhost:3002/hotels');
+        const response = await fetch(
+          `http://${data_file.ip}:${data_file.port}/hotels`
+        );
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data = await response.json();
         setHotels(Array.isArray(data.hotels) ? data.hotels : []);
       } catch (error) {
-        console.error('Error fetching hotels:', error);
+        console.error("Error fetching hotels:", error);
       }
     };
 
