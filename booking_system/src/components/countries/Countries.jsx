@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import "./Countries.css";
+import data_file from "../../data.json";
+import Result from "./Result";
 
 const Countries = () => {
+  const [countries, setCountries] = useState([]);
+
   const navigate = useNavigate();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -10,22 +14,47 @@ const Countries = () => {
 
   const [search, setSearch] = useState(searchQuery);
 
-  const countries = [
-    "United States",
-    "Canada",
-    "Brazil",
-    "United Kingdom",
-    "Germany",
-    "France",
-    "Japan",
-    "India",
-    "Australia",
-    "South Africa",
-  ];
+  // setCountries([
+  //   "United States",
+  //   "Canada",
+  //   "Brazil",
+  //   "United Kingdom",
+  //   "Germany",
+  //   "France",
+  //   "Japan",
+  //   "India",
+  //   "Australia",
+  //   "South Africa",
+  // ]);
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch(
+          `http://${data_file.ip}:${data_file.port}/countries/all`
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        console.log(data);
+        const uniqueCountries = [
+          ...new Set(data.regions.map((item) => item.countryName)),
+        ];
 
-  const filteredCountries = countries.filter((country) =>
-    country.toLowerCase().includes(search.toLowerCase())
-  );
+        setCountries(uniqueCountries);
+      } catch (error) {
+        console.error("Error fetching hotels:", error);
+      }
+    };
+
+    fetchCountries();
+  }, []);
+
+  console.log(countries);
+
+  // const filteredCountries = countries.filter((country) =>
+  //   country.toLowerCase().includes(search.toLowerCase())
+  // );
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -52,18 +81,18 @@ const Countries = () => {
 
             <div className="topic_block">
               <li>
-                <Link to="/" className="topic">
+                <Link to="/search" className="topic">
                   <span style={{ fontWeight: search ? "normal" : "bold" }}>
                     All
                   </span>
                 </Link>
               </li>
               <hr />
-              {filteredCountries.map((country) => (
+              {countries.map((country) => (
                 <div className="topic_block" key={country}>
                   <li>
                     <Link
-                      to={`/?q=${encodeURIComponent(country)}`}
+                      to={`/result/${encodeURIComponent(country)}`}
                       className="topic"
                     >
                       <span>{country}</span>

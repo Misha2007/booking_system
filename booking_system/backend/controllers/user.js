@@ -1,5 +1,4 @@
 import * as bcrypt from "bcrypt";
-import { User } from "../models/user.js";
 import Clients from "../models/clients.js";
 import jwt from "jsonwebtoken";
 import authConfig from "../config/auth.config.js";

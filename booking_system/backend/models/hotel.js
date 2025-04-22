@@ -1,23 +1,36 @@
-'use strict';
-import {Model, DataTypes} from 'sequelize'; 
+"use strict";
+import { Model, DataTypes } from "sequelize";
 import sequelize from "../util/db.js";
 
-
-  class Hotel extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
+class Hotel extends Model {
+  /**
+   * Helper method for defining associations.
+   * This method is not a part of Sequelize lifecycle.
+   * The `models/index` file will call this method automatically.
+   */
+  static associate(models) {
+    // define association here
+    /*
+    this.belongsTo(models.Region, {
+      foreignKey: {
+        name: "regionId",
+        field: "regionId",
+        as: "regions",
+      },
+    });*/
+    this.belongsTo(models.Region, {
+      foreignKey: "regionId",
+      as: "region", // ← see on oluline!
+    });
   }
-  Hotel.init({
+}
+
+Hotel.init(
+  {
     hotelId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING,
@@ -34,15 +47,24 @@ import sequelize from "../util/db.js";
     },
     price: {
       type: DataTypes.INTEGER,
-    }, 
+    },
     image: {
       type: DataTypes.STRING,
       allowNull: false,
-    } 
     },
-    {
+    regionId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Region",
+        key: "regionId",
+      },
+    },
+  },
+  {
     sequelize,
-    modelName: 'Hotel',
-    });
+    modelName: "Hotel",
+  }
+);
 
-    export default Hotel
+export default Hotel;

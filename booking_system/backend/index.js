@@ -1,12 +1,11 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import sequelize from "./util/db.js"; // Ensure db.js exports sequelize properly
-import userRoutes from "./routes/user.js"; // Ensure .js extensions are included
-import hotelRoutes from "./routes/hotel.js"; // Ensure .js extensions are included
-// import { Clients } from "./models/clients.js";
+import sequelize from "./util/db.js";
+import userRoutes from "./routes/user.js";
+import hotelRoutes from "./routes/hotel.js";
+import countryRoutes from "./routes/country.js";
 
 dotenv.config();
 
@@ -20,7 +19,8 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", userRoutes);
-app.use("/", hotelRoutes)
+app.use("/", hotelRoutes);
+app.use("/countries", countryRoutes);
 
 app.use(express.urlencoded({ extended: true }));
 
