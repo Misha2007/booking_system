@@ -32,23 +32,24 @@ const Search = () => {
     const value = e.target.value;
     setQuery(value);
 
-    const filtered = hotels.filter((item) =>
-      item.name && item.name.toLowerCase().includes(value.toLowerCase())
+    const filtered = hotels.filter(
+      (item) =>
+        item.name && item.name.toLowerCase().includes(value.toLowerCase())
     );
     setResults(filtered);
   };
 
   const scrollLeft = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({left: -300, behavior: "smooth"})
-    } 
+      scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
+    }
   };
-  
+
   const scrollRight = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({left: 300, behavior: "smooth"});
-    } 
-  }; 
+      scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
+    }
+  };
   return (
     <div>
       <div className="search-container">
@@ -95,30 +96,34 @@ const Search = () => {
       </section>
 
       <section className="popular-destinations">
-      <div className="dsa">
-        <div className="header-with-buttons">
-          <h2>{query ? `Found by "${query}"` : "Popular Destinations"}</h2>
-          <div className="carousel-buttons">
-            <button onClick={scrollLeft} className="arrow-button left">&#8249;</button>
-            <button onClick={scrollRight} className="arrow-button right">&#8250;</button>
-          </div>
-        </div>
-        <div className="destinations" ref={scrollRef}>
-          {results.map((item) => (
-            <div key={item.hotelId} className="destination-card">
-            <img alt={item.name} src={item.image} />
-            <h3>{item.name}</h3>
-            <div className="detail-container">
-              <p>${item.price} Starting</p>
-              <p>
-                <i className="fa fa-star"></i>
-                {item.hotelRating}
-              </p>
+        <div className="dsa2">
+          <div className="header-with-buttons">
+            <h2>{query ? `Found by "${query}"` : "Popular Destinations"}</h2>
+            <div className="carousel-buttons">
+              <button onClick={scrollLeft} className="arrow-button left">
+                &#8249;
+              </button>
+              <button onClick={scrollRight} className="arrow-button right">
+                &#8250;
+              </button>
             </div>
           </div>
-          ))}
+          <div className="destinations" ref={scrollRef}>
+            {results.map((item) => (
+              <div key={item.hotelId} className="destination-card">
+                <img alt={item.name} src={item.image} />
+                <h3>{item.name}</h3>
+                <div className="detail-container">
+                  <p>${item.price} Starting</p>
+                  <p>
+                    <i className="fa fa-star"></i>
+                    {item.hotelRating}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
       </section>
     </div>
   );
