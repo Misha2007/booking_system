@@ -1,4 +1,4 @@
-'use strict';
+/*'use strict';
 
 const fs = require('fs');
 const path = require('path');
@@ -41,3 +41,34 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 module.exports = db;
+
+*/
+import fs from "fs";
+import path from "path";
+import Sequelize from "sequelize";
+import { fileURLToPath } from "url";
+import sequelize from "../util/db.js"; // sinu db ühendus
+import Hotel from "./hotel.js";
+import Region from "./region.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const db = {};
+
+// Lisa mudelid
+db.Hotel = Hotel;
+db.Region = Region;
+
+// Käivita assotsiatsioonid
+Object.keys(db).forEach((modelName) => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
+
+// Lisa sequelize eksemplar
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+export default db;

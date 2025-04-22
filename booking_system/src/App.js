@@ -6,6 +6,7 @@ import Search from "./components/search/Search";
 import Account from "./components/account/Account";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Countries from "./components/countries/Countries";
+import Result from "./components/countries/Result";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/account" element={<Account />} />
           <Route path="/contries" element={<Countries />} />
+          <Route path="/result/:countryName" element={<Result />} />
         </Routes>
       </Router>
     </div>

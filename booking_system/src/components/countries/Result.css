@@ -1,0 +1,64 @@
+#result {
+  margin: 20px;
+}
+
+.hotel-result {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 20px;
+  background-color: #fff;
+  color: #555;
+}
+
+.hotel-result img {
+  object-fit: cover;
+  width: 600px;
+  height: 400px;
+}
+
+.hotel-result h2 {
+  font-size: 35px;
+  line-height: 0;
+  color: #000;
+}
+
+.hotel-result-details {
+  margin-left: 20px;
+}
+
+button {
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #3c5c46;
+  /* background-color: #87f; */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 10px 10px 10px 0;
+}
+
+button:hover {
+  background-color: #74927e;
+}
+
+button span {
+  margin-right: 5px;
+}
+
+button i {
+  color: #ff8585;
+}
+
+button:focus {
+  outline: none;
+}
+
+.buttons-container {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
