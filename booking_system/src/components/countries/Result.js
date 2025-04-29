@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "./Result.css";
 import data_file from "../../data.json";
 
 const Result = () => {
   const { countryName } = useParams();
-  console.log(countryName);
-
   const [hotels, setHotels] = useState([]);
-
-  const navigate = useNavigate();
-  const location = useLocation();
-  const query = new URLSearchParams(location.search);
-  const searchQuery = query.get("q") || "";
-
-  const [search, setSearch] = useState(searchQuery);
+  const [favourites, setFavourites] = useState([]);
 
   useEffect(() => {
-    const fetchCountries = async () => {
+    const fetchHotels = async () => {
       try {
         const response = await fetch(
           `http://${data_file.ip}:${data_file.port}/countries/by/${countryName}`
@@ -26,19 +18,28 @@ const Result = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log(data.hotels);
-        // const uniqueCountries = [
-        //   ...new Set(data.regions.map((item) => item.countryName)),
-        // ];
-
-        setHotels(data.hotels.hotels);
+        setHotels(data.hotels.hotels || []);
       } catch (error) {
         console.error("Error fetching hotels:", error);
       }
     };
 
-    fetchCountries();
-  }, []);
+    fetchHotels();
+
+    const storedFavourites = JSON.parse(localStorage.getItem("favourites")) || [];
+    setFavourites(storedFavourites);
+  }, [countryName]);
+
+  const toggleFavourite = (hotelId) => {
+    let updatedFavourites;
+    if (favourites.includes(hotelId)) {
+      updatedFavourites = favourites.filter((id) => id !== hotelId);
+    } else {
+      updatedFavourites = [...favourites, hotelId];
+    }
+    setFavourites(updatedFavourites);
+    localStorage.setItem("favourites", JSON.stringify(updatedFavourites));
+  };
 
   return (
     <section id="result">
@@ -56,26 +57,32 @@ const Result = () => {
                     <i className="fa fa-star"></i>
                     {hotel.hotelRating}
                   </p>
-                  <h3>hotel.location</h3>
+                  <h3>{hotel.location}</h3>
                   <div>
                     <p>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                       sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                      Duis aute irure dolor in reprehenderit in voluptate velit
-                      esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                      sint occaecat cupidatat non proident, sunt in culpa qui
-                      officia deserunt mollit anim id est laborum.
+                      aliqua.
                     </p>
                     <p>${hotel.price} Starting</p>
                   </div>
                 </div>
                 <div className="buttons-container">
                   <button className="book-now">Book now</button>
-                  <button className="book-now">
-                    <span>Add to favourites </span>
-                    <i className="fa fa-heart"></i>
+                  <button
+                    className="book-now"
+                    onClick={() => toggleFavourite(hotel.hotelId)}
+                  >
+                    <span>
+                      {favourites.includes(hotel.hotelId)
+                        ? "Remove from favourites"
+                        : "Add to favourites"}{" "}
+                    </span>
+                    <i
+                      className={`fa fa-heart${
+                        favourites.includes(hotel.hotelId) ? " fav" : ""
+                      }`}
+                    ></i>
                   </button>
                 </div>
               </div>
