@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./Hotels.css";
 import data_file from "../../data.json";
+import { useNavigate } from "react-router-dom";
 
 const Hotels = () => {
   const [hotels, setHotels] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -30,7 +32,18 @@ const Hotels = () => {
         <h2 className="hotels__title">Best Hotels</h2>
         <div className="hotels">
           {hotels.map((hotel) => (
-            <div key={hotel.hotelId} className="hotel">
+            <div
+              key={hotel.hotelId}
+              className="hotel"
+              onClick={(e) => {
+                if (
+                  e.target.tagName.toLowerCase() !== "button" &&
+                  !e.target.closest("button")
+                ) {
+                  navigate(`/hotel/${hotel.hotelId}`);
+                }
+              }}
+            >
               <img alt={hotel.name} src={hotel.image} />
               <h3>{hotel.name}</h3>
               <div className="detail-container">

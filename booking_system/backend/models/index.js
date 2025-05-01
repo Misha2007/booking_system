@@ -47,9 +47,10 @@ import fs from "fs";
 import path from "path";
 import Sequelize from "sequelize";
 import { fileURLToPath } from "url";
-import sequelize from "../util/db.js"; // sinu db ühendus
+import sequelize from "../util/db.js";
 import Hotel from "./hotel.js";
 import Region from "./region.js";
+import Trip from "./trip.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -59,6 +60,7 @@ const db = {};
 // Lisa mudelid
 db.Hotel = Hotel;
 db.Region = Region;
+db.Trip = Trip;
 
 // Käivita assotsiatsioonid
 Object.keys(db).forEach((modelName) => {
