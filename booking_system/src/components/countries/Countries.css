@@ -31,10 +31,10 @@ ul {
 
 #search-form-topics {
   float: left;
-  height: 5vh;
   font-size: 15px;
   width: 60%;
   border: none;
+  height: 100%;
 }
 
 #search-form-topics:focus {
@@ -51,12 +51,15 @@ ul {
 .topic-detail-form {
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: 5vh;
 }
 
 .topic-detail-form .search-button {
   background: #fff;
   cursor: pointer;
   border: none;
+  height: 100%;
 }
 
 .topic_block {

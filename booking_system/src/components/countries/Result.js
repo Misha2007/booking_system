@@ -18,6 +18,8 @@ const Result = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+        console.log(data.hotels);
+
         setHotels(data.hotels.hotels || []);
       } catch (error) {
         console.error("Error fetching hotels:", error);
@@ -41,6 +43,14 @@ const Result = () => {
     localStorage.setItem("favourites", JSON.stringify(updatedFavourites));
   };
 
+  const userChecker = () => {
+    if (localStorage.getItem("authToken")) {
+      console.log("User logged in");
+    } else {
+      alert("You should log in!!!");
+    }
+  };
+
   return (
     <section id="result">
       <div>
@@ -48,41 +58,63 @@ const Result = () => {
         <p>Found {hotels.length} options</p>
         <div className="hotels-result">
           {hotels.map((hotel) => (
-            <div key={hotel.hotelId} className="hotel-result">
-              <img alt={hotel.name} src={hotel.image} />
+            <div
+              key={hotel.hotelId}
+              className="hotel-result"
+              onClick={(e) => {
+                if (
+                  e.target.tagName.toLowerCase() !== "button" &&
+                  !e.target.closest("button")
+                ) {
+                  navigate(`/hotel/${hotel.hotelId}`);
+                }
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              <div className="hotel-result-image">
+                <img alt={hotel.name} src={hotel.image} />
+              </div>
               <div className="hotel-result-details">
-                <div>
+                <div className="hotel-name-rate">
                   <h2>{hotel.name}</h2>
                   <p>
                     <i className="fa fa-star"></i>
                     {hotel.hotelRating}
                   </p>
+
+                </div>
+                <div>
                   <h3>{hotel.location}</h3>
-                  <div>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
-                    </p>
-                    <p>${hotel.price} Starting</p>
-                  </div>
+
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit
+                    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+                    occaecat cupidatat non proident, sunt in culpa qui officia
+                    deserunt mollit anim id est laborum.
+                  </p>
+                  <p>${hotel.price} Starting</p>
                 </div>
                 <div className="buttons-container">
-                  <button className="book-now">Book now</button>
                   <button
                     className="book-now"
-                    onClick={() => toggleFavourite(hotel.hotelId)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent navigation
+                      userChecker();
+                    }}
                   >
-                    <span>
-                      {favourites.includes(hotel.hotelId)
-                        ? "Remove from favourites"
-                        : "Add to favourites"}{" "}
-                    </span>
-                    <i
-                      className={`fa fa-heart${
-                        favourites.includes(hotel.hotelId) ? " fav" : ""
-                      }`}
-                    ></i>
+                    Book now
+                  </button>
+                  <button
+                    className="book-now"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span>Add to favourites </span>
+                    <i className="fa fa-heart"></i>
+
                   </button>
                 </div>
               </div>
