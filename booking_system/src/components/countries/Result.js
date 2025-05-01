@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "./Result.css";
 import data_file from "../../data.json";
 
 const Result = () => {
   const { countryName } = useParams();
-  console.log(countryName);
-
   const [hotels, setHotels] = useState([]);
-
-  const navigate = useNavigate();
-  const location = useLocation();
-  const query = new URLSearchParams(location.search);
-  const searchQuery = query.get("q") || "";
-
-  const [search, setSearch] = useState(searchQuery);
+  const [favourites, setFavourites] = useState([]);
 
   useEffect(() => {
-    const fetchCountries = async () => {
+    const fetchHotels = async () => {
       try {
         const response = await fetch(
           `http://${data_file.ip}:${data_file.port}/countries/by/${countryName}`
@@ -28,14 +20,28 @@ const Result = () => {
         const data = await response.json();
         console.log(data.hotels);
 
-        setHotels(data.hotels.hotels);
+        setHotels(data.hotels.hotels || []);
       } catch (error) {
         console.error("Error fetching hotels:", error);
       }
     };
 
-    fetchCountries();
-  }, []);
+    fetchHotels();
+
+    const storedFavourites = JSON.parse(localStorage.getItem("favourites")) || [];
+    setFavourites(storedFavourites);
+  }, [countryName]);
+
+  const toggleFavourite = (hotelId) => {
+    let updatedFavourites;
+    if (favourites.includes(hotelId)) {
+      updatedFavourites = favourites.filter((id) => id !== hotelId);
+    } else {
+      updatedFavourites = [...favourites, hotelId];
+    }
+    setFavourites(updatedFavourites);
+    localStorage.setItem("favourites", JSON.stringify(updatedFavourites));
+  };
 
   const userChecker = () => {
     if (localStorage.getItem("authToken")) {
@@ -75,6 +81,7 @@ const Result = () => {
                     <i className="fa fa-star"></i>
                     {hotel.hotelRating}
                   </p>
+
                 </div>
                 <div>
                   <h3>{hotel.location}</h3>
@@ -107,6 +114,7 @@ const Result = () => {
                   >
                     <span>Add to favourites </span>
                     <i className="fa fa-heart"></i>
+
                   </button>
                 </div>
               </div>
