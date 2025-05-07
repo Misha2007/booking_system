@@ -13,4 +13,8 @@ router.patch("/profile/edit", verifyToken, (req, res) => {
   UserController.editUser(req, res);
 });
 
+router.delete("/delete", verifyToken, (req, res) => {
+  UserController.deleteUser(req, res);
+});
+
 export default router;

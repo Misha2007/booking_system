@@ -157,6 +157,29 @@ class userController {
       res.status(500).json({ message: "Server error", error: err.message });
     }
   };
+
+  deleteUser = async (req, res) => {
+    try {
+      const clientId = req.user.clientId;
+      if (!clientId) {
+        return res.status(400).json({ message: "User not authenticated" });
+      }
+      const deletedRows = await Clients.destroy({
+        where: {
+          clientId: clientId,
+        },
+      });
+
+      if (deletedRows === 0) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.json({ message: "User deleted successfully" });
+    } catch (err) {
+      console.error("Error deleting user:", err);
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
+  };
 }
 
 export const UserController = new userController();
