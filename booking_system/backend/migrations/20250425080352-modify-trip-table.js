@@ -20,6 +20,14 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       }),
+      queryInterface.addColumn("Trips", "clientId", {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Clients",
+          key: "clientId",
+        },
+      }),
       queryInterface.changeColumn("Trips", "bookingDate", {
         type: Sequelize.DATE,
         allowNull: false,

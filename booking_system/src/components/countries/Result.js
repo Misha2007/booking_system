@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./Result.css";
 import data_file from "../../data.json";
+import { useNavigate } from "react-router-dom";
 
 const Result = () => {
   const { countryName } = useParams();
   const [hotels, setHotels] = useState([]);
   const [favourites, setFavourites] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -28,7 +30,8 @@ const Result = () => {
 
     fetchHotels();
 
-    const storedFavourites = JSON.parse(localStorage.getItem("favourites")) || [];
+    const storedFavourites =
+      JSON.parse(localStorage.getItem("favourites")) || [];
     setFavourites(storedFavourites);
   }, [countryName]);
 
@@ -81,7 +84,6 @@ const Result = () => {
                     <i className="fa fa-star"></i>
                     {hotel.hotelRating}
                   </p>
-
                 </div>
                 <div>
                   <h3>{hotel.location}</h3>
@@ -110,11 +112,18 @@ const Result = () => {
                   </button>
                   <button
                     className="book-now"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={() => toggleFavourite(hotel.hotelId)}
                   >
-                    <span>Add to favourites </span>
-                    <i className="fa fa-heart"></i>
-
+                    <span>
+                      {favourites.includes(hotel.hotelId)
+                        ? "Remove from favourites"
+                        : "Add to favourites"}{" "}
+                    </span>
+                    <i
+                      className={`fa fa-heart${
+                        favourites.includes(hotel.hotelId) ? " fav" : ""
+                      }`}
+                    ></i>
                   </button>
                 </div>
               </div>

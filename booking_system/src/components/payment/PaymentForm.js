@@ -5,7 +5,7 @@ import {
   PaymentElement,
 } from "@stripe/react-stripe-js";
 import "./Payment.css";
-import data_file from "./data.json";
+import data_file from "../../data.json";
 
 const PaymentForm = ({ clientSecret }) => {
   const stripe = useStripe();
@@ -23,7 +23,7 @@ const PaymentForm = ({ clientSecret }) => {
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements, // this includes the PaymentElement input
       confirmParams: {
-        return_url: `http://${data_file.ip}:${data_file.port}/payment-success`,
+        return_url: `http://${data_file.ip}:${data_file.port_frontend}/payment-success`,
       },
     });
 

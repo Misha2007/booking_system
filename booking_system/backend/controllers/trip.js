@@ -9,11 +9,13 @@ class tripController {
 
   createTrip = async (req, res) => {
     try {
-      const { departureDate, arrivalDate, hotelId, regionId } = req.body;
+      const { departureDate, arrivalDate, clientId, hotelId, regionId } =
+        req.body;
 
       console.log(models.Trip);
 
       const newTrip = await models.Trip.create({
+        clientId,
         departureDate,
         arrivalDate,
         hotelId,
@@ -43,8 +45,11 @@ class tripController {
 
   getTrips = async (req, res) => {
     try {
-      const trips = await models.Trips.findAll();
-      console.log(trips);
+      const trips = await models.Trip.findAll({
+        where: {
+          clientId: req.params.clientId,
+        },
+      });
 
       if (!trips) {
         return res.status(404).json({ message: "Trips not found" });
