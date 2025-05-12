@@ -20,7 +20,7 @@ class Hotel extends Model {
     });*/
     this.belongsTo(models.Region, {
       foreignKey: "regionId",
-      as: "region", // ← see on oluline!
+      as: "region",
     });
   }
 }

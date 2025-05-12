@@ -155,7 +155,7 @@
 
 /* Heading */
 
-h1 {
+.container h1 {
   font-size: 7.5rem;
   background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQQ_OyYQhz6IQ7lcnjOP3Wi3oceU05vEaiaQ&s");
   background-repeat: repeat;

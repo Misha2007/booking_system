@@ -21,15 +21,6 @@ class countryController {
 
   getHotelsByRegion = async (req, res) => {
     try {
-      // Region.findOne({ where: { countryName: req.params.country } }).then(
-      //   (region) => {
-      //     Hotel.findAll({ where: { regionId: region.regionId } }).then(
-      //       (hotels) => {
-      //         res.status(200).json({ hotels });
-      //       }
-      //     );
-      //   }
-      // );
       models.Region.findOne({
         where: { countryName: req.params.country },
       }).then((region) => {

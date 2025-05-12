@@ -3,6 +3,7 @@ import "./Profile.css";
 import Profile from "./Profile";
 import FavouritedTrips from "./FavouritedTrips";
 import Settings from "./Settings";
+import YourTrips from "./YourTrips";
 
 const Account = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -12,7 +13,7 @@ const Account = () => {
       case "profile":
         return <Profile />;
       case "yourTrips":
-        return <p>Your trips content here</p>;
+        return <YourTrips />;
       case "favouritedTrips":
         return <FavouritedTrips />;
       case "viewedTours":

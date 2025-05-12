@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Search.css";
 
 const API_URL = "http://localhost:3002";
@@ -8,6 +9,7 @@ const Search = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const scrollRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -110,7 +112,18 @@ const Search = () => {
           </div>
           <div className="destinations" ref={scrollRef}>
             {results.map((item) => (
-              <div key={item.hotelId} className="destination-card">
+              <div
+                key={item.hotelId}
+                className="destination-card"
+                onClick={(e) => {
+                  if (
+                    e.target.tagName.toLowerCase() !== "button" &&
+                    !e.target.closest("button")
+                  ) {
+                    navigate(`/hotel/${item.hotelId}`);
+                  }
+                }}
+              >
                 <img alt={item.name} src={item.image} />
                 <h3>{item.name}</h3>
                 <div className="detail-container">
