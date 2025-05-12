@@ -13,6 +13,10 @@ class Trip extends Model {
       foreignKey: "hotelId",
       as: "hotels",
     });
+    this.belongsTo(models.Clients, {
+      foreignKey: "clientId",
+      as: "clients",
+    });
   }
 }
 Trip.init(
@@ -37,6 +41,14 @@ Trip.init(
       references: {
         model: "Hotel",
         key: "hotelId",
+      },
+    },
+    clientId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Clients",
+        key: "clientId",
       },
     },
   },

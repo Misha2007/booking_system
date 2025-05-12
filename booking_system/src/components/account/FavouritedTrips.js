@@ -8,7 +8,8 @@ const localHotels = [
     location: "Unknown",
     hotelRating: 4.6,
     price: 50,
-    image: "https://cf.bstatic.com/xdata/images/hotel/square600/371896039.webp?k=6386b5949904e76fedbf862547d98b6be1143175f423f1a711ec9a62bb1d6e43&o=",
+    image:
+      "https://cf.bstatic.com/xdata/images/hotel/square600/371896039.webp?k=6386b5949904e76fedbf862547d98b6be1143175f423f1a711ec9a62bb1d6e43&o=",
   },
   {
     hotelId: 2,
@@ -16,7 +17,8 @@ const localHotels = [
     location: "Unknown",
     hotelRating: 3.5,
     price: 50,
-    image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/2753125.jpg?k=f8215e38aa420367f9196cd5619fcfa5157a1fda084466bcb803eda031c6e93a&o=&hp=1",
+    image:
+      "https://cf.bstatic.com/xdata/images/hotel/max1024x768/2753125.jpg?k=f8215e38aa420367f9196cd5619fcfa5157a1fda084466bcb803eda031c6e93a&o=&hp=1",
   },
   {
     hotelId: 3,
@@ -24,7 +26,8 @@ const localHotels = [
     location: "Unknown",
     hotelRating: 5,
     price: 50,
-    image: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/266923700.jpg?k=3306fa6ad63862f227d83f51a825e2d6255cd15de37217a470ae94813d5e3d2a&o=&hp=1",
+    image:
+      "https://cf.bstatic.com/xdata/images/hotel/max1280x900/266923700.jpg?k=3306fa6ad63862f227d83f51a825e2d6255cd15de37217a470ae94813d5e3d2a&o=&hp=1",
   },
   {
     hotelId: 4,
@@ -40,7 +43,8 @@ const FavouritedTrips = () => {
   const [favourites, setFavourites] = useState([]);
 
   useEffect(() => {
-    const storedFavourites = JSON.parse(localStorage.getItem("favourites")) || [];
+    const storedFavourites =
+      JSON.parse(localStorage.getItem("favourites")) || [];
     setFavourites(storedFavourites);
   }, []);
 
@@ -60,7 +64,7 @@ const FavouritedTrips = () => {
 
   return (
     <div className="favourited-trips-container">
-      <h2>Favourited Trips</h2>
+      <h2 className="profile__title">Favourited Trips</h2>
       <div className="hotels">
         {validFavourites.map((hotelId) => {
           const hotel = localHotels.find((h) => h.hotelId === hotelId);

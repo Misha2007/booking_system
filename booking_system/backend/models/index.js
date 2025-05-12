@@ -51,6 +51,7 @@ import sequelize from "../util/db.js";
 import Hotel from "./hotel.js";
 import Region from "./region.js";
 import Trip from "./trip.js";
+import Clients from "./clients.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -61,6 +62,7 @@ const db = {};
 db.Hotel = Hotel;
 db.Region = Region;
 db.Trip = Trip;
+db.Clients = Clients;
 
 // Käivita assotsiatsioonid
 Object.keys(db).forEach((modelName) => {

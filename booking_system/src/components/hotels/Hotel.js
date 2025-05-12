@@ -77,41 +77,16 @@ const Result = (props) => {
       console.log("Fetched user:", data.user.clientId);
       console.log(tripData);
       console.log(hotel.hotelId);
-      const body = {
+      const bookingData = {
         clientId: data.user.clientId,
         hotelId: hotel.hotelId,
         arrivalDate: tripData.arrivalDate,
         departureDate: tripData.departureDate,
+        roomType: tripData.departureDate,
+        numberOfGuests: tripData.numberOfGuests,
       };
 
-      try {
-        const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/trips/create`,
-          {
-            method: "POST",
-            body: JSON.stringify(body),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log("sad");
-        if (!response.ok) {
-          const errorMessage = await response.text();
-          setError({
-            title: "Problems with backend",
-            message: errorMessage || "Invalid data.",
-          });
-          return;
-        }
-      } catch (error) {
-        console.log(error);
-        setError({
-          title: "Server Unreachable",
-          message: "Failed to create a trip, please try again later.",
-        });
-        return;
-      }
+      localStorage.setItem("pendingBooking", JSON.stringify(bookingData));
 
       navigate("/payment", { state: { hotel_data: hotel, user: data.user } });
     } catch (error) {

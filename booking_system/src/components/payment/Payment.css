@@ -98,13 +98,13 @@
   animation: scaleUp 0.6s ease-in-out;
 }
 
-h1 {
+.payment-success-container h1 {
   font-size: 2rem;
   color: #333;
   margin-top: 20px;
 }
 
-p {
+.payment-success-container p {
   color: #555;
   margin: 10px 0 20px;
   font-size: 1rem;
