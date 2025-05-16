@@ -8,6 +8,12 @@
   z-index: 100;
   padding: 10px 20px;
   box-sizing: border-box;
+  align-items: center;
+}
+
+.mobile {
+  padding: 0 !important;
+  align-items: start !important;
 }
 
 #logo {
@@ -77,12 +83,13 @@
     /* Drops into view */
     opacity: 1;
     /* Fades in */
+    padding: 0 !important;
   }
 
-  .fa-xmark {
+  .fa-times {
     color: #fff;
     position: absolute;
-    top: 20px;
+    top: 30px;
     right: 45px;
   }
 }

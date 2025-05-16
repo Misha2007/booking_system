@@ -55,3 +55,13 @@
   color: #ffce31;
   margin-right: 10px;
 }
+
+@media (any-pointer: coarse) {
+  .dsa {
+    height: auto;
+  }
+
+  .hotels {
+    max-width: 400px;
+  }
+}

@@ -114,3 +114,21 @@
     overflow-y: visible;
   }
 }
+
+@media (any-pointer: coarse) {
+  .tours-container {
+    width: 90vw;
+  }
+
+  #main-image-title {
+    line-height: normal;
+  }
+
+  #main-image-desc {
+    display: block;
+  }
+
+  .tour p {
+    display: none;
+  }
+}

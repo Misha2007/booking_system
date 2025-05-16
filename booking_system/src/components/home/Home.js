@@ -4,7 +4,7 @@ import Tours from "./Tours";
 
 const Home = () => {
   return (
-    <div>
+    <div id="home">
       <div className="container">
         <h1>Booking system</h1>
         <p>

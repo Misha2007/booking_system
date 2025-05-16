@@ -96,3 +96,18 @@ select::-webkit-dropdown-list {
   transform: translateY(-50%);
   z-index: 5;
 }
+
+@media (any-pointer: coarse) {
+  .hotel-result {
+    flex-direction: column;
+  }
+
+  .trip-group {
+    flex-direction: column;
+  }
+
+  .hotel-result .hotel-result-image {
+    width: 80vw;
+    margin: 0 auto;
+  }
+}

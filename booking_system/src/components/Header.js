@@ -14,7 +14,10 @@ const Header = () => {
   };
 
   return (
-    <header id="header" className="fixed header-transparent">
+    <header
+      id="header"
+      className={!menuOpen ? "fixed header-transparent" : "mobile"}
+    >
       <a href="/" id="logo">
         <img
           src="https://cdn-icons-png.flaticon.com/512/5219/5219577.png"
@@ -25,7 +28,7 @@ const Header = () => {
 
       <nav id="menu" className={menuOpen ? "open" : ""}>
         <button id="mobile-menu-btn" onClick={toggleMenuClose}>
-          <i className="fa-solid fa-xmark" style={{ color: "#fff" }}></i>
+          <i className="fa fa-times" style={{ color: "#ffa" }}></i>
         </button>
         <Link to="/" className="menuItem">
           Main
@@ -45,7 +48,7 @@ const Header = () => {
       </nav>
 
       <button id="mobile-menu-btn" onClick={toggleMenuOpen}>
-        <i className="fa-solid fa-bars"></i>
+        <i className="fa fa-bars"></i>
       </button>
     </header>
   );
