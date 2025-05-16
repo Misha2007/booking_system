@@ -17,6 +17,10 @@ const Result = (props) => {
 
   const [error, setError] = useState(null);
 
+  const [authorized, setAuthorized] = useState(
+    localStorage.getItem("authToken")
+  );
+
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const searchQuery = query.get("q") || "";
@@ -150,9 +154,11 @@ const Result = (props) => {
                 </div> */}
               </div>
             </div>
-            <div id="trip">
-              <Trip hotel={hotel} onSubmitTrip={onSubmitTrip}></Trip>
-            </div>
+            {authorized && (
+              <div id="trip">
+                <Trip hotel={hotel} onSubmitTrip={onSubmitTrip}></Trip>
+              </div>
+            )}
           </div>
         ) : (
           <p>Loading hotel details...</p>

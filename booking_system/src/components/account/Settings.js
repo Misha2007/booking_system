@@ -9,7 +9,7 @@ const Settings = () => {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState(null);
   const [token, setToken] = useState("");
-  
+
   useEffect(() => {
     const storedToken = localStorage.getItem("authToken");
     if (!storedToken) {
@@ -25,7 +25,11 @@ const Settings = () => {
   };
 
   const handleDeleteAccount = async () => {
-    if (!window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete your account? This action cannot be undone."
+      )
+    ) {
       return;
     }
     setDeleting(true);
@@ -56,31 +60,33 @@ const Settings = () => {
   };
 
   return (
-    <div className="settings-page">
-      <div className="settings-title-alt">Settings</div>
-      <div className="settings-section">
-        <h2 className="section-title">Language</h2>
-        <select
-          className="language-dropdown"
-          value={language}
-          onChange={handleLanguageChange}
-        >
-          <option value="en">English</option>
-          <option value="es">Spanish</option>
-          <option value="fr">French</option>
-          <option value="de">German</option>
-        </select>
-        <p className="language-note">Language switching in the works</p>
-      </div>
-      <div className="settings-section">
-        <button
-          className="delete-account-text-button"
-          onClick={handleDeleteAccount}
-          disabled={deleting}
-        >
-          {deleting ? "Deleting Account..." : "Delete Account"}
-        </button>
-        {error && <p className="error-message">{error}</p>}
+    <div className="favourited-trips-container">
+      <h2 className="profile__title">Settings</h2>
+      <div className="profile">
+        <div className="settings-section">
+          <h2 className="section-title">Language</h2>
+          <select
+            className="language-dropdown"
+            value={language}
+            onChange={handleLanguageChange}
+          >
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+          </select>
+          <p className="language-note">Language switching in the works</p>
+        </div>
+        <div className="settings-section">
+          <button
+            className="delete-account-text-button"
+            onClick={handleDeleteAccount}
+            disabled={deleting}
+          >
+            {deleting ? "Deleting Account..." : "Delete Account"}
+          </button>
+          {error && <p className="error-message">{error}</p>}
+        </div>
       </div>
     </div>
   );
