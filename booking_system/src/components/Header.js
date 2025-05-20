@@ -36,7 +36,7 @@ const Header = () => {
         <Link to="/search" className="menuItem">
           Search
         </Link>
-        <Link to="/" className="menuItem">
+        <Link to="/benefits" className="menuItem">
           Benefits
         </Link>
         <Link to="/login" className="menuItem">
