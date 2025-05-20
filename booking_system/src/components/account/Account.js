@@ -1,80 +1,93 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import Profile from "./Profile";
 import FavouritedTrips from "./FavouritedTrips";
 import Settings from "./Settings";
 import YourTrips from "./YourTrips";
 
-const Account = () => {
-  const [activeTab, setActiveTab] = useState("profile");
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  return isMobile;
+}
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case "profile":
-        return <Profile />;
-      case "yourTrips":
-        return <YourTrips />;
-      case "favouritedTrips":
-        return <FavouritedTrips />;
-      case "viewedTours":
-        return <p>Viewed tours content here</p>;
-      case "settings":
-        return <Settings />;
-      default:
-        return <Profile />;
-    }
-  };
+const sections = [
+  { key: "profile", icon: "fa-user", label: "My profile", component: <Profile /> },
+  { key: "yourTrips", icon: "fa-suitcase", label: "Your trips", component: <YourTrips /> },
+  { key: "favouritedTrips", icon: "fa-heart", label: "Favourited trips", component: <FavouritedTrips /> },
+  { key: "viewedTours", icon: "fa-history", label: "Viewed tours", component: <p>Viewed tours content here</p> },
+  { key: "settings", icon: "fa-cog", label: "Settings", component: <Settings /> },
+];
+
+const Account = () => {
+  const isMobile = useIsMobile();
+  const [openSection, setOpenSection] = useState("profile");
+
+  // Always show profile by default on desktop
+  useEffect(() => {
+    if (!isMobile) setOpenSection("profile");
+  }, [isMobile]);
+
+  // Add menu-open class if a section is open on mobile
+  const functionsContainerClass =
+    "functions-container" +
+    (isMobile && openSection ? " menu-open" : "");
 
   return (
     <section className="dsa">
       <div className="account-container">
-        <div className="functions-container">
+        <div className={functionsContainerClass}>
           <div>
             <h2 className="account__title">Account</h2>
             <ol>
-              <li
-                className={activeTab === "profile" ? "active" : ""}
-                onClick={() => setActiveTab("profile")}
-                style={{ cursor: "pointer" }}
-              >
-                <i className="fa fa-user"></i>
-                My profile
-              </li>
-              <li
-                className={activeTab === "yourTrips" ? "active" : ""}
-                onClick={() => setActiveTab("yourTrips")}
-                style={{ cursor: "pointer" }}
-              >
-                <i className="fa fa-suitcase"></i>
-                Your trips
-              </li>
-              <li
-                className={activeTab === "favouritedTrips" ? "active" : ""}
-                onClick={() => setActiveTab("favouritedTrips")}
-                style={{ cursor: "pointer" }}
-              >
-                <i className="fa fa-heart"></i>
-                Favourited trips
-              </li>
-              <li
-                className={activeTab === "viewedTours" ? "active" : ""}
-                onClick={() => setActiveTab("viewedTours")}
-                style={{ cursor: "pointer" }}
-              >
-                <i className="fa fa-history"></i>
-                Viewed tours
-              </li>
-              <li
-                className={activeTab === "settings" ? "active" : ""}
-                onClick={() => setActiveTab("settings")}
-                style={{ cursor: "pointer" }}
-              >
-                <i className="fa fa-cog"></i>
-                Settings
-              </li>
+              {sections.map((section) => (
+                <li
+                  key={section.key}
+                  className={openSection === section.key ? "active" : ""}
+                  onClick={() =>
+                    isMobile
+                      ? setOpenSection(openSection === section.key ? null : section.key)
+                      : setOpenSection(section.key)
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  <i className={`fa ${section.icon}`}></i>
+                  {section.label}
+                  {isMobile && (
+                    <span className="chevron" style={{ marginLeft: "auto" }}>
+                      {openSection === section.key ? "▲" : "▼"}
+                    </span>
+                  )}
+                </li>
+              ))}
             </ol>
           </div>
-          <div>{renderContent()}</div>
+          <div>
+            {isMobile
+              ? (
+                // Only show the open section's content on mobile
+                sections.map(
+                  (section) =>
+                    openSection === section.key && (
+                      <div key={section.key} className="open-section-card">{section.component}</div>
+                    )
+                )
+              )
+              : (
+                // On desktop, show only the selected tab's content
+                sections.map(
+                  (section) =>
+                    openSection === section.key && (
+                      <div key={section.key}>{section.component}</div>
+                    )
+                )
+              )
+            }
+          </div>
         </div>
       </div>
     </section>
