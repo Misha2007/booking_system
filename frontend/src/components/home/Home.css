@@ -1,0 +1,246 @@
+@media (any-pointer: coarse) {
+  .container {
+    display: none;
+  }
+
+  #home {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* do your own styles */
+  #motion-demo {
+    position: relative;
+    width: 80vw;
+    height: 90vh;
+    background: #1378bc;
+    border-left: 20px solid rgba(0, 0, 0, 0.25);
+    border-right: 20px solid rgba(0, 0, 0, 0.25);
+    animation: animatePlatform 10s ease-in-out infinite; /* Adjust duration here */
+    border-bottom: 20px solid #14588f;
+    margin-bottom: 100px;
+  }
+
+  #motion-demo div {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    offset-path: path("M 900,650 L 150,650 L 150,-300 L 900,-300 Z");
+    offset-distance: 0%;
+    offset-anchor: center;
+    transition: 0.5s;
+    animation: followPath 10s ease-in-out infinite,
+      animatePlane 10s ease-in-out infinite;
+    z-index: 5;
+  }
+
+  @keyframes followPath {
+    0% {
+      offset-distance: 0%;
+    }
+    100% {
+      offset-distance: 100%;
+    }
+  }
+
+  @keyframes animatePlane {
+    0% {
+      width: 100px;
+      height: 100px;
+    }
+    100% {
+      width: 300px;
+      height: 300px;
+    }
+  }
+
+  #motion-demo div img {
+    rotate: 45deg;
+    filter: drop-shadow(10px 10px 0 rgba(0, 0, 0, 0.5));
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Runway animation */
+  #motion-demo::before {
+    content: "";
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 100%;
+    background: repeating-linear-gradient(
+      transparent 0%,
+      transparent 50%,
+      #fff 50%,
+      #fff 100%
+    );
+    background-size: 15px 220px;
+  }
+
+  #motion-demo::before {
+    content: "";
+    position: absolute;
+    top: 60.2%;
+    left: 110.7%;
+    width: 15vw;
+    height: 32.8vh;
+    background: #1378bc;
+    border-top: 20px solid #14588f;
+    border-bottom: 20px solid #14588f;
+    /* background-image: repeating-linear-gradient(
+      transparent 0,
+      white 30px,
+      white 30px,
+      transparent 60px
+    ); */
+    background-size: 100% 50px;
+    animation: animateRunwayTurn 10s linear infinite;
+    z-index: 2;
+  }
+
+  /* Vertical runway (right part of L) */
+  #motion-demo::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    width: 30px;
+    height: 80vh;
+    background: #1378bc;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      white 0,
+      white 200px,
+      transparent 100px,
+      transparent 600px
+    );
+    background-size: 100px 500px;
+    /* animation: animateRunway 10s linear infinite; */
+  }
+
+  @keyframes animateRunway {
+    0% {
+      background-position-y: 0px;
+    }
+    100% {
+      animation-timing-function: ease-in;
+      background-position-y: 5000px;
+    }
+  }
+}
+
+@media (any-pointer: fine) {
+  #motion-demo {
+    position: relative;
+    width: 100vw;
+    height: 400px;
+    background: #1378bc;
+    border-top: 20px solid rgba(0, 0, 0, 0.25);
+    border-bottom: 20px solid rgba(0, 0, 0, 0.25);
+  }
+
+  #motion-demo:not(div > #motion-demo) {
+    animation: animatePlatform 10s ease-in-out infinite; /* Adjust duration here */
+  }
+
+  /* Plane keyframes */
+  @keyframes animatePlatform {
+    0% {
+      transform: scaleY(0.7);
+    }
+    100% {
+      transform: scaleY(1);
+    }
+  }
+
+  /* Plane animation */
+  #motion-demo div {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    filter: drop-shadow(10px 10px 0 rgba(0, 0, 0, 0.5));
+    transition: 0.5s;
+    animation: animatePlane 10s ease-in-out infinite; /* Adjust duration here */
+  }
+
+  #motion-demo div img {
+    rotate: 45deg;
+    filter: drop-shadow(10px 10px 0 rgba(0, 0, 0, 0.5));
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Plane keyframes */
+  @keyframes animatePlane {
+    0% {
+      width: 300px;
+      height: 300px;
+      left: -40%; /* Start off slightly off-screen */
+      top: 7%;
+      filter: drop-shadow(10px 10px 0 rgba(0, 0, 0, 0));
+    }
+    100% {
+      width: 100px; /* Shrinks to a small size */
+      height: 100px;
+      left: 100%; /* Plane reaches the landing point */
+      top: 37%; /* Lands near the bottom */
+      filter: drop-shadow(10px 10px 0 rgba(0, 0, 0, 0.5));
+    }
+  }
+
+  /* Runway animation */
+  #motion-demo::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 15px;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 50%,
+      #fff 50%,
+      #fff 100%
+    );
+    background-size: 300px 320px;
+    animation: animateRunway 10s linear infinite; /* Match duration */
+  }
+
+  /* Runway keyframes */
+  @keyframes animateRunway {
+    0% {
+      background-position-x: 0px;
+    }
+    100% {
+      animation-timing-function: ease-in; /* Speed up as plane takes off */
+      background-position-x: 5000px; /* Fast runway */
+    }
+  }
+}
+
+/* Heading */
+
+.container h1 {
+  font-size: 7.5rem;
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQQ_OyYQhz6IQ7lcnjOP3Wi3oceU05vEaiaQ&s");
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 10px;
+}
+
+.container {
+  margin: 100px;
+  text-align: center;
+}
+
+.container p {
+  font-size: 20px;
+  color: #0c2012;
+  font-family: "Courier New", Courier, monospace;
+}
