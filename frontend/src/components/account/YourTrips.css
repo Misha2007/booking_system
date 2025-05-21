@@ -97,3 +97,10 @@
 .less .trip-container-row {
   margin-right: 0;
 }
+
+@media (any-pointer: coarse) {
+  .trip-account {
+    display: block;
+    text-align: center;
+  }
+}
