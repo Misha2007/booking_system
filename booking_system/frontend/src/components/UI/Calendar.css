@@ -72,3 +72,9 @@ tbody tr td {
 tbody tr td:hover {
   background-color: #87f9;
 }
+
+@media (any-pointer: coarse) {
+  .table {
+    display: block;
+  }
+}

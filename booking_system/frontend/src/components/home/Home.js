@@ -18,11 +18,13 @@ const Home = () => {
         </p>
       </div>
       <div id="motion-demo">
-        <img
-          src="https://images.vexels.com/media/users/3/242810/isolated/preview/faf4f5ad02d6d68cfeafa44e1b57649a-plane-semi-flat.png"
-          alt="Flying Plane"
-          className="animated-plane"
-        />
+        <div>
+          <img
+            src="https://images.vexels.com/media/users/3/242810/isolated/preview/faf4f5ad02d6d68cfeafa44e1b57649a-plane-semi-flat.png"
+            alt="Flying Plane"
+            className="animated-plane"
+          />
+        </div>
       </div>
       <div>
         <Tours></Tours>

@@ -95,3 +95,13 @@ li .fa {
   font-size: 22px;
   cursor: pointer;
 }
+
+@media (any-pointer: coarse) {
+  .tab-container {
+    display: none;
+  }
+
+  .field {
+    grid-template-columns: 1fr;
+  }
+}

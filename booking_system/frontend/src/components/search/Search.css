@@ -165,3 +165,26 @@
   font-size: 1.8rem;
   font-family: "Courier Prime", Courier, monospace;
 }
+
+@media (any-pointer: coarse) {
+  .header-with-buttons {
+    padding: 0;
+    display: block;
+  }
+
+  .destinations {
+    max-width: 400px;
+  }
+
+  .search-wrapper {
+    width: 90%;
+  }
+
+  .header-with-buttons .carousel-buttons {
+    display: none;
+  }
+
+  .header-with-buttons h2 {
+    font-size: 1.5rem;
+  }
+}

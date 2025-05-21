@@ -108,7 +108,7 @@ const LoginBlock = () => {
   }, [token, navigate]);
 
   return (
-    <section className="dsa">
+    <section className="dsa" id="login-block">
       {error && (
         <Error
           title={error.title}

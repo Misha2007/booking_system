@@ -116,3 +116,28 @@ a:hover {
   cursor: pointer;
   width: 100%;
 }
+
+@media (any-pointer: coarse) {
+  .login-container {
+    width: auto;
+  }
+
+  #login-block {
+    height: 90vh;
+  }
+
+  .login_button {
+    font-size: 16px;
+    height: 50px;
+    border-radius: 10px;
+  }
+
+  .remember-container {
+    display: block;
+    text-align: left;
+  }
+
+  .login_button {
+    margin: 0;
+  }
+}

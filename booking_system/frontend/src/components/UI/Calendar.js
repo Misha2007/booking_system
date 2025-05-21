@@ -160,7 +160,6 @@ const Calendar = (props) => {
 
   return (
     <div className="table">
-      {/* Current Month */}
       <div>
         <div id="table-header">
           <div className="arrow" id="prev-month" onClick={prevMonth}>

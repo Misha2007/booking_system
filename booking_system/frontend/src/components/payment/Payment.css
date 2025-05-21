@@ -145,3 +145,18 @@
     transform: scale(1);
   }
 }
+
+@media (any-pointer: coarse) {
+  .payment-form {
+    min-width: 0;
+  }
+
+  .success-box {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .payment-success-container {
+    background: #fff;
+  }
+}

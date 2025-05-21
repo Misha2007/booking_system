@@ -29,7 +29,7 @@ const Account = () => {
     <section className="dsa">
       <div className="account-container">
         <div className="functions-container">
-          <div>
+          <div className="tab-container">
             <h2 className="account__title">Account</h2>
             <ol>
               <li

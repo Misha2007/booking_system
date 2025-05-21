@@ -131,4 +131,8 @@
   .tour p {
     display: none;
   }
+
+  .tour h3 {
+    line-height: normal;
+  }
 }

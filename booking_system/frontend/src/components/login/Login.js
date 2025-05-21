@@ -101,7 +101,9 @@ const Login = (props) => {
             />
             <label htmlFor="remember_me">Remember me</label>
           </div>
-          <a href="#">Forgot password?</a>
+          <p>
+            <a href="#">Forgot password?</a>
+          </p>
         </div>
 
         <button type="submit" className="login_button">

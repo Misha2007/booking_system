@@ -130,7 +130,12 @@ const Trip = (props) => {
             <label htmlFor="peopleNumber">Number of People</label>
             <div className="select">
               <i className="fa fa-user"></i>
-              <select id="peopleNumber" name="peopleNumber" defaultValue="">
+              <select
+                id="peopleNumber"
+                name="peopleNumber"
+                defaultValue=""
+                required
+              >
                 <option value="" disabled>
                   Select Number of People
                 </option>
@@ -148,7 +153,7 @@ const Trip = (props) => {
             <label htmlFor="roomType">Room Type</label>
             <div className="select">
               <i className="fa fa-bed"></i>
-              <select id="roomType" name="roomType" defaultValue="">
+              <select id="roomType" name="roomType" defaultValue="" required>
                 <option value="" disabled>
                   Select Room Type
                 </option>
