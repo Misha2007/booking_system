@@ -1,0 +1,48 @@
+.benefits-page {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 24px;
+}
+
+.benefits-title {
+  text-align: center;
+  margin-bottom: 32px;
+  font-size: 2.2rem;
+  color: #2d3748;
+}
+
+.benefits-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+.account-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 32px 24px;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.2s;
+}
+
+.account-card:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+}
+
+.card-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #1a202c;
+}
+
+.card-description {
+  font-size: 1rem;
+  color: #4a5568;
+  margin: 0;
+}

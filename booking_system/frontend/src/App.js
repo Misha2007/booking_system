@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Countries from "./components/countries/Countries";
 import Result from "./components/countries/Result";
 import Hotel from "./components/hotels/Hotel";
+import Benefits from "./components/benefits/Benefits";
 import NotFound from "./components/UI/NotFound";
 // import PaymentPage from "./components/payment/PaymentPage";
 // import { loadStripe } from "@stripe/stripe-js";
@@ -28,6 +29,7 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/account" element={<Account />} />
           <Route path="/contries" element={<Countries />} />
+          <Route path="/benefits" element={<Benefits />} />
           <Route path="/result/:countryName" element={<Result />} />
           <Route path="/hotel/:hotelId" element={<Hotel />} />
           <Route path="*" element={<NotFound />} />
