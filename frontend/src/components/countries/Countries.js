@@ -9,23 +9,9 @@ const Countries = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const query = new URLSearchParams(location.search);
-  const searchQuery = query.get("q") || "";
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
 
-  const [search, setSearch] = useState(searchQuery);
-
-  // setCountries([
-  //   "United States",
-  //   "Canada",
-  //   "Brazil",
-  //   "United Kingdom",
-  //   "Germany",
-  //   "France",
-  //   "Japan",
-  //   "India",
-  //   "Australia",
-  //   "South Africa",
-  // ]);
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -42,8 +28,9 @@ const Countries = () => {
         ];
 
         setCountries(uniqueCountries);
+        setResults(uniqueCountries);
       } catch (error) {
-        console.error("Error fetching hotels:", error);
+        console.error("Error fetching countries:", error);
       }
     };
 
@@ -57,8 +44,13 @@ const Countries = () => {
   // );
 
   const handleSearch = (e) => {
-    e.preventDefault();
-    navigate(`?q=${encodeURIComponent(search)}`);
+    const value = e.target.value;
+    setQuery(value);
+
+    const filtered = countries.filter(
+      (item) => item && item.toLowerCase().includes(value.toLowerCase())
+    );
+    setResults(filtered);
   };
 
   return (
@@ -66,29 +58,29 @@ const Countries = () => {
       <div className="form-countries-full">
         <div className="form-room">
           <ul className="chart">
-            <form onSubmit={handleSearch} className="topic-detail-form">
+            <div className="topic-detail-form">
               <button type="submit" className="search-button">
                 <i className="fa fa-search"></i>
               </button>
               <input
                 type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={query}
+                onChange={handleSearch}
                 placeholder="Search countries..."
                 id="search-form-topics"
               />
-            </form>
+            </div>
 
             <div className="topic_block">
               <li>
                 <Link to="/search" className="topic">
-                  <span style={{ fontWeight: search ? "normal" : "bold" }}>
+                  <span style={{ fontWeight: query ? "normal" : "bold" }}>
                     All
                   </span>
                 </Link>
               </li>
               <hr />
-              {countries.map((country) => (
+              {results.map((country) => (
                 <div className="topic_block" key={country}>
                   <li>
                     <Link

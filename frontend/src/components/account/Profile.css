@@ -96,16 +96,6 @@ li .fa {
   cursor: pointer;
 }
 
-@media (any-pointer: coarse) {
-  .tab-container {
-    display: none;
-  }
-
-  .field {
-    grid-template-columns: 1fr;
-  }
-}
-
 .chevron {
   display: none;
 }
@@ -160,7 +150,6 @@ li .fa {
     width: 95vw;
     margin: 16px auto;
     border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     padding: 20px 10px;
     height: auto;
     max-width: 500px;
@@ -237,10 +226,10 @@ li .fa {
   }
 
   .profile {
-    width: 95vw;
+    width: 85vw;
     margin: 16px auto;
     border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: none;
     padding: 20px 10px;
     height: auto;
     max-width: 500px;
@@ -263,5 +252,13 @@ li .fa {
   .open-section-card {
     z-index: 1;
     position: relative;
+  }
+
+  li {
+    margin: 20px;
+  }
+
+  .account-sections-container {
+    display: flex;
   }
 }

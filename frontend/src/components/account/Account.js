@@ -35,12 +35,6 @@ const sections = [
     component: <FavouritedTrips />,
   },
   {
-    key: "viewedTours",
-    icon: "fa-history",
-    label: "Viewed tours",
-    component: <p>Viewed tours content here</p>,
-  },
-  {
     key: "settings",
     icon: "fa-cog",
     label: "Settings",
@@ -71,7 +65,11 @@ const Account = () => {
               {sections.map((section) => (
                 <li
                   key={section.key}
-                  className={openSection === section.key ? "active" : ""}
+                  className={
+                    openSection === section.key
+                      ? "active account-sections-container"
+                      : "account-sections-container"
+                  }
                   onClick={() =>
                     isMobile
                       ? setOpenSection(
@@ -81,8 +79,10 @@ const Account = () => {
                   }
                   style={{ cursor: "pointer" }}
                 >
-                  <i className={`fa ${section.icon}`}></i>
-                  {section.label}
+                  <div>
+                    <i className={`fa ${section.icon}`}></i>
+                    {section.label}{" "}
+                  </div>
                   {isMobile && (
                     <span className="chevron" style={{ marginLeft: "auto" }}>
                       {openSection === section.key ? "▲" : "▼"}
