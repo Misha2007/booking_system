@@ -8,6 +8,7 @@ import hotelRoutes from "./routes/hotel.js";
 import countryRoutes from "./routes/country.js";
 import tripRoutes from "./routes/trip.js";
 import paymentRoutes from "./routes/payment.js";
+import { swaggerSpec, swaggerUi } from "./swagger.js";
 
 dotenv.config();
 
@@ -27,6 +28,8 @@ app.use("/trips", tripRoutes);
 app.use("/payment", paymentRoutes);
 
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 sequelize
   .authenticate()
