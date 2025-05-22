@@ -74,6 +74,7 @@ const Settings = () => {
             <option value="es">Spanish</option>
             <option value="fr">French</option>
             <option value="de">German</option>
+            <option value="ee">Estonian</option>
           </select>
           <p className="language-note">Language switching in the works</p>
         </div>

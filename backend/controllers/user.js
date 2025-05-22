@@ -1,5 +1,6 @@
 import * as bcrypt from "bcrypt";
 import Clients from "../models/clients.js";
+import Trip from "../models/trip.js";
 import jwt from "jsonwebtoken";
 import authConfig from "../config/auth.config.js";
 import "../util/db.js";
@@ -160,14 +161,19 @@ class userController {
 
   deleteUser = async (req, res) => {
     try {
-      const clientId = req.user.clientId;
+      const clientId = req.user?.clientId || req.user?.id;
       if (!clientId) {
         return res.status(400).json({ message: "User not authenticated" });
       }
+
+      // Delete all trips for this user
+      await Trip.destroy({
+        where: { clientId }
+      });
+
+      // Delete the user
       const deletedRows = await Clients.destroy({
-        where: {
-          clientId: clientId,
-        },
+        where: { clientId }
       });
 
       if (deletedRows === 0) {
