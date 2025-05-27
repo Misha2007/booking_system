@@ -50,6 +50,21 @@ const Profile = () => {
         );
 
         if (!response.ok) {
+          const errorData = await response.json();
+          if (
+            response.status === 401 &&
+            errorData.message &&
+            errorData.message.toLowerCase().includes("expired")
+          ) {
+            localStorage.removeItem("authToken");
+
+            navigate(
+              "/login" +
+                (errorData.message ? `?error=${errorData.message}` : "")
+            );
+
+            return;
+          }
           setError({
             title: "Problems with backend",
             message: "Failed to fetch user data",

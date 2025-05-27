@@ -12,8 +12,6 @@ class tripController {
       const { departureDate, arrivalDate, clientId, hotelId, regionId } =
         req.body;
 
-      console.log(models.Trip);
-
       const newTrip = await models.Trip.create({
         clientId,
         departureDate,

@@ -24,7 +24,6 @@ class countryController {
       models.Region.findOne({
         where: { countryName: req.params.country },
       }).then((region) => {
-        console.log(region.regionId);
         models.Region.findByPk(region.regionId, {
           include: [
             {
@@ -34,7 +33,6 @@ class countryController {
           ],
         })
           .then((hotels) => {
-            console.log(hotels);
             res.status(200).json({ hotels });
           })
           .catch((error) => {

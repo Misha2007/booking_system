@@ -1,7 +1,7 @@
 import Login from "./Login";
 import { useState, useEffect } from "react";
 import Register from "./Register";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Error from "../UI/Error";
 import data_file from "../../data.json";
 
@@ -10,6 +10,15 @@ const LoginBlock = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [token, setToken] = useState("");
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const errorMsg = params.get("error");
+    if (errorMsg) {
+      setError({ message: errorMsg });
+    }
+  }, [location.search]);
 
   const toggleLogin = () => {
     setLogin((prev) => !prev);
@@ -33,8 +42,9 @@ const LoginBlock = () => {
             },
           }
         );
-        console.log("sad");
-        localStorage.setItem("authToken", response.token);
+        const data = await response.json();
+        console.log("Response Data:", data.accessToken);
+        localStorage.setItem("authToken", data.accessToken);
         if (!response.ok) {
           const errorMessage = await response.text();
           setError({
@@ -43,7 +53,7 @@ const LoginBlock = () => {
           });
           return;
         }
-        console.log(error);
+        navigate("/account");
       } catch (error) {
         console.log(error);
         setError({
@@ -71,7 +81,6 @@ const LoginBlock = () => {
           }
         );
         const data = await response.json();
-        console.log("Response Data:", data.accessToken);
         localStorage.setItem("authToken", data.accessToken);
 
         if (!response.ok) {
