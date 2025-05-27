@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import Error from "../UI/Error";
 import Calendar from "../UI/Calendar";
+import data_file from "../../data.json";
 import { FaUsers } from "react-icons/fa";
 
 const Trip = (props) => {
@@ -12,6 +13,26 @@ const Trip = (props) => {
   const [selectedDateFrom, setSelectedDateFrom] = useState(null);
   const [selectedDateTo, setSelectedDateTo] = useState(null);
   const [calendarOpen, setCalendarOpen] = useState(false);
+
+  const [rooms, setRooms] = useState([]);
+  const [selectedRoom, setSelectedRoom] = useState("");
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await fetch(
+          `http://${data_file.ip}:${data_file.port}/rooms/hotel/${props.hotel.hotelId}`
+        );
+        const data = await response.json();
+        setRooms(data);
+      } catch (err) {
+        setRooms([]);
+      }
+    }
+    if (props.hotel && props.hotel.hotelId) {
+      fetchRooms();
+    }  
+  }, [props.hotel]); 
 
   useEffect(() => {
     if (!selectedDateFrom && !selectedDateTo) {
@@ -148,24 +169,30 @@ const Trip = (props) => {
             </div>
           </div>
 
-          {/* Room Type */}
-          <div>
-            <label htmlFor="roomType">Room Type</label>
-            <div className="select">
-              <i className="fa fa-bed"></i>
-              <select id="roomType" name="roomType" defaultValue="" required>
-                <option value="" disabled>
-                  Select Room Type
-                </option>
-                <option value="single">Single Room</option>
-                <option value="double">Double Room</option>
-                <option value="suite">Suite</option>
-                <option value="family">Family Room</option>
+          {/* Room Selection */}
+            <div>
+              <label htmlFor="roomSelect">Room</label>
+              <div className="select">
+                <i className="fa fa-bed"></i>
+                <select
+                  id="roomSelect"
+                  name="roomSelect"
+                  value={selectedRoom}
+                  onChange={(e) => setSelectedRoom(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    {rooms.length === 0 ? "No rooms available" : "Select Room"}
+                  </option>
+                  {rooms.map((room) => (
+                    <option key={room.Room} value={room.Room}>
+                      {room.roomName || `Room ${room.Room}`} - {room.roomType}
+                    </option>
+                ))}
               </select>
             </div>
           </div>
         </div>
-
         {calendarOpen ? <Calendar calendarHandler={calendarHandler} /> : ""}
 
         <div className="t-price">

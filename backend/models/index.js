@@ -52,6 +52,7 @@ import Hotel from "./hotel.js";
 import Region from "./region.js";
 import Trip from "./trip.js";
 import Clients from "./clients.js";
+import Room from "./room.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -63,6 +64,7 @@ db.Hotel = Hotel;
 db.Region = Region;
 db.Trip = Trip;
 db.Clients = Clients;
+db.Room = Room;
 
 // Käivita assotsiatsioonid
 Object.keys(db).forEach((modelName) => {

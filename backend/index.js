@@ -8,6 +8,7 @@ import hotelRoutes from "./routes/hotel.js";
 import countryRoutes from "./routes/country.js";
 import tripRoutes from "./routes/trip.js";
 import paymentRoutes from "./routes/payment.js";
+import roomRoutes from "./routes/room.js";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use("/", hotelRoutes);
 app.use("/countries", countryRoutes);
 app.use("/trips", tripRoutes);
 app.use("/payment", paymentRoutes);
+app.use("/rooms", roomRoutes);
 
 app.use(express.urlencoded({ extended: true }));
 
