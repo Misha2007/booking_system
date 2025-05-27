@@ -86,7 +86,7 @@ const Result = (props) => {
         hotelId: hotel.hotelId,
         arrivalDate: tripData.arrivalDate,
         departureDate: tripData.departureDate,
-        roomType: tripData.departureDate,
+        roomId: tripData.roomId,
         numberOfGuests: tripData.numberOfGuests,
       };
 

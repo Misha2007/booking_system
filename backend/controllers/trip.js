@@ -8,14 +8,16 @@ class tripController {
   }
 
   createTrip = async (req, res) => {
+    console.log("Req body222:", req.body);
     try {
-      const { departureDate, arrivalDate, clientId, hotelId, regionId } =
+      const { departureDate, arrivalDate, clientId, hotelId, regionId, roomId } =
         req.body;
 
       const newTrip = await models.Trip.create({
         clientId,
         departureDate,
         arrivalDate,
+        roomId,
         hotelId,
         regionId,
         metadata: {

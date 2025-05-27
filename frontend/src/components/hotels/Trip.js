@@ -1,7 +1,7 @@
-// import "./Login.css";
 import { useState, useRef, useEffect } from "react";
 import Error from "../UI/Error";
 import Calendar from "../UI/Calendar";
+import data_file from "../../data.json";
 import { FaUsers } from "react-icons/fa";
 
 const Trip = (props) => {
@@ -12,6 +12,36 @@ const Trip = (props) => {
   const [selectedDateFrom, setSelectedDateFrom] = useState(null);
   const [selectedDateTo, setSelectedDateTo] = useState(null);
   const [calendarOpen, setCalendarOpen] = useState(false);
+
+  const [rooms, setRooms] = useState([]);
+  const [selectedRoom, setSelectedRoom] = useState("");
+
+  useEffect(() => {
+    const fetchAvailableRooms = async () => {
+      if (
+        !props.hotel ||
+        !props.hotel.hotelId ||
+        !selectedDateFrom ||
+        !selectedDateTo
+      ) {
+        setRooms([]);
+        return;
+      }
+      // Format dates as YYYY-MM-DD
+      const from = `2025-${String(selectedDateFrom.month + 1).padStart(2, "0")}-${String(selectedDateFrom.day).padStart(2, "0")}`;
+      const to = `2025-${String(selectedDateTo.month + 1).padStart(2, "0")}-${String(selectedDateTo.day).padStart(2, "0")}`;
+      try {
+        const response = await fetch(
+          `http://${data_file.ip}:${data_file.port}/rooms/hotel/${props.hotel.hotelId}/available?from=${from}&to=${to}`
+        );
+        const data = await response.json();
+        setRooms(data);
+      } catch (err) {
+        setRooms([]);
+      }
+    };
+    fetchAvailableRooms();
+  }, [props.hotel, selectedDateFrom, selectedDateTo]);
 
   useEffect(() => {
     if (!selectedDateFrom && !selectedDateTo) {
@@ -77,9 +107,18 @@ const Trip = (props) => {
       return;
     }
 
+    if (!selectedRoom) {
+      setError({
+        title: "Missing Information",
+        message: "Please select a room.",
+      });
+      return;
+    }
+
     const tripData = {
       departureDate,
       arrivalDate,
+      roomId: Number(selectedRoom), // <-- include selected room
     };
 
     console.log(tripData);
@@ -148,24 +187,30 @@ const Trip = (props) => {
             </div>
           </div>
 
-          {/* Room Type */}
+          {/* Room Selection */}
           <div>
-            <label htmlFor="roomType">Room Type</label>
+            <label htmlFor="roomSelect">Room</label>
             <div className="select">
               <i className="fa fa-bed"></i>
-              <select id="roomType" name="roomType" defaultValue="" required>
+              <select
+                id="roomSelect"
+                name="roomSelect"
+                value={selectedRoom}
+                onChange={(e) => setSelectedRoom(e.target.value)}
+                required
+              >
                 <option value="" disabled>
-                  Select Room Type
+                  {rooms.length === 0 ? "No rooms available" : "Select Room"}
                 </option>
-                <option value="single">Single Room</option>
-                <option value="double">Double Room</option>
-                <option value="suite">Suite</option>
-                <option value="family">Family Room</option>
+                {rooms.map((room) => (
+                  <option key={room.Room} value={room.Room}>
+                    {room.roomName || `Room ${room.Room}`} - {room.roomType}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
         </div>
-
         {calendarOpen ? <Calendar calendarHandler={calendarHandler} /> : ""}
 
         <div className="t-price">
