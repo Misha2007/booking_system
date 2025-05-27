@@ -61,21 +61,29 @@ class userController {
 
         // Create the new user with the hashed password
         Clients.create({
-          firstName: name, // Assuming 'firstName' is used for name in your model
+          firstName: name,
           email: email,
-          password: hash, // Pass the hashed password to the database
+          password: hash,
         })
           .then((newUser) => {
-            // Send back the successful response
+            // Generate token immediately after signup
+            const token = jwt.sign(
+              { clientId: newUser.clientId },
+              authConfig.secret,
+              { expiresIn: "2h" } // or your preferred expiration
+            );
+
+            // Send back user data and token
             res.status(201).json({
               message: "Created new user",
               newUser: newUser,
+              accessToken: token,
             });
+
             console.log(newUser);
             console.log(`[Server]: ${newUser.firstName} signed up`);
           })
           .catch((err) => {
-            // Handle errors from Sequelize
             res
               .status(500)
               .json({ message: "Error creating user", error: err.message });
@@ -112,10 +120,8 @@ class userController {
             const token = jwt.sign(
               { clientId: newUser.clientId },
               authConfig.secret,
-              {
-                noTimestamp: true,
-                expiresIn: "2h",
-              }
+
+              { expiresIn: "2h" }
             );
 
             console.log("login user token", newUser.clientId);

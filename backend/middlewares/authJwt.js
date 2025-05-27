@@ -16,17 +16,12 @@ export const verifyToken = async (req, res, next) => {
   }
 
   try {
-    // Decode the JWT token
-
     const decoded = jwt.verify(token.replace("Bearer ", ""), authConfig.secret);
-    //const decoded = jwt.verify(token, authConfig.secret);
     console.log("Decoded JWT:", decoded);
 
-    // Assign the decoded user ID to req.user
-    req.user = req.user || {}; // Initialize req.user if it doesn't exist
-    req.user.clientId = decoded.clientId; // Set the user ID from decoded JWT
+    req.user = req.user || {};
+    req.user.clientId = decoded.clientId;
 
-    // Fetch the user (client) from the database
     const user = await Clients.findByPk(req.user.clientId);
     console.log("Found user:", user);
 
@@ -34,12 +29,16 @@ export const verifyToken = async (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized! User not found" });
     }
 
-    // Assign the found user to req.user
-    req.user = user; // Add the found user to the req object
+    req.user = user;
     console.log("[Server]: User added to req object:", req.user);
 
-    next(); // Proceed to the next middleware or route handler
+    next();
   } catch (err) {
+    if (err.name === "TokenExpiredError") {
+      return res
+        .status(401)
+        .json({ message: "Token expired. Please log in again." });
+    }
     return res
       .status(401)
       .json({ message: "Unauthorized!", error: err.message });
