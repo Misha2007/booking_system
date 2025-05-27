@@ -166,7 +166,7 @@ This project is open-source and available under the [MIT License](LICENSE).
 
 MIT License
 
-Copyright (c) 2025 Mykhailo Drogovoz && Rasmo Kiin
+Copyright (c) 2025 Misha2007
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

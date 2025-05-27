@@ -123,7 +123,6 @@ class payment {
       const finalizedInvoice = await stripe.invoices.finalizeInvoice(
         invoice_id
       );
-      console.log(finalizedInvoice);
       return finalizedInvoice;
     } catch (error) {
       console.error("Error finalizing invoice:", error);
@@ -160,7 +159,6 @@ class payment {
       // });
 
       const customer_id = customer.id;
-      console.log(amount);
 
       // Step 1: Create an invoice
       const invoice = await this.createInvoice(customer_id);
