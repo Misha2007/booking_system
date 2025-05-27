@@ -28,14 +28,20 @@ const Trip = (props) => {
         return;
       }
       // Format dates as YYYY-MM-DD
-      const from = `2025-${String(selectedDateFrom.month + 1).padStart(2, "0")}-${String(selectedDateFrom.day).padStart(2, "0")}`;
-      const to = `2025-${String(selectedDateTo.month + 1).padStart(2, "0")}-${String(selectedDateTo.day).padStart(2, "0")}`;
+      const from = `${String(selectedDateFrom.month + 1).padStart(
+        2,
+        "0"
+      )}-${String(selectedDateFrom.day).padStart(2, "0")}-2025`;
+      const to = `${String(selectedDateTo.month + 1).padStart(2, "0")}-${String(
+        selectedDateTo.day
+      ).padStart(2, "0")}-2025`;
       try {
         const response = await fetch(
           `http://${data_file.ip}:${data_file.port}/rooms/hotel/${props.hotel.hotelId}/available?from=${from}&to=${to}`
         );
         const data = await response.json();
         setRooms(data);
+        console.log(data);
       } catch (err) {
         setRooms([]);
       }
@@ -82,14 +88,17 @@ const Trip = (props) => {
 
     const departureDate = new Date(
       2025,
-      selectedDateFrom.month - 1,
+      selectedDateFrom.month,
       selectedDateFrom.day
     );
     const arrivalDate = new Date(
       2025,
-      selectedDateTo.month - 1,
+      selectedDateTo.month,
       selectedDateTo.day
     );
+
+    console.log(departureDate);
+    console.log(arrivalDate);
 
     if (!departureDate || !arrivalDate) {
       setError({
