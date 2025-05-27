@@ -33,7 +33,6 @@ const LoginBlock = () => {
             },
           }
         );
-        console.log("sad");
         localStorage.setItem("authToken", response.token);
         if (!response.ok) {
           const errorMessage = await response.text();

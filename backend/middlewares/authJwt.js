@@ -36,7 +36,7 @@ export const verifyToken = async (req, res, next) => {
 
     // Assign the found user to req.user
     req.user = user; // Add the found user to the req object
-    console.log("User added to req object:", req.user);
+    console.log("[Server]: User added to req object:", req.user);
 
     next(); // Proceed to the next middleware or route handler
   } catch (err) {

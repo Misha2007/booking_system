@@ -9,7 +9,6 @@ class hotelController {
   getHotels = async (req, res) => {
     try {
       const hotels = await Hotel.findAll();
-      console.log(hotels);
 
       if (!hotels) {
         return res.status(404).json({ message: "Hotels not found" });

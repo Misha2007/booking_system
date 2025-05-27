@@ -40,6 +40,9 @@ class userController {
     const email = req.body.email;
     const password = req.body.password;
 
+    if (name == null || email == null || password == null) {
+      return res.status(400).json({ message: "Fill all required fields" });
+    }
     // Use bcrypt to hash the password first
     bcrypt.genSalt(saltRounds, (err, salt) => {
       if (err) {
@@ -64,7 +67,7 @@ class userController {
         })
           .then((newUser) => {
             // Send back the successful response
-            res.json({
+            res.status(201).json({
               message: "Created new user",
               newUser: newUser,
             });
@@ -82,10 +85,17 @@ class userController {
   }
 
   getUser(req, res) {
-    console.log("Found user: ");
+    if (req.body.email == null || req.body.password == null) {
+      return res.status(400).json({ message: "Fill all required fields" });
+    }
+
     const project = Clients.findOne({ where: { email: req.body.email } }).then(
       (newUser) => {
-        console.log(newUser);
+        if (!newUser) {
+          return res.status(404).json({
+            error: "User not found",
+          });
+        }
 
         const storedHashedPassword = newUser.password;
         const userInputPassword = req.body.password;
@@ -104,7 +114,7 @@ class userController {
               authConfig.secret,
               {
                 noTimestamp: true,
-                expiresIn: 86400,
+                expiresIn: "2h",
               }
             );
 
@@ -118,7 +128,7 @@ class userController {
               });
             } else {
               console.log("[Server]: Passwords do not match! Auth failed.");
-              res.status(500).send("Passwords dont match");
+              res.status(401).send("Invalid credentials");
             }
           }
         );
@@ -128,6 +138,15 @@ class userController {
 
   editUser = async (req, res) => {
     try {
+      if (
+        (req.body.phoneNumber && typeof req.body.phoneNumber !== "number") ||
+        (req.body.firstName && typeof req.body.firstName !== "string") ||
+        (req.body.email && typeof req.body.email !== "string") ||
+        (req.body.lastName && typeof req.body.lastName !== "string")
+      ) {
+        return res.status(400).json({ error: "Invalid types of data" });
+      }
+
       const updatedRows = await Clients.update(
         {
           firstName: req.body.firstName,
@@ -168,12 +187,12 @@ class userController {
 
       // Delete all trips for this user
       await Trip.destroy({
-        where: { clientId }
+        where: { clientId },
       });
 
       // Delete the user
       const deletedRows = await Clients.destroy({
-        where: { clientId }
+        where: { clientId },
       });
 
       if (deletedRows === 0) {

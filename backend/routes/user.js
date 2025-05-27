@@ -141,6 +141,34 @@ const router = Router();
  *               properties:
  *                 accessToken:
  *                   type: string
+ *       400:
+ *         description: Bad Request – Missing or invalid fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       401:
+ *         description: Unauthorized – Invalid credentials
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *
+ *       404:
+ *         description: Not Found – User does not exist
+ *         content:
+ *           application/json:
+ *              schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                    type: string
  *
  * /user/new-user:
  *   post:
@@ -163,14 +191,23 @@ const router = Router();
  *               password:
  *                 type: string
  *     responses:
- *       200:
- *         description: Successful login, returns JWT token
+ *       201:
+ *         description: User successfully created
+ *         content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  message:
+ *                    type: string
+ *       400:
+ *         description: Bad Request – Missing or invalid fields
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 accessToken:
+ *                 error:
  *                   type: string
  *
  *
@@ -199,13 +236,22 @@ const router = Router();
  *                 type: number
  *     responses:
  *       200:
- *         description: Successful login, returns JWT token
+ *         description: User successful updated
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 accessToken:
+ *                   type: string
+ *       400:
+ *         description: Bad Request – Missing or invalid fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
  *                   type: string
  *
  * /user/delete:
@@ -216,7 +262,7 @@ const router = Router();
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Delete account
+ *         description: Account was deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -234,12 +280,17 @@ router.patch("/profile/edit", verifyToken, (req, res) => {
   UserController.editUser(req, res);
 });
 
-router.delete("/delete", (req, res, next) => {
-  console.log("DELETE /user/delete route hit");
-  next();
-}, verifyToken, (req, res) => {
-  console.log("verifyToken passed");
-  UserController.deleteUser(req, res);
-});
+router.delete(
+  "/delete",
+  (req, res, next) => {
+    console.log("DELETE /user/delete route hit");
+    next();
+  },
+  verifyToken,
+  (req, res) => {
+    console.log("verifyToken passed");
+    UserController.deleteUser(req, res);
+  }
+);
 
 export default router;
