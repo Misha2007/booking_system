@@ -51,6 +51,14 @@ Trip.init(
         key: "clientId",
       },
     },
+    roomId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Rooms",
+        key: "Room",
+      },
+    }, 
   },
   {
     sequelize,
