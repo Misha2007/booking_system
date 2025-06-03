@@ -11,12 +11,21 @@ class userController {
   }
 
   getUserProfile = async (req, res) => {
+    let user;
     try {
-      const user = await Clients.findOne({
-        where: {
-          clientId: req.user.clientId,
-        },
-      });
+      if (req.params.clientId) {
+        user = await Clients.findOne({
+          where: {
+            clientId: req.params.clientId,
+          },
+        });
+      } else {
+        user = await Clients.findOne({
+          where: {
+            clientId: req.user.clientId,
+          },
+        });
+      }
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -39,49 +48,54 @@ class userController {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
+    const role = req.body.role || "client";
+    const lastName = req.body.lastName || null;
+    const phoneNumber = req.body.number || null;
 
-    if (name == null || email == null || password == null) {
+    console.log(req.body.role);
+
+    if (!name || !email || !password) {
       return res.status(400).json({ message: "Fill all required fields" });
     }
-    // Use bcrypt to hash the password first
+
+    if (req.user && req.user.role !== "admin" && role !== "client") {
+      return res.status(403).json({ message: "Only admins can assign roles" });
+    }
+
     bcrypt.genSalt(saltRounds, (err, salt) => {
       if (err) {
         return res.status(500).json({ message: "Error generating salt" });
       }
-      console.log(
-        "[Server]: Salt generation successful, proceeding to hash the password"
-      );
 
       bcrypt.hash(password, salt, (err, hash) => {
         if (err) {
           return res.status(500).json({ message: "Error hashing password" });
         }
 
-        console.log("[Server]: Hashed password:", hash);
-
-        // Create the new user with the hashed password
         Clients.create({
           firstName: name,
           email: email,
           password: hash,
+          role: role,
+          lastName: lastName,
+          phoneNumber: phoneNumber,
         })
           .then((newUser) => {
-            // Generate token immediately after signup
             const token = jwt.sign(
-              { clientId: newUser.clientId },
+              { clientId: newUser.clientId, role: newUser.role },
               authConfig.secret,
-              { expiresIn: "2h" } // or your preferred expiration
+              { expiresIn: "2h" }
             );
 
-            // Send back user data and token
             res.status(201).json({
               message: "Created new user",
               newUser: newUser,
               accessToken: token,
             });
 
-            console.log(newUser);
-            console.log(`[Server]: ${newUser.firstName} signed up`);
+            console.log(
+              `[Server]: ${newUser.firstName} (${newUser.role}) signed up`
+            );
           })
           .catch((err) => {
             res
@@ -118,7 +132,7 @@ class userController {
             }
 
             const token = jwt.sign(
-              { clientId: newUser.clientId },
+              { clientId: newUser.clientId, role: newUser.role },
               authConfig.secret,
 
               { expiresIn: "2h" }
@@ -143,6 +157,7 @@ class userController {
   }
 
   editUser = async (req, res) => {
+    let updatedRows;
     try {
       if (
         (req.body.phoneNumber && typeof req.body.phoneNumber !== "number") ||
@@ -153,29 +168,53 @@ class userController {
         return res.status(400).json({ error: "Invalid types of data" });
       }
 
-      const updatedRows = await Clients.update(
-        {
-          firstName: req.body.firstName,
-          lastName: req.body.lastName || null,
-          email: req.body.email,
-          phoneNumber: req.body.phoneNumber || null,
-        },
-        {
-          where: {
-            clientId: req.user.clientId,
+      if (req.params.clientId) {
+        updatedRows = await Clients.update(
+          {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName || null,
+            email: req.body.email,
+            phoneNumber: req.body.phoneNumber || null,
           },
-        }
-      );
+          {
+            where: {
+              clientId: req.params.clientId,
+            },
+          }
+        );
+      } else {
+        updatedRows = await Clients.update(
+          {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName || null,
+            email: req.body.email,
+            phoneNumber: req.body.phoneNumber || null,
+          },
+          {
+            where: {
+              clientId: req.user.clientId,
+            },
+          }
+        );
+      }
 
       if (updatedRows[0] === 0) {
         return res.status(404).json({ message: "User not found" });
       }
 
-      const updatedUser = await Clients.findOne({
-        where: {
-          clientId: req.user.clientId,
-        },
-      });
+      if (req.params.clientId) {
+        const updatedUser = await Clients.findOne({
+          where: {
+            clientId: req.params.clientId,
+          },
+        });
+      } else {
+        const updatedUser = await Clients.findOne({
+          where: {
+            clientId: req.user.clientId,
+          },
+        });
+      }
 
       res.json({ message: "User updated successfully" });
     } catch (err) {
@@ -185,8 +224,13 @@ class userController {
   };
 
   deleteUser = async (req, res) => {
+    let clientId;
     try {
-      const clientId = req.user?.clientId || req.user?.id;
+      if (req.params.clientId) {
+        clientId = req.params.clientId;
+      } else {
+        clientId = req.user?.clientId || req.user?.id;
+      }
       if (!clientId) {
         return res.status(400).json({ message: "User not authenticated" });
       }
@@ -206,6 +250,24 @@ class userController {
       }
 
       res.json({ message: "User deleted successfully" });
+    } catch (err) {
+      console.error("Error deleting user:", err);
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
+  };
+
+  getAllUsers = async (req, res) => {
+    try {
+      // Delete the user
+      const allUsers = await Clients.findAll();
+
+      if (allUsers === 0) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      console.log(allUsers);
+
+      res.json({ users: allUsers });
     } catch (err) {
       console.error("Error deleting user:", err);
       res.status(500).json({ message: "Server error", error: err.message });

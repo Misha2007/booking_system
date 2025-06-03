@@ -18,7 +18,7 @@
   height: 60vh;
 }
 
-li {
+.profile-container li {
   padding: 10px;
   font-size: 28px;
   list-style: none;
@@ -83,7 +83,7 @@ li {
   color: #62896e;
 }
 
-li .fa {
+.profile-container li .fa {
   border-right: 1px solid black;
   padding-right: 10px;
   margin-right: 10px;

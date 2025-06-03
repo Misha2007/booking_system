@@ -1,4 +1,5 @@
-.login-container {
+.login-container,
+.hotel-container {
   background: white;
   width: 50%;
   margin: 0 auto;
@@ -17,7 +18,10 @@
 #user,
 #email,
 #password,
-#passwordConfirm {
+#passwordConfirm,
+#roles,
+#lastName,
+#number {
   border: none;
   border-bottom: #0c2012 1.5px solid;
   margin-bottom: 5px;
@@ -55,6 +59,7 @@ a:hover {
   width: 100%;
   display: flex;
   align-items: center;
+  margin-top: 10px;
 }
 
 .input-container label {
@@ -68,7 +73,8 @@ a:hover {
   pointer-events: none;
 }
 
-.input-container input {
+.input-container input,
+.input-container select {
   width: 100%;
   padding: 15px 10px;
   font-size: 18px;
@@ -77,6 +83,12 @@ a:hover {
   outline: none;
   background: transparent;
   padding-left: 35px; /* Adjust for icon spacing */
+}
+
+.input-container select,
+.input-container select option {
+  font-size: 18px;
+  font-family: "Courier Prime";
 }
 
 .input-container input:focus ~ label,

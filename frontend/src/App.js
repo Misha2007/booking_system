@@ -16,6 +16,12 @@ import NotFound from "./components/UI/NotFound";
 import PaymentWrapper from "./components/payment/PaymentWrapper";
 import SuccessfulPage from "./components/payment/SuccesssfulPage";
 
+import Users from "./components_admin/Users";
+
+import NewUser from "./components_admin/NewUser";
+import AdminHotels from "./components_admin/AdminHotels";
+import NewHotel from "./components_admin/NewHotel";
+
 // const stripePromise = loadStripe(data_file.PUBLIC_KEY);
 
 function App() {
@@ -36,6 +42,10 @@ function App() {
           {/* <Route path="/payment" element={<PaymentPage />} /> */}
           <Route path="/payment" element={<PaymentWrapper />} />
           <Route path="/payment-success" element={<SuccessfulPage />} />
+          <Route path="/admin/users" element={<Users />} />
+          <Route path="/admin/create-user" element={<NewUser />} />
+          <Route path="/admin/hotels" element={<AdminHotels />} />
+          <Route path="/admin/new-hotel" element={<NewHotel />} />
         </Routes>
       </Router>
     </div>

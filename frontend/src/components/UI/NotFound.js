@@ -1,16 +1,32 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./NotFound.css";
-import { useNavigate } from "react-router-dom";
 
 const NotFound = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const got_error = location.state || "404";
+  const got_error_message = location.state || "Page not found.";
+
+  const { error, errorMessage } = location.state || {
+    error: "404",
+    errorMessage: "Page not found.",
+  };
+
+  // const [error, setError] = useState(got_error);
+  // const [errorMessage, setErrorMessage] = useState(got_error_message);
+
+  const handleGoHome = () => {
+    navigate("/");
+  };
 
   return (
     <div className="not-found">
-      <h1>404</h1>
-      <p>Oops! Page not found.</p>
-      <Link to={navigate(-1)}>Go back</Link>
+      <h1>{error} error</h1>
+      <p>Oops! {errorMessage}</p>
+      <button className="go-back-button" onClick={handleGoHome}>
+        Go Home
+      </button>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import { UserController } from "../controllers/user.js";
 import { verifyToken } from "../middlewares/authJwt.js";
+import { rolesSeparator } from "../middlewares/rolesSeparator.js";
 
 const router = Router();
 
@@ -272,6 +273,12 @@ const router = Router();
  */
 
 router.post("/new-user", (req, res) => UserController.createUser(req, res));
+router.post(
+  "/admin/create",
+  verifyToken,
+  rolesSeparator,
+  UserController.createUser
+);
 router.post("/login", (req, res) => UserController.getUser(req, res));
 router.get("/profile", verifyToken, (req, res) => {
   UserController.getUserProfile(req, res);
@@ -289,6 +296,28 @@ router.delete(
   verifyToken,
   (req, res) => {
     console.log("verifyToken passed");
+    UserController.deleteUser(req, res);
+  }
+);
+
+router.get("/admin/getAllUsers", verifyToken, rolesSeparator, (req, res) => {
+  UserController.getAllUsers(req, res);
+});
+
+router.patch(
+  "/admin/edit/:clientId",
+  verifyToken,
+  rolesSeparator,
+  (req, res) => {
+    UserController.editUser(req, res);
+  }
+);
+
+router.delete(
+  "/admin/delete/:clientId",
+  verifyToken,
+  rolesSeparator,
+  (req, res) => {
     UserController.deleteUser(req, res);
   }
 );

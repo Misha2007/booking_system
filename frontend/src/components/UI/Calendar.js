@@ -159,7 +159,7 @@ const Calendar = (props) => {
   const daysArrayNextMonth = getDaysArray(nextMonthYear, nextMonthIndex);
 
   return (
-    <div className="table">
+    <div className="table calendar">
       <div>
         <div id="table-header">
           <div className="arrow" id="prev-month" onClick={prevMonth}>
