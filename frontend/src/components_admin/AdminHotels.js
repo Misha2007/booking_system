@@ -106,7 +106,7 @@ function AdminHotels() {
 
   // Handle adding or editing hotel
   const handleSubmit = (id) => {
-    navigate(`/hotel/${id ? `edit/${id}` : "create"}`);
+    navigate(`/admin/hotel/${id ? `edit/${id}` : "create"}`);
   };
 
   // Handle search term change
@@ -155,7 +155,12 @@ function AdminHotels() {
         </thead>
         <tbody>
           {filteredHotels.map((hotel) => (
-            <tr key={hotel.hotelId}>
+            <tr
+              key={hotel.hotelId}
+              onClick={() => {
+                navigate(`/admin/hotel/${hotel.hotelId}`);
+              }}
+            >
               <td>{hotel.hotelId}</td>
               <td>{hotel.name}</td>
               <td>{hotel.location || "None"}</td>

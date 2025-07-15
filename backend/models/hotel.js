@@ -22,6 +22,10 @@ class Hotel extends Model {
       foreignKey: "regionId",
       as: "region",
     });
+    this.hasMany(models.Room, {
+      foreignKey: "hotelId",
+      as: "rooms",
+    });
   }
 }
 

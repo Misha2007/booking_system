@@ -21,6 +21,7 @@ import Users from "./components_admin/Users";
 import NewUser from "./components_admin/NewUser";
 import AdminHotels from "./components_admin/AdminHotels";
 import NewHotel from "./components_admin/NewHotel";
+import AdminHotel from "./components_admin/Hotel";
 
 // const stripePromise = loadStripe(data_file.PUBLIC_KEY);
 
@@ -45,7 +46,8 @@ function App() {
           <Route path="/admin/users" element={<Users />} />
           <Route path="/admin/create-user" element={<NewUser />} />
           <Route path="/admin/hotels" element={<AdminHotels />} />
-          <Route path="/admin/new-hotel" element={<NewHotel />} />
+          <Route path="/admin/hotel/create" element={<NewHotel />} />
+          <Route path="/admin/hotel/:hotelId" element={<AdminHotel />} />
         </Routes>
       </Router>
     </div>

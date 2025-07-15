@@ -1,5 +1,8 @@
 import Hotel from "../models/hotel.js";
+import Room from "../models/room.js";
 import "../util/db.js";
+import models from "../models/index.js";
+import Region from "../models/region.js";
 
 class hotelController {
   constructor() {
@@ -25,6 +28,25 @@ class hotelController {
     try {
       const hotel = await Hotel.findByPk(req.params.hotelId);
 
+      if (!hotel) {
+        return res.status(404).json({ message: "Hotel not found" });
+      }
+
+      res.json({ hotel: hotel });
+    } catch (err) {
+      console.error("Error fetching hotels data", err);
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
+  };
+
+  getHotelByIdAdmin = async (req, res) => {
+    try {
+      const hotel = await Hotel.findByPk(req.params.hotelId, {
+        include: [
+          { model: Room, as: "rooms" },
+          { model: Region, as: "region" },
+        ],
+      });
       if (!hotel) {
         return res.status(404).json({ message: "Hotel not found" });
       }
