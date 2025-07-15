@@ -4,13 +4,10 @@ import sequelize from "../util/db.js";
 
 class Room extends Model {
   static associate(models) {
-    // Each Room belongs to a Hotel
     this.belongsTo(models.Hotel, {
       foreignKey: "hotelId",
       as: "hotel",
     });
-    // Optionally: RoomType association if you have a RoomType model
-    // this.belongsTo(models.RoomType, { foreignKey: "roomTypeId", as: "roomType" });
   }
 }
 
@@ -37,7 +34,6 @@ Room.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    // Add more fields as needed (e.g., price, capacity)
   },
   {
     sequelize,
