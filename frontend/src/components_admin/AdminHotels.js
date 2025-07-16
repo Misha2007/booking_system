@@ -60,7 +60,7 @@ function AdminHotels() {
   const handleDeleteSubmit = async (id) => {
     try {
       const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/hotels/delete/${id}`, // Ensure this endpoint is correct
+        `http://${data_file.ip}:${data_file.port}/hotels/delete/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -100,7 +100,7 @@ function AdminHotels() {
       console.log(data);
       setHotels(data);
     } catch (error) {
-      setError(error.message); // Set error if the deletion fails
+      setError(error.message);
     }
   };
 

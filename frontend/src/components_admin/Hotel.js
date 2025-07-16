@@ -1,5 +1,5 @@
 import data_file from "../data.json";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./AdminHotel.css";
 
@@ -12,27 +12,89 @@ function AdminHotel() {
   const navigate = useNavigate();
   const storedToken = localStorage.getItem("authToken");
 
+  const [addRoom, setAddRoom] = useState(false);
+  const roomTypeRef = useRef();
+  const roomNameRef = useRef();
+
+  const fetchHotelData = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `http://${data_file.ip}:${data_file.port}/hotel-admin/${hotelId}`
+      );
+      const data = await response.json();
+      setHotel(data.hotel);
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchHotelData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/hotel-admin/${hotelId}`
-        );
-        const data = await response.json();
-        setHotel(data.hotel);
-        setLoading(false);
-      } catch (error) {
-        setError(error);
-        setLoading(false);
-      }
-    };
     if (!storedToken) {
       navigate("/login");
     } else {
       fetchHotelData();
     }
   }, []);
+
+  const handleAddRoom = async (event) => {
+    event.preventDefault();
+
+    const enteredRoomType = roomTypeRef.current?.value || "";
+    const enteredRoomName = roomNameRef.current?.value || "";
+
+    if (!enteredRoomType || !enteredRoomName) {
+      setError(new Error("Missing input fields"));
+      return;
+    }
+
+    const room = {
+      roomType: enteredRoomType,
+      roomName: enteredRoomName,
+      hotelId: hotelId,
+    };
+
+    try {
+      const response = await fetch(
+        `http://${data_file.ip}:${data_file.port}/rooms/hotel/add-room`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authToken: storedToken,
+          },
+          body: JSON.stringify(room),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (
+          response.status === 401 &&
+          errorData.message &&
+          errorData.message.toLowerCase().includes("expired")
+        ) {
+          localStorage.removeItem("authToken");
+          navigate("/login?error=Session expired. Please log in again.");
+          return;
+        }
+        throw new Error("Failed to add room");
+      }
+
+      const data = await response.json();
+
+      await fetchHotelData();
+
+      if (roomTypeRef.current) roomTypeRef.current.value = "";
+      if (roomNameRef.current) roomNameRef.current.value = "";
+
+      setAddRoom(false);
+    } catch (err) {
+      setError(err);
+    }
+  };
 
   return (
     <>
@@ -108,9 +170,37 @@ function AdminHotel() {
                       </p>
                     </div>
                   ))}
-                  <button className="add-room">
-                    <span> Add room</span>{" "}
-                  </button>
+                  {addRoom ? (
+                    <form className="room" onSubmit={handleAddRoom}>
+                      <p>
+                        <strong>Room Type:</strong>{" "}
+                        <input ref={roomTypeRef} type="text" required />
+                      </p>
+                      <p>
+                        <strong>Room Name:</strong>{" "}
+                        <input ref={roomNameRef} type="text" required />
+                      </p>
+                      <div className="add-room-container">
+                        <button
+                          className="add-room cancel"
+                          type="button"
+                          onClick={() => setAddRoom(false)}
+                        >
+                          <span>Cancel</span>
+                        </button>
+                        <button className="add-room" type="submit">
+                          <span>Add Room</span>
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    <button
+                      className="add-room"
+                      onClick={() => setAddRoom(true)}
+                    >
+                      <span>Add Room</span>
+                    </button>
+                  )}
                 </div>
 
                 <div id="region" className="card">

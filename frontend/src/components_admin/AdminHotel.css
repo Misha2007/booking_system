@@ -177,6 +177,26 @@ h1 {
   margin: 0 auto;
 }
 
+.room input {
+  border: none;
+  border-bottom: #d5d8c1 1px solid;
+  background: transparent;
+  color: #d5d8c1;
+  width: 60%;
+}
+
+.room input:focus {
+  outline: none;
+}
+
+.add-room-container {
+  display: flex;
+}
+
+.add-room.cancel {
+  color: #fd7373;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   #admin-hotel {

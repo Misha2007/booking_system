@@ -1,6 +1,7 @@
 import express from "express";
 import db from "../models/index.js";
 import { Op } from "sequelize";
+import { RoomController } from "../controllers/room.js";
 
 const router = express.Router();
 
@@ -66,5 +67,9 @@ router.get("/hotel/:hotelId/available", async (req, res) => {
       .json({ message: "Error fetching available rooms", error: err.message });
   }
 });
+
+router.post("/hotel/add-room", async (req, res) =>
+  RoomController.createRoom(req, res)
+);
 
 export default router;
