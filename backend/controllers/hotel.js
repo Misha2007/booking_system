@@ -3,6 +3,7 @@ import Room from "../models/room.js";
 import "../util/db.js";
 import models from "../models/index.js";
 import Region from "../models/region.js";
+import RoomInfo from "../models/roominfo.js";
 
 class hotelController {
   constructor() {
@@ -43,10 +44,17 @@ class hotelController {
     try {
       const hotel = await Hotel.findByPk(req.params.hotelId, {
         include: [
-          { model: Room, as: "rooms" },
+          { model: RoomInfo, as: "roomInfos" },
           { model: Region, as: "region" },
         ],
       });
+      for (let i = 0; i < hotel.roomInfos.length; i++) {
+        const room = hotel.roomInfos[i];
+        const roomInfo = await RoomInfo.findByPk(room.id, {
+          include: [{ model: Room, as: "room" }],
+        });
+        hotel.roomInfos[i] = roomInfo;
+      }
       if (!hotel) {
         return res.status(404).json({ message: "Hotel not found" });
       }

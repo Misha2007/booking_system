@@ -1,6 +1,9 @@
 import Stripe from "stripe";
 
 import dotenv from "dotenv";
+import RoomInfo from "../models/roominfo.js";
+import Hotel from "../models/hotel.js";
+import Room from "../models/room.js";
 dotenv.config();
 
 const stripe = new Stripe(process.env.secretKey);
@@ -13,28 +16,54 @@ class payment {
   // Handle the payment process
   createPaymentWithLineItems = async (req, res) => {
     try {
-      const { customerEmail, amount, description } = req.body;
+      const { customerEmail, bookingData } = req.body;
 
-      // 1. Create the customer (optional, only if you want to save for future)
       const customer = await stripe.customers.create({
         email: customerEmail,
       });
 
-      // 2. Create a PaymentIntent with metadata to simulate line items
+      const hotelData = await Hotel.findByPk(bookingData.hotelId);
+      const roomInfo = await RoomInfo.findOne({
+        where: {
+          hotelId: bookingData.hotelId,
+          roomId: bookingData.roomId,
+        },
+      });
+
+      if (!roomInfo) {
+        return res
+          .status(404)
+          .json({ error: "Room not found for selected hotel." });
+      }
+
+      const fromDate = new Date(bookingData.departureDate);
+      const toDate = new Date(bookingData.arrivalDate);
+
+      const dayCount =
+        Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24)) || 1;
+
+      const amount = roomInfo.basePrice * dayCount;
+
+      const room = await Room.findByPk(bookingData.roomId);
+      console.log(room);
+
+      const description = `Booking for ${room.roomType} room in ${hotelData.name} - ${dayCount} night(s)`;
+
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount * 100, // in cents
+        amount: Math.round(amount * 100),
         currency: "eur",
         customer: customer.id,
         description: description,
         metadata: {
           product_description: description,
-          source: "manual-line-item",
           email: customerEmail,
+          roomId: bookingData.roomId,
+          hotelId: bookingData.hotelId,
+          numberOfGuests: bookingData.numberOfGuests,
         },
-        receipt_email: customerEmail, // Auto-send receipt
+        receipt_email: customerEmail,
       });
 
-      // 3. Send client_secret to frontend
       res.json({ clientSecret: paymentIntent.client_secret });
     } catch (error) {
       console.error("Error during payment creation:", error);
@@ -55,36 +84,6 @@ class payment {
       });
     }
   };
-
-  // createCheckoutSession = async (req, res) => {
-  //   try {
-  //     // Create a Checkout session
-  //     const session = await stripe.checkout.sessions.create({
-  //       payment_method_types: ["card"], // Type of payment method, e.g., 'card'
-  //       line_items: [
-  //         {
-  //           price_data: {
-  //             currency: "usd", // Currency, e.g., 'usd'
-  //             product_data: {
-  //               name: "Product Name", // The name of the product you're selling
-  //             },
-  //             unit_amount: 1000, // Price in cents, e.g., $10.00
-  //           },
-  //           quantity: 1,
-  //         },
-  //       ],
-  //       mode: "payment", // Indicates it's a one-time payment
-  //       success_url: `http://ip:port/success`, // Success URL after payment
-  //       cancel_url: `http://ip:port/cancel`, // Cancel URL if payment fails
-  //     });
-
-  //     // Return the sessionId to the frontend (clientSecret is not needed here)
-  //     res.json({ sessionId: session.id });
-  //   } catch (error) {
-  //     console.error("Error creating checkout session:", error);
-  //     res.status(500).json({ error: error.message });
-  //   }
-  // };
 
   createInvoice = async (customer_id) => {
     try {

@@ -4,27 +4,19 @@ import sequelize from "../util/db.js";
 
 class Room extends Model {
   static associate(models) {
-    this.belongsTo(models.Hotel, {
-      foreignKey: "hotelId",
-      as: "hotel",
+    this.hasMany(models.RoomInfo, {
+      foreignKey: "roomId",
+      as: "roomInfos",
     });
   }
 }
 
 Room.init(
   {
-    Room: {
+    roomId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-    },
-    hotelId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Hotel",
-        key: "hotelId",
-      },
     },
     roomType: {
       type: DataTypes.STRING,

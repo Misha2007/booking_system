@@ -7,8 +7,9 @@ const router = express.Router();
 
 router.get("/hotel/:hotelId", async (req, res) => {
   try {
-    const rooms = await db.Room.findAll({
+    const rooms = await db.RoomInfo.findAll({
       where: { hotelId: req.params.hotelId },
+      include: [{ model: db.Room, as: "room" }],
     });
     res.json(rooms);
   } catch (err) {
@@ -27,12 +28,16 @@ router.get("/hotel/:hotelId/available", async (req, res) => {
   }
 
   try {
-    const allRooms = await db.Room.findAll({ where: { hotelId } });
-
     const fromDate = new Date(from);
     fromDate.setHours(0, 0, 0, 0);
     const toDate = new Date(to);
     toDate.setHours(23, 59, 59, 999);
+
+    const allRoomInfos = await db.RoomInfo.findAll({
+      where: { hotelId },
+      include: [{ model: db.Room, as: "room" }],
+    });
+
     const bookedTrips = await db.Trip.findAll({
       where: {
         hotelId,
@@ -46,25 +51,31 @@ router.get("/hotel/:hotelId/available", async (req, res) => {
       },
     });
 
-    console.log(from);
+    const roomBookingCounts = {};
+    bookedTrips.forEach((trip) => {
+      const roomId = trip.roomId;
+      roomBookingCounts[roomId] = (roomBookingCounts[roomId] || 0) + 1;
+    });
 
-    console.log("booked trips", bookedTrips);
-    // Make sure both are integers for comparison!
-    const bookedRoomIds = bookedTrips.map((trip) => Number(trip.roomId));
-    console.log("Booked room IDs:", bookedRoomIds);
-    console.log(
-      "All room IDs:",
-      allRooms.map((r) => r.Room)
-    );
-    const availableRooms = allRooms.filter(
-      (room) => !bookedRoomIds.includes(Number(room.Room))
-    );
+    const availabilityInfo = allRoomInfos.map((roomInfo) => {
+      const bookedCount = roomBookingCounts[roomInfo.roomId] || 0;
+      const availableCount = Math.max(0, roomInfo.quantity - bookedCount);
 
-    res.json(availableRooms);
+      return {
+        roomInfoId: roomInfo.id,
+        roomId: roomInfo.roomId,
+        roomType: roomInfo.room?.type,
+        quantity: roomInfo.quantity,
+        available: availableCount,
+        details: roomInfo,
+      };
+    });
+
+    res.json(availabilityInfo);
   } catch (err) {
     res
       .status(500)
-      .json({ message: "Error fetching available rooms", error: err.message });
+      .json({ message: "Error fetching availability", error: err.message });
   }
 });
 

@@ -3,26 +3,37 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert(
-      "Rooms",
+      "RoomPricings",
       [
         {
+          hotelId: 1,
           roomId: 1,
-          roomType: "single",
-          roomName: "Room 101",
+          priceDate: "2025-08-01",
+          price: 85.0,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
+          hotelId: 1,
           roomId: 2,
-          roomType: "double",
-          roomName: "Room 102",
+          priceDate: "2025-08-01",
+          price: 115.0,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
+          hotelId: 2,
           roomId: 3,
-          roomType: "suite",
-          roomName: "Suite A",
+          priceDate: "2025-08-01",
+          price: 180.0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          hotelId: 2,
+          roomId: 3,
+          priceDate: "2025-08-02",
+          price: 185.0,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -32,6 +43,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Rooms", null, {});
+    await queryInterface.bulkDelete("RoomPricings", null, {});
   },
 };

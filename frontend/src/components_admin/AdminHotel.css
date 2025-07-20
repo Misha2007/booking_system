@@ -1,5 +1,5 @@
 /* Admin Title */
-h1 {
+#admin-hotel-wrap h1 {
   text-align: center;
   font-size: 2.5rem;
   color: #948fa4;
@@ -154,6 +154,7 @@ h1 {
 
 #rooms .room {
   padding: 10px 0;
+  position: relative;
 }
 
 .add-room {
@@ -187,6 +188,16 @@ h1 {
 
 .room input:focus {
   outline: none;
+}
+
+.room .fa-trash {
+  color: #fd7373;
+  cursor: pointer;
+  display: flex;
+  justify-content: end;
+  position: absolute;
+  top: 10%;
+  left: 95%;
 }
 
 .add-room-container {

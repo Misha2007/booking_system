@@ -11,7 +11,7 @@ const stripePromise = loadStripe(data_file.PUBLIC_KEY);
 const PaymentWrapper = () => {
   const [clientSecret, setClientSecret] = useState(null);
   const location = useLocation();
-  const { hotel_data, user } = location.state || {};
+  const { bookingData, user } = location.state || {};
 
   useEffect(() => {
     const fetchClientSecret = async () => {
@@ -22,8 +22,7 @@ const PaymentWrapper = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             customerEmail: user.email,
-            amount: hotel_data.price,
-            description: hotel_data.name,
+            bookingData: bookingData,
           }),
         }
       );

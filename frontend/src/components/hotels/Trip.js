@@ -15,6 +15,8 @@ const Trip = (props) => {
 
   const [rooms, setRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState("");
+  const [peopleCount, setPeopleCount] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchAvailableRooms = async () => {
@@ -27,7 +29,9 @@ const Trip = (props) => {
         setRooms([]);
         return;
       }
-      // Format dates as YYYY-MM-DD
+
+      setLoading(true);
+
       const from = `${String(selectedDateFrom.month + 1).padStart(
         2,
         "0"
@@ -35,19 +39,30 @@ const Trip = (props) => {
       const to = `${String(selectedDateTo.month + 1).padStart(2, "0")}-${String(
         selectedDateTo.day
       ).padStart(2, "0")}-2025`;
+
       try {
         const response = await fetch(
           `http://${data_file.ip}:${data_file.port}/rooms/hotel/${props.hotel.hotelId}/available?from=${from}&to=${to}`
         );
         const data = await response.json();
-        setRooms(data);
-        console.log(data);
+
+        // Filter rooms by capacity
+        const filteredRooms =
+          peopleCount === ""
+            ? data
+            : data.filter(
+                (room) => room.details.capacity >= Number(peopleCount)
+              );
+
+        setRooms(filteredRooms);
+        setLoading(false);
       } catch (err) {
         setRooms([]);
       }
     };
+
     fetchAvailableRooms();
-  }, [props.hotel, selectedDateFrom, selectedDateTo]);
+  }, [props.hotel, selectedDateFrom, selectedDateTo, peopleCount]);
 
   useEffect(() => {
     if (!selectedDateFrom && !selectedDateTo) {
@@ -127,7 +142,8 @@ const Trip = (props) => {
     const tripData = {
       departureDate,
       arrivalDate,
-      roomId: Number(selectedRoom), // <-- include selected room
+      roomId: Number(selectedRoom),
+      numberOfGuests: peopleCount,
     };
 
     console.log(tripData);
@@ -144,6 +160,23 @@ const Trip = (props) => {
     setSelectedDateTo(selectedRange.slice(-1)[0]);
   };
 
+  const calculateTotalPrice = () => {
+    if (!selectedRoom || !fromDate || !toDate) return 0;
+
+    const selectedRoomObj = rooms.find(
+      (room) => room.roomId === Number(selectedRoom)
+    );
+
+    console.log(selectedRoomObj);
+
+    if (!selectedRoomObj) return 0;
+
+    const dayCount =
+      Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24)) || 1;
+
+    return selectedRoomObj.details.basePrice * dayCount;
+  };
+
   return (
     <form onSubmit={submitHandler}>
       {error && (
@@ -153,84 +186,116 @@ const Trip = (props) => {
           onConfirm={handleCloseError}
         />
       )}
-
-      <div className="form-group">
-        <div className="trip-group">
-          <div>
-            <span>Date</span>
-            <div
-              onClick={() => setCalendarOpen(!calendarOpen)}
-              className="calendar-form"
-            >
-              <i className="fa fa-calendar"></i>
-              <div>
-                <span>From: {formatDate(fromDate)}</span>
-              </div>
-              <span> - </span>
-              <div>
-                <span>To: {formatDate(toDate)}</span>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="form-group" style={{ position: "relative" }}>
+          <div className="trip-group">
+            <div>
+              <span>Date</span>
+              <div
+                onClick={() => setCalendarOpen(!calendarOpen)}
+                className="calendar-form"
+              >
+                <i className="fa fa-calendar"></i>
+                <div>
+                  <span>From: {formatDate(fromDate)}</span>
+                </div>
+                <span> - </span>
+                <div>
+                  <span>To: {formatDate(toDate)}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Room Type - Number of People */}
-          <div>
-            <label htmlFor="peopleNumber">Number of People</label>
-            <div className="select">
-              <i className="fa fa-user"></i>
-              <select
-                id="peopleNumber"
-                name="peopleNumber"
-                defaultValue=""
-                required
-              >
-                <option value="" disabled>
-                  Select Number of People
-                </option>
-                <option value="1">1 Person</option>
-                <option value="2">2 People</option>
-                <option value="3">3 People</option>
-                <option value="4">4 People</option>
-                <option value="5">5 People</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Room Selection */}
-          <div>
-            <label htmlFor="roomSelect">Room</label>
-            <div className="select">
-              <i className="fa fa-bed"></i>
-              <select
-                id="roomSelect"
-                name="roomSelect"
-                value={selectedRoom}
-                onChange={(e) => setSelectedRoom(e.target.value)}
-                required
-              >
-                <option value="" disabled>
-                  {rooms.length === 0 ? "No rooms available" : "Select Room"}
-                </option>
-                {rooms.map((room) => (
-                  <option key={room.Room} value={room.Room}>
-                    {room.roomName || `Room ${room.Room}`} - {room.roomType}
+            {/* Room Type - Number of People */}
+            <div>
+              <label htmlFor="peopleNumber">Number of People</label>
+              <div className="select">
+                <i className="fa fa-user"></i>
+                <select
+                  id="peopleNumber"
+                  name="peopleNumber"
+                  value={peopleCount}
+                  onChange={(e) => setPeopleCount(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Select Number of People
                   </option>
-                ))}
-              </select>
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <option key={num} value={num}>
+                      {num} {num === 1 ? "Person" : "People"}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="roomSelect">Room</label>
+              <div className="select">
+                <i className="fa fa-bed"></i>
+                {console.log(
+                  "Selected room:",
+                  selectedRoom.available === 0 || rooms.length === 0
+                )}
+                <select
+                  id="roomSelect"
+                  name="roomSelect"
+                  value={selectedRoom}
+                  onChange={(e) => {
+                    const selectedId = e.target.value;
+                    const room = rooms.find((r) => r.roomId == selectedId);
+                    setSelectedRoom(room);
+                  }}
+                  required
+                  style={{
+                    borderColor:
+                      selectedRoom.available === 0 || rooms.length === 0
+                        ? "red"
+                        : "#87f9",
+                  }}
+                >
+                  <option value="" disabled>
+                    {rooms.length === 0 ? "No rooms available" : "Select Room"}
+                  </option>
+                  {rooms.map((room) => (
+                    <option key={room.roomId} value={room.roomId}>
+                      {console.log(room.available === 0 && "red")}
+                      {room.details.room.roomName ||
+                        `Room ${room.roomId}`} - {room.details.room.roomType}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
-        </div>
-        {calendarOpen ? <Calendar calendarHandler={calendarHandler} /> : ""}
+          {calendarOpen ? <Calendar calendarHandler={calendarHandler} /> : ""}
+          {selectedRoom.available === 0 && (
+            <p style={{ color: "red" }}>
+              Sorry, this type of room is already sold out. Select another room
+              type or/and other dates
+            </p>
+          )}
 
-        <div className="t-price">
-          <h2>Price:</h2>
-          <span>${props.hotel.price}</span>
-        </div>
+          {rooms.length === 0 && (
+            <p style={{ color: "red" }}>
+              Unfortunately, this hotel does not have available rooms for the
+              required number of people on your dates. Please select another
+              hotel and/or other dates.
+            </p>
+          )}
+          <div className="t-price">
+            <h2>Price:</h2>
+            <span>${calculateTotalPrice()}</span>
+          </div>
 
-        <button type="submit" className="login_button">
-          Go to Checkout
-        </button>
-      </div>
+          <button type="submit" className="login_button">
+            Go to Checkout
+          </button>
+        </div>
+      )}
     </form>
   );
 };

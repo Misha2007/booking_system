@@ -155,18 +155,26 @@ function AdminHotel() {
               <div>
                 <div id="rooms" className="card">
                   <h3 className="title">Rooms</h3>
-                  {hotel.rooms.map((room) => (
+                  {hotel.roomInfos.map((room) => (
                     <div key={room.id} className="room">
+                      <i className="fa fa-trash"></i>
                       <p>
-                        <strong>Room Id:</strong> {room.Room}
+                        <strong>Room Id:</strong> {room.roomId}
                       </p>
-
                       <p>
-                        <strong>Room Type:</strong> {room.roomType}
+                        <strong>Room Type:</strong> {room.room.roomType}
                       </p>
-
                       <p>
-                        <strong>Room Name:</strong> {room.roomName}
+                        <strong>Room Name:</strong> {room.room.roomName}
+                      </p>
+                      <p>
+                        <strong>Capacity:</strong> {room.capacity} Guests
+                      </p>
+                      <p>
+                        <strong>Default Price:</strong> {room.basePrice}$
+                      </p>
+                      <p>
+                        <strong>Quantity:</strong> {room.quantity}
                       </p>
                     </div>
                   ))}

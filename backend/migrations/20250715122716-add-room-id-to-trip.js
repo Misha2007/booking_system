@@ -8,7 +8,7 @@ module.exports = {
       allowNull: true,
       references: {
         model: "Rooms",
-        key: "Room",
+        key: "roomId",
       },
       onUpdate: "CASCADE",
       onDelete: "SET NULL",

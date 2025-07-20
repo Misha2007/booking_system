@@ -92,7 +92,9 @@ const Result = (props) => {
 
       localStorage.setItem("pendingBooking", JSON.stringify(bookingData));
 
-      navigate("/payment", { state: { hotel_data: hotel, user: data.user } });
+      navigate("/payment", {
+        state: { bookingData: bookingData, user: data.user },
+      });
     } catch (error) {
       console.error("Error fetching user:", error);
     }
