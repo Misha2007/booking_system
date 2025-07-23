@@ -3,6 +3,10 @@
   width: 100%;
   margin-top: 20px;
 }
+#image-upload .room.field input {
+  font-size: 18px;
+  width: 100%;
+}
 
 .hotel-info-wrap .field {
   font-size: 18px;

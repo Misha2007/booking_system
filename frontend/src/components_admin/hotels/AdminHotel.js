@@ -12,8 +12,6 @@ function AdminHotel() {
 
   const { hotel, loading, error } = useHotelById(hotelId);
 
-  const [imageTarget, setImageTarget] = useState("hotel");
-  const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [openSection, setOpenSection] = useState("HotelInfo");
 
   const setOpenSectionFunction = (data) => {
@@ -40,14 +38,6 @@ function AdminHotel() {
     );
   }
 
-  const handleRoomChange = (e) => {
-    setSelectedRoomId(e.target.value);
-  };
-
-  const handleImageTargetChange = (e) => {
-    setImageTarget(e.target.value);
-  };
-
   return (
     <div className="admin-hotel-panel">
       <div id="admin-hotel-wrap">
@@ -65,46 +55,7 @@ function AdminHotel() {
           <h1>Admin Panel - Hotel Details</h1>
           {openSection === "HotelInfo" && <HotelInfo />}
           {openSection === "checkDates" && <p>Coming soon...</p>}
-          {openSection === "AddImage" && (
-            <div id="image-upload">
-              <AddImage
-                target={imageTarget}
-                hotelId={hotelId}
-                roomId={selectedRoomId}
-              />
-              <div className="field">
-                <label>Hotel Name:</label>
-                <select value={hotel.name} onChange={() => {}}>
-                  <option value={hotel.name}>{hotel.name}</option>
-                </select>
-              </div>
-              <div className="field">
-                <label>Choose Image Target:</label>
-                <select value={imageTarget} onChange={handleImageTargetChange}>
-                  <option value="hotel">Hotel</option>
-                  <option value="room">Room</option>
-                </select>
-              </div>
-              {imageTarget === "room" && (
-                <div className="field">
-                  <label>Select Room:</label>
-                  <select onChange={handleRoomChange} value={selectedRoomId}>
-                    <option value="" disabled>
-                      Select a room
-                    </option>
-                    {hotel.roomInfos.map((room) => (
-                      <option key={room.id} value={room.roomId}>
-                        {room.room.roomType} - {room.room.roomName}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-              <div>
-                <button>Submit</button>
-              </div>
-            </div>
-          )}
+          {openSection === "AddImage" && <AddImage hotel={hotel} />}
         </div>
       </div>
     </div>

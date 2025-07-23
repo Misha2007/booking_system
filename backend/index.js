@@ -9,6 +9,7 @@ import countryRoutes from "./routes/country.js";
 import tripRoutes from "./routes/trip.js";
 import paymentRoutes from "./routes/payment.js";
 import roomRoutes from "./routes/room.js";
+import imageRoutes from "./routes/image.js";
 
 import { swaggerSpec, swaggerUi } from "./swagger.js";
 
@@ -29,6 +30,7 @@ app.use("/countries", countryRoutes);
 app.use("/trips", tripRoutes);
 app.use("/payment", paymentRoutes);
 app.use("/rooms", roomRoutes);
+app.use("/images", imageRoutes);
 
 app.use(express.urlencoded({ extended: true }));
 

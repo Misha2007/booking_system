@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import data_file from "../../data.json"; // API URL and port from here
+import data_file from "../../data.json";
 import { useNavigate } from "react-router-dom";
 
 export default function useHotelById(hotelId) {
@@ -12,13 +12,13 @@ export default function useHotelById(hotelId) {
   useEffect(() => {
     const fetchHotel = async () => {
       if (!storedToken) {
-        navigate("/login"); // Redirect to login if no token
+        navigate("/login");
         return;
       }
 
       try {
         const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/hotel-admin/${hotelId}`, // Fetch by hotelId
+          `http://${data_file.ip}:${data_file.port}/hotel-admin/${hotelId}`,
           {
             method: "GET",
             headers: {

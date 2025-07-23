@@ -33,7 +33,7 @@ Image.init(
     },
     roomInfoId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     isCover: {
       type: DataTypes.BOOLEAN,
