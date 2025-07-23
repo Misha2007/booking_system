@@ -55,6 +55,7 @@ import Clients from "./clients.js";
 import Room from "./room.js";
 import RoomInfo from "./roominfo.js";
 import RoomPricing from "./roompricing.js";
+import Image from "./image.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -69,6 +70,7 @@ db.Clients = Clients;
 db.Room = Room;
 db.RoomInfo = RoomInfo;
 db.RoomPricing = RoomPricing;
+db.Image = Image;
 
 // Käivita assotsiatsioonid
 Object.keys(db).forEach((modelName) => {

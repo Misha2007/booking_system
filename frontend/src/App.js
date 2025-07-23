@@ -16,12 +16,12 @@ import NotFound from "./components/UI/NotFound";
 import PaymentWrapper from "./components/payment/PaymentWrapper";
 import SuccessfulPage from "./components/payment/SuccesssfulPage";
 
-import Users from "./components_admin/Users";
+import Users from "./components_admin/users/Users";
 
-import NewUser from "./components_admin/NewUser";
-import AdminHotels from "./components_admin/AdminHotels";
-import NewHotel from "./components_admin/NewHotel";
-import AdminHotel from "./components_admin/Hotel";
+import NewUser from "./components_admin/users/NewUser";
+import AdminHotels from "./components_admin/hotels/AdminHotels";
+import NewHotel from "./components_admin/hotels/NewHotel";
+import AdminHotel from "./components_admin/hotels/AdminHotel";
 
 // const stripePromise = loadStripe(data_file.PUBLIC_KEY);
 

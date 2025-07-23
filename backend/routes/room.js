@@ -2,6 +2,8 @@ import express from "express";
 import db from "../models/index.js";
 import { Op } from "sequelize";
 import { RoomController } from "../controllers/room.js";
+import { verifyToken } from "../middlewares/authJwt.js";
+import { rolesSeparator } from "../middlewares/rolesSeparator.js";
 
 const router = express.Router();
 
@@ -79,8 +81,12 @@ router.get("/hotel/:hotelId/available", async (req, res) => {
   }
 });
 
-router.post("/hotel/add-room", async (req, res) =>
+router.post("/hotel/add-room", verifyToken, rolesSeparator, (req, res) =>
   RoomController.createRoom(req, res)
+);
+
+router.post("/image/create", verifyToken, rolesSeparator, (req, res) =>
+  RoomController.createImage(req, res)
 );
 
 export default router;

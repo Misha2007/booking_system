@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import data_file from "../data.json";
+import data_file from "../../data.json";
 import "./NewHotel.css";
 
 function NewHotel() {

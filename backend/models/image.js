@@ -2,50 +2,53 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../util/db.js";
 
-class RoomPricing extends Model {
+class Image extends Model {
   /**
    * Helper method for defining associations.
    * This method is not a part of Sequelize lifecycle.
    * The `models/index` file will call this method automatically.
    */
   static associate(models) {
-    this.belongsTo(models.Hotel, {
-      foreignKey: "hotelId",
-      onDelete: "CASCADE",
-    });
-    this.belongsTo(models.Room, {
-      foreignKey: "roomId",
+    this.belongsTo(models.Hotel, { foreignKey: "hotelId" });
+    this.belongsTo(models.RoomInfo, {
+      foreignKey: "roomInfoId",
       onDelete: "CASCADE",
     });
   }
 }
-RoomPricing.init(
+Image.init(
   {
-    hid: {
+    imageId: {
       type: DataTypes.INTEGER,
-      autoIncrement: true,
       primaryKey: true,
+      autoIncrement: true,
+    },
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     hotelId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
-    roomId: {
+    roomInfoId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    priceDate: {
-      type: DataTypes.DATEONLY,
+    isCover: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false,
     },
-    price: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
+    altText: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   {
     sequelize,
-    modelName: "RoomPricing",
+    modelName: "Image",
   }
 );
-export default RoomPricing;
+
+export default Image;

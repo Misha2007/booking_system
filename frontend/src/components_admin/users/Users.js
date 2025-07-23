@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import data_file from "../data.json";
+import data_file from "../../data.json";
 import "./Users.css";
 
 function Users() {

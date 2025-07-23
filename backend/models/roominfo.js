@@ -19,6 +19,10 @@ class RoomInfo extends Model {
       onDelete: "CASCADE",
       as: "room",
     });
+    this.hasMany(models.Image, {
+      foreignKey: "roomInfoId",
+      onDelete: "CASCADE",
+    });
   }
 }
 RoomInfo.init(

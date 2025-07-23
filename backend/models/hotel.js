@@ -26,6 +26,7 @@ class Hotel extends Model {
       foreignKey: "hotelId",
       as: "roomInfos",
     });
+    this.hasMany(models.Image, { foreignKey: "hotelId" });
   }
 }
 

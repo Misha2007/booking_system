@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import data_file from "../data.json";
-import "./Users.css";
+import data_file from "../../data.json";
 
 function AdminHotels() {
   const [hotels, setHotels] = useState([]); // Default to an empty array
@@ -23,7 +22,7 @@ function AdminHotels() {
   const fetchHotelData = async () => {
     try {
       const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/hotels`, // Ensure this endpoint is correct
+        `http://${data_file.ip}:${data_file.port}/hotels`,
         {
           method: "GET",
           headers: {

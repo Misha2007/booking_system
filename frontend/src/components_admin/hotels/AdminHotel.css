@@ -1,4 +1,70 @@
-/* Admin Title */
+#image-upload button {
+  background: #6a6675;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.hotel-info-wrap .field {
+  font-size: 18px;
+}
+
+.admin-hotel-panel {
+  display: flex;
+  color: #fff;
+}
+
+.hotel-info-wrap .close {
+  text-align: right;
+}
+
+#admin-hotel-wrap.sidebar {
+  /* background: #444446; */
+  color: #f0f0f0;
+  padding: 30px 20px;
+  border-radius: 10px;
+  min-width: 220px;
+  max-width: 240px;
+  height: auto;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  box-shadow: none;
+  margin: 100px 0;
+}
+
+.sidebar .sidebar-details {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sidebar .sidebar-details h2 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+  color: #dcdcdc;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar .sidebar-details h2:hover {
+  background-color: #5a5a5c;
+  color: #ffffff;
+}
+
+.sidebar .sidebar-details h2.main {
+  background-color: #6f6f73;
+  color: #e3e0f3;
+  font-weight: bold;
+  border-left: 4px solid #d3cfe7;
+  padding-left: 10px;
+}
+
+#admin-hotel-wrap .hotel-info-wrap {
+  width: 70vw;
+}
+
 #admin-hotel-wrap h1 {
   text-align: center;
   font-size: 2.5rem;
@@ -11,15 +77,16 @@
 }
 
 #admin-hotel-wrap {
+  display: flex;
   background: #1c1c1e;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   margin: 40px;
   padding: 20px;
-  max-width: 1300px;
+  max-width: 1500px;
   margin-left: auto;
   margin-right: auto;
   border-radius: 12px;
-  text-align: right;
+  gap: 50px;
 }
 
 #admin-hotel-wrap .fa-close {
@@ -210,8 +277,13 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  #admin-hotel-wrap.sidebar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   #admin-hotel {
-    grid-template-columns: 1fr; /* Stack columns on smaller screens */
+    grid-template-columns: 1fr;
   }
 
   #admin-hotel #hotel-details {

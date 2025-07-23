@@ -258,14 +258,11 @@ class userController {
 
   getAllUsers = async (req, res) => {
     try {
-      // Delete the user
       const allUsers = await Clients.findAll();
 
       if (allUsers === 0) {
         return res.status(404).json({ message: "User not found" });
       }
-
-      console.log(allUsers);
 
       res.json({ users: allUsers });
     } catch (err) {
