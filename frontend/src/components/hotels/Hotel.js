@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-// import "./Result.css";
 import data_file from "../../data.json";
 import Trip from "./Trip";
 import "./Hotel.css";
 import NotFound from "../UI/NotFound";
+import "./Gallery.css";
 
 const Result = (props) => {
   const navigate = useNavigate();
 
   const { hotelId } = useParams();
-  console.log(hotelId);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedRoomCategory, setSelectedRoomCategory] = useState("all");
 
   const [hotel, setHotel] = useState();
   const [notFound, setNotFound] = useState(false);
@@ -53,6 +55,15 @@ const Result = (props) => {
     };
 
     fetchCountries();
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setSelectedImage(null);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const onSubmitTrip = async (tripData) => {
@@ -100,6 +111,37 @@ const Result = (props) => {
     }
   };
 
+  const getGroupedImages = () => {
+    if (!hotel?.Images) return {};
+
+    const grouped = {
+      all: [],
+    };
+
+    hotel.Images.forEach((img) => {
+      grouped.all.push(img);
+
+      if (img.roomInfoId) {
+        if (!grouped[img.roomInfoId]) {
+          grouped[img.roomInfoId] = [];
+        }
+        grouped[img.roomInfoId].push(img);
+      }
+    });
+
+    return grouped;
+  };
+
+  const groupedImages = getGroupedImages();
+
+  const roomOptions = [
+    { id: "all", name: "All" },
+    ...(hotel?.roomInfos || []).map((room) => ({
+      id: room.id,
+      name: room.room.roomType,
+    })),
+  ];
+
   if (notFound) {
     return <NotFound />;
   }
@@ -110,9 +152,141 @@ const Result = (props) => {
         {hotel ? (
           <div className="hotel-result-container">
             <div className="hotel-result">
-              <div className="hotel-result-image">
+              {/* <div className="hotel-result-image">
                 <img alt={hotel.name} src={hotel.image} />
+                {hotel.Images.map((image) => (
+                  <img src={image.url} />
+                ))}
+              </div> */}
+              <div className="gallery-preview hotel-result-image">
+                {hotel.Images?.[0] && (
+                  <img
+                    src={hotel.Images[0].url}
+                    alt="Preview"
+                    onClick={() => setIsGalleryOpen(true)}
+                  />
+                )}
               </div>
+
+              {isGalleryOpen && (
+                <div
+                  className="gallery-overlay"
+                  onClick={() => {
+                    setIsGalleryOpen(false);
+                    setSelectedImage(null);
+                  }}
+                >
+                  <div
+                    className="gallery-modal"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="gallery-header">
+                      {selectedImage && (
+                        <button
+                          className="gallery-close back-button"
+                          onClick={() => setSelectedImage(null)}
+                        >
+                          <i className="fa fa-arrow-left"></i>
+                        </button>
+                      )}
+
+                      <div className="gallery-filters">
+                        {roomOptions.map((room) => (
+                          <button
+                            key={room.id}
+                            className={`gallery-filter-button ${
+                              selectedRoomCategory === room.id ? "active" : ""
+                            }`}
+                            onClick={() => setSelectedRoomCategory(room.id)}
+                          >
+                            {room.name}
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        className="gallery-close"
+                        onClick={() => {
+                          setIsGalleryOpen(false);
+                          setSelectedImage(null);
+                        }}
+                      >
+                        <i className="fa fa-times" aria-hidden="true"></i>
+                      </button>
+                    </div>
+
+                    {!selectedImage ? (
+                      <div className="gallery-grid">
+                        {(groupedImages[selectedRoomCategory] || []).length ===
+                        0 ? (
+                          <p style={{ textAlign: "center", marginTop: "20px" }}>
+                            No images available for this room.
+                          </p>
+                        ) : (
+                          <div className="gallery-grid">
+                            {(groupedImages[selectedRoomCategory] || []).map(
+                              (image, index) => (
+                                <div key={index} className="gallery-item">
+                                  <img
+                                    src={image.url}
+                                    alt={`Hotel image ${index + 1}`}
+                                    onClick={() =>
+                                      setSelectedImage({
+                                        url: image.url,
+                                        index,
+                                      })
+                                    }
+                                  />
+                                </div>
+                              )
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="enlarged-view">
+                        <img src={selectedImage.url} alt="Enlarged view" />
+
+                        {groupedImages[selectedRoomCategory].length > 1 && (
+                          <>
+                            {selectedImage.index > 0 && (
+                              <button
+                                className="arrow arrow-left"
+                                onClick={() =>
+                                  setSelectedImage((prev) => ({
+                                    url: groupedImages[selectedRoomCategory][
+                                      prev.index - 1
+                                    ].url,
+                                    index: prev.index - 1,
+                                  }))
+                                }
+                              >
+                                ←
+                              </button>
+                            )}
+                            {selectedImage.index <
+                              groupedImages[selectedRoomCategory].length -
+                                1 && (
+                              <button
+                                className="arrow arrow-right"
+                                onClick={() =>
+                                  setSelectedImage((prev) => ({
+                                    url: groupedImages[selectedRoomCategory][
+                                      prev.index + 1
+                                    ].url,
+                                    index: prev.index + 1,
+                                  }))
+                                }
+                              >
+                                →
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
               <div className="hotel-result-details">
                 <div className="hotel-name-rate">
                   <h2>{hotel.name}</h2>

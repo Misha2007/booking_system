@@ -194,7 +194,7 @@ const Trip = (props) => {
             <div>
               <span>Date</span>
               <div
-                onClick={() => setCalendarOpen(!calendarOpen)}
+                onClick={() => setCalendarOpen((current) => !current)}
                 className="calendar-form"
               >
                 <i className="fa fa-calendar"></i>

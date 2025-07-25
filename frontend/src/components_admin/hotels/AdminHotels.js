@@ -117,7 +117,8 @@ function AdminHotels() {
   const filteredHotels = hotels.filter((hotel) => {
     return (
       hotel.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      hotel.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (hotel.location &&
+        hotel.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
       hotel.price.toString().includes(searchTerm) // Price as string
     );
   });

@@ -28,7 +28,21 @@ class hotelController {
 
   getHotelById = async (req, res) => {
     try {
-      const hotel = await Hotel.findByPk(req.params.hotelId);
+      const hotel = await Hotel.findByPk(req.params.hotelId, {
+        include: [
+          { model: RoomInfo, as: "roomInfos" },
+          { model: Region, as: "region" },
+          Image,
+        ],
+      });
+
+      for (let i = 0; i < hotel.roomInfos.length; i++) {
+        const room = hotel.roomInfos[i];
+        const roomInfo = await RoomInfo.findByPk(room.id, {
+          include: [{ model: Room, as: "room" }],
+        });
+        hotel.roomInfos[i] = roomInfo;
+      }
 
       if (!hotel) {
         return res.status(404).json({ message: "Hotel not found" });
