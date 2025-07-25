@@ -128,7 +128,7 @@ const Calendar = (props) => {
 
       const range = getRange(start, end, year);
       setSelectedDates(range);
-      props.calendarHandler?.(range);
+      props.calendarHandler(range);
     } else {
       setSelectedDateFrom(clickedDate);
       setSelectedDateTo(null);

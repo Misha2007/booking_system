@@ -6,6 +6,7 @@ import { FaUsers } from "react-icons/fa";
 
 const Trip = (props) => {
   const [error, setError] = useState(null);
+  const hasInitialized = useRef(false);
 
   const departureDateRef = useRef();
   const arrivalDateRef = useRef();
@@ -186,116 +187,113 @@ const Trip = (props) => {
           onConfirm={handleCloseError}
         />
       )}
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div className="form-group" style={{ position: "relative" }}>
-          <div className="trip-group">
-            <div>
-              <span>Date</span>
-              <div
-                onClick={() => setCalendarOpen((current) => !current)}
-                className="calendar-form"
+      {loading && <p>Loading rooms...</p>}
+      <div className="form-group" style={{ position: "relative" }}>
+        <div className="trip-group">
+          <div>
+            <span>Date</span>
+            <div
+              onClick={() => setCalendarOpen((current) => !current)}
+              className="calendar-form"
+            >
+              <i className="fa fa-calendar"></i>
+              <div>
+                <span>From: {formatDate(fromDate)}</span>
+              </div>
+              <span> - </span>
+              <div>
+                <span>To: {formatDate(toDate)}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Room Type - Number of People */}
+          <div>
+            <label htmlFor="peopleNumber">Number of People</label>
+            <div className="select">
+              <i className="fa fa-user"></i>
+              <select
+                id="peopleNumber"
+                name="peopleNumber"
+                value={peopleCount}
+                onChange={(e) => setPeopleCount(e.target.value)}
+                required
               >
-                <i className="fa fa-calendar"></i>
-                <div>
-                  <span>From: {formatDate(fromDate)}</span>
-                </div>
-                <span> - </span>
-                <div>
-                  <span>To: {formatDate(toDate)}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Room Type - Number of People */}
-            <div>
-              <label htmlFor="peopleNumber">Number of People</label>
-              <div className="select">
-                <i className="fa fa-user"></i>
-                <select
-                  id="peopleNumber"
-                  name="peopleNumber"
-                  value={peopleCount}
-                  onChange={(e) => setPeopleCount(e.target.value)}
-                  required
-                >
-                  <option value="" disabled>
-                    Select Number of People
+                <option value="" disabled>
+                  Select Number of People
+                </option>
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <option key={num} value={num}>
+                    {num} {num === 1 ? "Person" : "People"}
                   </option>
-                  {[1, 2, 3, 4, 5].map((num) => (
-                    <option key={num} value={num}>
-                      {num} {num === 1 ? "Person" : "People"}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="roomSelect">Room</label>
-              <div className="select">
-                <i className="fa fa-bed"></i>
-                {console.log(
-                  "Selected room:",
-                  selectedRoom.available === 0 || rooms.length === 0
-                )}
-                <select
-                  id="roomSelect"
-                  name="roomSelect"
-                  value={selectedRoom}
-                  onChange={(e) => {
-                    const selectedId = e.target.value;
-                    const room = rooms.find((r) => r.roomId == selectedId);
-                    setSelectedRoom(room);
-                  }}
-                  required
-                  style={{
-                    borderColor:
-                      selectedRoom.available === 0 || rooms.length === 0
-                        ? "red"
-                        : "#87f9",
-                  }}
-                >
-                  <option value="" disabled>
-                    {rooms.length === 0 ? "No rooms available" : "Select Room"}
-                  </option>
-                  {rooms.map((room) => (
-                    <option key={room.roomId} value={room.roomId}>
-                      {console.log(room.available === 0 && "red")}
-                      {room.details.room.roomName ||
-                        `Room ${room.roomId}`} - {room.details.room.roomType}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                ))}
+              </select>
             </div>
           </div>
-          {calendarOpen ? <Calendar calendarHandler={calendarHandler} /> : ""}
-          {selectedRoom.available === 0 && (
-            <p style={{ color: "red" }}>
-              Sorry, this type of room is already sold out. Select another room
-              type or/and other dates
-            </p>
-          )}
 
-          {rooms.length === 0 && (
-            <p style={{ color: "red" }}>
-              Unfortunately, this hotel does not have available rooms for the
-              required number of people on your dates. Please select another
-              hotel and/or other dates.
-            </p>
-          )}
-          <div className="t-price">
-            <h2>Price:</h2>
-            <span>${calculateTotalPrice()}</span>
+          <div>
+            <label htmlFor="roomSelect">Room</label>
+            <div className="select">
+              <i className="fa fa-bed"></i>
+              {console.log(
+                "Selected room:",
+                selectedRoom.available === 0 || rooms.length === 0
+              )}
+              <select
+                id="roomSelect"
+                name="roomSelect"
+                value={selectedRoom}
+                onChange={(e) => {
+                  const selectedId = e.target.value;
+                  const room = rooms.find((r) => r.roomId == selectedId);
+                  setSelectedRoom(room);
+                }}
+                required
+                style={{
+                  borderColor:
+                    selectedRoom.available === 0 || rooms.length === 0
+                      ? "red"
+                      : "#87f9",
+                }}
+              >
+                <option value="" disabled>
+                  {rooms.length === 0 ? "No rooms available" : "Select Room"}
+                </option>
+                {rooms.map((room) => (
+                  <option key={room.roomId} value={room.roomId}>
+                    {console.log(room.available === 0 && "red")}
+                    {room.details.room.roomName || `Room ${room.roomId}`} -{" "}
+                    {room.details.room.roomType}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-
-          <button type="submit" className="login_button">
-            Go to Checkout
-          </button>
         </div>
-      )}
+        {calendarOpen ? <Calendar calendarHandler={calendarHandler} /> : ""}
+        {selectedRoom.available === 0 && (
+          <p style={{ color: "red" }}>
+            Sorry, this type of room is already sold out. Select another room
+            type or/and other dates
+          </p>
+        )}
+
+        {loading === false && rooms.length === 0 && (
+          <p style={{ color: "red" }}>
+            Unfortunately, this hotel does not have available rooms for the
+            required number of people on your dates. Please select another hotel
+            and/or other dates.
+          </p>
+        )}
+        <div className="t-price">
+          <h2>Price:</h2>
+          <span>${calculateTotalPrice()}</span>
+        </div>
+
+        <button type="submit" className="login_button">
+          Go to Checkout
+        </button>
+      </div>
     </form>
   );
 };
