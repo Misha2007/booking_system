@@ -141,7 +141,7 @@
   z-index: 10;
 }
 
-.arrow {
+.arrow-gallery {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -159,6 +159,9 @@
 .arrow-right {
   right: 10px;
 }
-.arrow:hover {
+.arrow-gallery:hover {
   background: rgba(255, 255, 255, 1);
+}
+.arrow-gallery i {
+  color: #000;
 }

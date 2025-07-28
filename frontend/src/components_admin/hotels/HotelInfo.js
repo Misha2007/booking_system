@@ -15,6 +15,9 @@ function HotelInfo() {
   const [addRoom, setAddRoom] = useState(false);
   const roomTypeRef = useRef();
   const roomNameRef = useRef();
+  const capacityRef = useRef();
+  const basePriceRef = useRef();
+  const quantityRef = useRef();
 
   const fetchHotelData = async () => {
     setLoading(true);
@@ -83,6 +86,9 @@ function HotelInfo() {
       roomType: enteredRoomType,
       roomName: enteredRoomName,
       hotelId: hotelId,
+      capacity: capacityRef.current?.valueAsNumber || 0,
+      basePrice: basePriceRef.current?.valueAsNumber || 0,
+      quantity: quantityRef.current?.valueAsNumber || 0,
     };
 
     try {
@@ -227,6 +233,23 @@ function HotelInfo() {
                   <p>
                     <strong>Room Name:</strong>{" "}
                     <input ref={roomNameRef} type="text" required />
+                  </p>
+                  <p>
+                    <strong>Capacity:</strong>{" "}
+                    <input ref={capacityRef} type="number" required />
+                  </p>
+                  <p>
+                    <strong>Base Price:</strong>{" "}
+                    <input
+                      ref={basePriceRef}
+                      type="number"
+                      step="0.01"
+                      required
+                    />
+                  </p>
+                  <p>
+                    <strong>Quantity:</strong>{" "}
+                    <input ref={quantityRef} type="number" required />
                   </p>
                   <div className="add-room-container">
                     <button

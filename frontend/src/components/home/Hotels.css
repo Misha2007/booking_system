@@ -22,6 +22,7 @@
   min-width: 280px;
   height: 450px;
   text-align: left;
+  cursor: pointer;
 }
 
 .hotel img {

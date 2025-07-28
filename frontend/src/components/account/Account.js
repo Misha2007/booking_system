@@ -59,7 +59,7 @@ const Account = () => {
     <section className="dsa">
       <div className="account-container">
         <div className={functionsContainerClass}>
-          <div>
+          <div className="custom-list">
             <h2 className="account__title">Account</h2>
             <ol>
               {sections.map((section) => (

@@ -250,7 +250,7 @@ const Result = (props) => {
                           <>
                             {selectedImage.index > 0 && (
                               <button
-                                className="arrow arrow-left"
+                                className="arrow-gallery arrow-left"
                                 onClick={() =>
                                   setSelectedImage((prev) => ({
                                     url: groupedImages[selectedRoomCategory][
@@ -260,14 +260,14 @@ const Result = (props) => {
                                   }))
                                 }
                               >
-                                ←
+                                <i className="fa fa-arrow-left"></i>
                               </button>
                             )}
                             {selectedImage.index <
                               groupedImages[selectedRoomCategory].length -
                                 1 && (
                               <button
-                                className="arrow arrow-right"
+                                className="arrow-gallery arrow-right"
                                 onClick={() =>
                                   setSelectedImage((prev) => ({
                                     url: groupedImages[selectedRoomCategory][
@@ -277,7 +277,7 @@ const Result = (props) => {
                                   }))
                                 }
                               >
-                                →
+                                <i className="fa fa-arrow-right"></i>
                               </button>
                             )}
                           </>

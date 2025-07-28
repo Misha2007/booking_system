@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../home/Hotels.css";
+import { useNavigate } from "react-router-dom";
 
 const localHotels = [
   {
@@ -41,6 +42,7 @@ const localHotels = [
 
 const FavouritedTrips = () => {
   const [favourites, setFavourites] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedFavourites =
@@ -73,6 +75,9 @@ const FavouritedTrips = () => {
               key={hotel.hotelId}
               className="hotel"
               style={{ position: "relative", paddingBottom: "40px" }}
+              onClick={() => {
+                navigate(`/hotel/${hotel.hotelId}`);
+              }}
             >
               <img alt={hotel.name} src={hotel.image} />
               <h3>{hotel.name}</h3>

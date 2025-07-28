@@ -20,4 +20,8 @@ router.post(
   (req, res) => HotelController.imageCreate(req, res)
 );
 
+router.get(`/hotels/available`, (req, res) =>
+  HotelController.getAvailableHotels(req, res)
+);
+
 export default router;

@@ -71,7 +71,7 @@ const Countries = () => {
               />
             </div>
 
-            <div className="topic_block">
+            <div className="topic_block custom-list">
               <li>
                 <Link to="/search" className="topic">
                   <span style={{ fontWeight: query ? "normal" : "bold" }}>
@@ -81,7 +81,7 @@ const Countries = () => {
               </li>
               <hr />
               {results.map((country) => (
-                <div className="topic_block" key={country}>
+                <div className="topic_block custom-list" key={country}>
                   <li>
                     <Link
                       to={`/result/${encodeURIComponent(country)}`}

@@ -12,13 +12,30 @@ class roomController {
       if (req.user.role !== "admin") {
         return res.status(403).json({ message: "Forbidden" });
       }
-      const { hotelId, roomType, roomName } = req.body;
+      const { hotelId, roomType, roomName, capacity, basePrice, quantity } =
+        req.body;
       const hotel = await Hotel.findByPk(hotelId);
       if (!hotel) {
         return res.status(404).json({ message: "Hotel not found" });
       }
-      const room = await Room.create({ hotelId, roomType, roomName });
-      return res.status(201).json(room);
+      const [room, created] = await Room.findOrCreate({
+        where: { roomType, roomName },
+      });
+      const roomInfo = await RoomInfo.create({
+        hotelId,
+        roomId: room.roomId,
+        capacity,
+        basePrice,
+        quantity,
+      });
+      const extendedRoomInfo = await RoomInfo.findByPk(roomInfo.id, {
+        include: {
+          model: Room,
+          attributes: ["roomType", "roomName"],
+          as: "room",
+        },
+      });
+      return res.status(201).json({ roomInfo: extendedRoomInfo });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "Error creating room" });
