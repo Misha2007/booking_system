@@ -29,6 +29,15 @@ class countryController {
             {
               model: models.Hotel,
               as: "hotels",
+              include: [
+                {
+                  model: models.Image,
+                  where: {
+                    isCover: true,
+                  },
+                  required: true,
+                },
+              ],
             },
           ],
         })

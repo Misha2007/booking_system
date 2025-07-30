@@ -1,0 +1,65 @@
+.gallery-admin .gallery-grid {
+  column-count: 3;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery-item .cover-image {
+  border: #fd7373 1px solid;
+}
+
+.gallery-item .options {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #1c1c1e;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  gap: 2px;
+}
+
+.gallery-item .fa {
+  font-size: 18px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.gallery-item .fa-trash {
+  color: #fd7373;
+}
+
+.dropdown-menu {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  position: absolute;
+  right: 0;
+  top: 40px;
+  z-index: 10;
+  min-width: 160px;
+  font-size: 14px;
+}
+
+.dropdown-option {
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #000;
+}
+
+.dropdown-option:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-option.disabled {
+  color: #999;
+  cursor: default;
+  pointer-events: none;
+}

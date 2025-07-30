@@ -31,6 +31,7 @@
 .hotel-result h2 {
   font-size: 35px;
   color: #000;
+  max-width: 90%;
 }
 
 .hotel-result-details {
@@ -76,4 +77,10 @@ button:focus {
   display: flex;
   align-items: center;
   margin-top: 15px;
+}
+
+@media (max-width: 1200px) {
+  .hotel-result h2 {
+    margin: 0;
+  }
 }

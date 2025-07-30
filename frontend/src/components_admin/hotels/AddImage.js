@@ -14,6 +14,7 @@ function AddImage(props) {
   const [fileList, setFileList] = useState([]);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const hotel = props.hotel;
+  const [coverFileName, setCoverFileName] = useState(null);
   // const [image_url, setImage_url] = useState("");
 
   const onDragEnter = () => wrapperRef.current.classList.add("dragover");
@@ -83,11 +84,15 @@ function AddImage(props) {
           throw new Error("Failed to upload file: " + file.name);
         }
 
+        const isCover = file.name === coverFileName;
+
         const payload = {
           imageUrl: data.secure_url,
           target: imageTarget,
           hotelId: hotel.hotelId,
+          isCover,
         };
+
         if (imageTarget === "room") {
           payload.roomInfoId = selectedRoomId;
         }
@@ -137,10 +142,24 @@ function AddImage(props) {
         <div className="drop-file-preview">
           <p className="drop-file-preview__title">Ready to upload</p>
           {fileList.map((item, index) => (
-            <div key={index} className="drop-file-preview__item">
+            <div
+              key={index}
+              className={`drop-file-preview__item ${
+                coverFileName === item.name ? "cover" : ""
+              }`}
+            >
               <img src={URL.createObjectURL(item)} alt={item.name} />
               <div className="drop-file-preview__item__info">
                 <p>{item.name}</p>
+                <label>
+                  <input
+                    type="radio"
+                    name="coverImage"
+                    checked={coverFileName === item.name}
+                    onChange={() => setCoverFileName(item.name)}
+                  />
+                  Set as Cover
+                </label>
               </div>
               <span
                 className="drop-file-preview__item__del"

@@ -16,7 +16,16 @@ class hotelController {
   getHotels = async (req, res) => {
     try {
       const hotels = await Hotel.findAll({
-        include: [{ model: Region, as: "region" }, Image],
+        include: [
+          { model: Region, as: "region" },
+          {
+            model: Image,
+            where: {
+              isCover: true,
+            },
+            required: true,
+          },
+        ],
       });
 
       if (!hotels) {

@@ -5,6 +5,7 @@ import Sidebar from "./Sidebar";
 import AddImage from "./AddImage";
 import "./AdminHotel.css";
 import HotelInfo from "./HotelInfo";
+import Gallery from "./Gallery";
 
 function AdminHotel() {
   const navigate = useNavigate();
@@ -56,6 +57,7 @@ function AdminHotel() {
           {openSection === "HotelInfo" && <HotelInfo />}
           {openSection === "checkDates" && <p>Coming soon...</p>}
           {openSection === "AddImage" && <AddImage hotel={hotel} />}
+          {openSection === "Gallery" && <Gallery hotelId={hotel.hotelId} />}
         </div>
       </div>
     </div>

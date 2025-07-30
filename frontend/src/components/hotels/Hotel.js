@@ -27,6 +27,9 @@ const Result = (props) => {
   const query = new URLSearchParams(location.search);
   const searchQuery = query.get("q") || "";
 
+  const previewImage =
+    hotel && hotel.Images.find((image) => image.isCover)?.url;
+
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -158,10 +161,11 @@ const Result = (props) => {
                   <img src={image.url} />
                 ))}
               </div> */}
+              {console.log(previewImage)}
               <div className="gallery-preview hotel-result-image">
-                {hotel.Images?.[0] && (
+                {previewImage && (
                   <img
-                    src={hotel.Images[0].url}
+                    src={previewImage}
                     alt="Preview"
                     onClick={() => setIsGalleryOpen(true)}
                   />

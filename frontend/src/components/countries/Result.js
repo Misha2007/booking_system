@@ -75,14 +75,16 @@ const Result = () => {
               style={{ cursor: "pointer" }}
             >
               <div className="hotel-result-image">
-                <img alt={hotel.name} src={hotel.image} />
+                <img alt={hotel.name} src={hotel.Images[0].url} />
               </div>
               <div className="hotel-result-details">
                 <div className="hotel-name-rate">
                   <h2>{hotel.name}</h2>
                   <p>
-                    <i className="fa fa-star"></i>
-                    {hotel.hotelRating}
+                    <span>
+                      <i className="fa fa-star"></i>
+                    </span>
+                    <span>{hotel.hotelRating}</span>
                   </p>
                 </div>
                 <div>

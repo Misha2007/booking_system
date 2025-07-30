@@ -72,16 +72,22 @@
 }
 
 .gallery-grid {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  column-count: 2;
+  column-gap: 12px;
 }
+
+.gallery-item {
+  break-inside: avoid;
+  margin-bottom: 12px;
+}
+
 .gallery-item img {
   width: 100%;
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
+
 .gallery-item img:hover {
   transform: scale(1.05);
 }
@@ -164,4 +170,16 @@
 }
 .arrow-gallery i {
   color: #000;
+}
+
+@media (max-width: 900px) {
+  .gallery-grid {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .gallery-grid {
+    column-count: 1;
+  }
 }

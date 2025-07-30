@@ -25,6 +25,10 @@ function Sidebar(props) {
       key: "AddImage",
       label: "Add images",
     },
+    {
+      key: "Gallery",
+      label: "Gallery",
+    },
   ];
 
   useEffect(() => {

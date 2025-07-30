@@ -44,7 +44,8 @@ const Hotels = () => {
                 }
               }}
             >
-              <img alt={hotel.name} src={hotel.image} />
+              {console.log("dsfsdfkdshfk", hotel.Images)}
+              <img alt={hotel.name} src={hotel.Images[0].url} />
               <h3>{hotel.name}</h3>
               <div className="detail-container">
                 <p>${hotel.price} Starting</p>
