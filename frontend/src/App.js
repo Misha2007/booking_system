@@ -22,6 +22,7 @@ import NewUser from "./components_admin/users/NewUser";
 import AdminHotels from "./components_admin/hotels/AdminHotels";
 import NewHotel from "./components_admin/hotels/NewHotel";
 import AdminHotel from "./components_admin/hotels/AdminHotel";
+import AdminMain from "./components_admin/main/AdminMain";
 
 // const stripePromise = loadStripe(data_file.PUBLIC_KEY);
 
@@ -43,6 +44,8 @@ function App() {
           {/* <Route path="/payment" element={<PaymentPage />} /> */}
           <Route path="/payment" element={<PaymentWrapper />} />
           <Route path="/payment-success" element={<SuccessfulPage />} />
+
+          <Route path="/admin" element={<AdminMain />} />
           <Route path="/admin/users" element={<Users />} />
           <Route path="/admin/create-user" element={<NewUser />} />
           <Route path="/admin/hotels" element={<AdminHotels />} />
