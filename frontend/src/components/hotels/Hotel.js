@@ -102,6 +102,7 @@ const Result = (props) => {
         departureDate: tripData.departureDate,
         roomId: tripData.roomId,
         numberOfGuests: tripData.numberOfGuests,
+        price: tripData.price,
       };
 
       localStorage.setItem("pendingBooking", JSON.stringify(bookingData));

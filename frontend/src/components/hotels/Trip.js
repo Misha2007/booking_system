@@ -143,8 +143,9 @@ const Trip = (props) => {
     const tripData = {
       departureDate,
       arrivalDate,
-      roomId: Number(selectedRoom),
+      roomId: Number(selectedRoom.roomId),
       numberOfGuests: peopleCount,
+      price: calculateTotalPrice(),
     };
 
     console.log(tripData);
@@ -165,16 +166,15 @@ const Trip = (props) => {
     if (!selectedRoom || !fromDate || !toDate) return 0;
 
     const selectedRoomObj = rooms.find(
-      (room) => room.roomId === Number(selectedRoom)
+      (room) => room.roomInfoId === Number(selectedRoom.roomInfoId)
     );
 
-    console.log(selectedRoomObj);
+    console.log(rooms);
 
     if (!selectedRoomObj) return 0;
 
     const dayCount =
       Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24)) || 1;
-
     return selectedRoomObj.details.basePrice * dayCount;
   };
 

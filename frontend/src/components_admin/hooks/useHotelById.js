@@ -2,25 +2,25 @@ import { useState, useEffect } from "react";
 import data_file from "../../data.json";
 import { useNavigate } from "react-router-dom";
 
-export default function useHotelById(hotelId) {
-  const [hotel, setHotel] = useState(null);
+export default function useHotelById(props) {
+  const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const storedToken = localStorage.getItem("authToken");
 
   useEffect(() => {
-    const fetchHotel = async () => {
+    const fetchData = async () => {
       if (!storedToken) {
         navigate("/login");
         return;
       }
 
       try {
-        const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/hotel-admin/${hotelId}`,
+        const res = await fetch(
+          `http://${data_file.ip}:${data_file.port}${props.route}`,
           {
-            method: "GET",
+            method: props.method,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${storedToken}`,
@@ -28,14 +28,14 @@ export default function useHotelById(hotelId) {
           }
         );
 
-        const data = await response.json();
+        const data = await res.json();
 
-        if (!response.ok) {
-          if (response.status === 401) {
+        if (!res.ok) {
+          if (res.status === 401) {
             localStorage.removeItem("authToken");
             navigate("/login?error=Session expired. Please log in again.");
             return;
-          } else if (response.status === 403) {
+          } else if (res.status === 403) {
             navigate("/error", {
               state: {
                 error: "403",
@@ -47,7 +47,7 @@ export default function useHotelById(hotelId) {
           throw new Error("Failed to fetch hotel");
         }
 
-        setHotel(data.hotel || {});
+        setResponse(data || {});
         setLoading(false);
       } catch (err) {
         setError(err);
@@ -55,10 +55,9 @@ export default function useHotelById(hotelId) {
       }
     };
 
-    if (hotelId) {
-      fetchHotel();
+    if (props.route && props.method) {
+      fetchData();
     }
-  }, [hotelId, navigate, storedToken]);
-
-  return { hotel, loading, error };
+  }, []);
+  return { response, loading, error };
 }

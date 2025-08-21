@@ -11,7 +11,10 @@ function AdminHotel() {
   const navigate = useNavigate();
   const { hotelId } = useParams();
 
-  const { hotel, loading, error } = useHotelById(hotelId);
+  const { response, loading, error } = useHotelById({
+    route: `/hotel-admin/${hotelId}`,
+    method: "GET",
+  });
 
   const [openSection, setOpenSection] = useState("HotelInfo");
 
@@ -56,8 +59,10 @@ function AdminHotel() {
           <h1>Admin Panel - Hotel Details</h1>
           {openSection === "HotelInfo" && <HotelInfo />}
           {openSection === "checkDates" && <p>Coming soon...</p>}
-          {openSection === "AddImage" && <AddImage hotel={hotel} />}
-          {openSection === "Gallery" && <Gallery hotelId={hotel.hotelId} />}
+          {openSection === "AddImage" && <AddImage hotel={response.hotel} />}
+          {openSection === "Gallery" && (
+            <Gallery hotelId={response.hotel.hotelId} />
+          )}
         </div>
       </div>
     </div>

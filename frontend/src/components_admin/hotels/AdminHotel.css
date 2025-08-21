@@ -66,11 +66,10 @@
 }
 
 #admin-hotel-wrap .hotel-info-wrap {
-  width: 70vw;
+  width: 90vw;
 }
 
 #admin-hotel-wrap h1 {
-  text-align: center;
   font-size: 2.5rem;
   color: #948fa4;
   margin-bottom: 30px;
