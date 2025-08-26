@@ -49,7 +49,7 @@ function App() {
           <Route path="/admin/users" element={<Users />} />
           <Route path="/admin/create-user" element={<NewUser />} />
           <Route path="/admin/hotels" element={<AdminHotels />} />
-          <Route path="/admin/hotel/create" element={<NewHotel />} />
+          <Route path="/admin/hotel/create" element={<AdminHotel />} />
           <Route path="/admin/hotel/:hotelId" element={<AdminHotel />} />
         </Routes>
       </Router>

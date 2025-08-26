@@ -20,6 +20,10 @@ router.post(
   (req, res) => HotelController.imageCreate(req, res)
 );
 
+router.post("/hotel/create", verifyToken, rolesSeparator, (req, res) =>
+  HotelController.createHotel(req, res)
+);
+
 router.get(`/hotels/available`, (req, res) =>
   HotelController.getAvailableHotels(req, res)
 );

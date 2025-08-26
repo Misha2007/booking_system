@@ -59,6 +59,19 @@ class roomController {
       return res.status(500).json({ message: "Error creating image" });
     }
   };
+
+  getRoomTypes = async (req, res) => {
+    try {
+      if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+      const roomTypes = await Room.findAll();
+      return res.status(200).json(roomTypes);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Error creating image" });
+    }
+  };
 }
 
 export const RoomController = new roomController();

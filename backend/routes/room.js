@@ -89,4 +89,8 @@ router.post("/image/create", verifyToken, rolesSeparator, (req, res) =>
   RoomController.createImage(req, res)
 );
 
+router.get("/room-types", verifyToken, rolesSeparator, async (req, res) => {
+  RoomController.getRoomTypes(req, res);
+});
+
 export default router;

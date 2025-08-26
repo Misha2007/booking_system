@@ -4,400 +4,372 @@ import data_file from "../../data.json";
 import "./NewHotel.css";
 
 function NewHotel() {
-  const [regions, setRegions] = useState([]); // Regions data for selection
-  const [showImagePreview, setShowImagePreview] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
-  const [rooms, setRooms] = useState([]); // State to hold added rooms
-  const [newRoom, setNewRoom] = useState(false);
-  const [errors, setErrors] = useState({
-    roomType: "",
-    roomName: "",
-    // Other fields...
+  const [newHotel, setNewHotel] = useState({
+    name: "",
+    location: "",
+    price: 0,
+    hotelRating: 0,
+    description: "",
+    regionId: "",
   });
 
+  const [regions, setRegions] = useState([]);
+  const [roomTypes, setRoomTypes] = useState([]);
+  const [rooms, setRooms] = useState([]);
+  const [addRoom, setAddRoom] = useState(false);
+  const [creatingNewRegion, setCreatingNewRegion] = useState(false);
+  const [newRegion, setNewRegion] = useState({
+    regionName: "",
+    countryName: "",
+  });
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const storedToken = localStorage.getItem("authToken");
 
-  // Form refs for hotel fields
-  const nameInputRef = useRef();
-  const locationInputRef = useRef();
-  const availableRoomsInputRef = useRef();
-  const hotelRatingInputRef = useRef();
-  const priceInputRef = useRef();
-  const imageInputRef = useRef();
-  const regionSelectRef = useRef();
+  const roomTypeRef = useRef();
+  const roomNameRef = useRef();
+  const capacityRef = useRef();
+  const basePriceRef = useRef();
+  const quantityRef = useRef();
 
-  // Room form refs
-  const roomTypeInputRef = useRef();
-  const roomNameInputRef = useRef();
-
-  // Fetch regions data (for selecting country/region)
   useEffect(() => {
     if (!storedToken) {
       navigate("/login");
+    } else {
+      fetchInitialData();
+    }
+  }, []);
+
+  const fetchInitialData = async () => {
+    try {
+      const [regionRes, roomTypeRes] = await Promise.all([
+        fetch(`http://${data_file.ip}:${data_file.port}/countries/all`, {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        }),
+        fetch(`http://${data_file.ip}:${data_file.port}/rooms/room-types`, {
+          headers: { Authorization: `Bearer ${storedToken}` },
+        }),
+      ]);
+
+      if (!regionRes.ok || !roomTypeRes.ok)
+        throw new Error("Failed to fetch initial data");
+
+      const regionsData = await regionRes.json();
+      const roomTypesData = await roomTypeRes.json();
+
+      console.log(roomTypesData);
+      setRegions(regionsData.regions);
+      setRoomTypes(roomTypesData);
+    } catch (err) {
+      setError(err);
+    }
+  };
+
+  const handleAddRoom = (e) => {
+    e.preventDefault();
+
+    const newRoom = {
+      roomType: roomTypeRef.current?.value || "",
+      roomName: roomNameRef.current?.value || "",
+      capacity: capacityRef.current?.valueAsNumber || 0,
+      basePrice: basePriceRef.current?.valueAsNumber || 0,
+      quantity: quantityRef.current?.valueAsNumber || 0,
+    };
+
+    if (!newRoom.roomType || !newRoom.roomName) {
+      setError(new Error("Missing room fields"));
       return;
     }
 
-    const fetchRegions = async () => {
-      try {
-        const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/countries/all`, // Endpoint for fetching regions
+    setRooms([...rooms, newRoom]);
+
+    roomTypeRef.current.value = "";
+    roomNameRef.current.value = "";
+    capacityRef.current.value = "";
+    basePriceRef.current.value = "";
+    quantityRef.current.value = "";
+    setAddRoom(false);
+  };
+
+  const handleRemoveRoom = (index) => {
+    setRooms(rooms.filter((_, i) => i !== index));
+  };
+
+  const handleCreateHotel = async () => {
+    try {
+      let regionId = newHotel.regionId;
+
+      if (creatingNewRegion && newRegion.regionName && newRegion.countryName) {
+        const regionRes = await fetch(
+          `http://${data_file.ip}:${data_file.port}/regions/create`,
           {
-            method: "GET",
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${storedToken}`,
             },
+            body: JSON.stringify(newRegion),
           }
         );
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          if (
-            response.status === 401 &&
-            errorData.message &&
-            errorData.message.toLowerCase().includes("expired")
-          ) {
-            localStorage.removeItem("authToken");
-            navigate(
-              "/login" +
-                (errorData.message ? `?error=${errorData.message}` : "")
-            );
-            return;
-          }
-        }
+        if (!regionRes.ok) throw new Error("Failed to create new region");
 
-        const data = await response.json();
-        setRegions(data.regions); // Populate regions dropdown
-      } catch (error) {
-        console.error("Error fetching regions:", error);
+        const regionData = await regionRes.json();
+        regionId = regionData.regionId;
       }
-    };
 
-    fetchRegions();
-  }, [navigate, storedToken]);
+      const hotelPayload = {
+        ...newHotel,
+        regionId,
+        rooms,
+      };
 
-  // Handle image preview
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setImageUrl(URL.createObjectURL(file));
-      setShowImagePreview(true);
-    }
-  };
-
-  // Handle adding rooms
-  const handleAddRoom = () => {
-    const roomType = roomTypeInputRef.current.value.trim();
-    const roomName = roomNameInputRef.current.value.trim();
-
-    if (!roomType || !roomName) {
-      setErrors({
-        roomType: roomType ? "" : "Room type is required",
-        roomName: roomName ? "" : "Room name is required",
-      });
-      return;
-    }
-
-    // Check if the room already exists
-    if (rooms.some((room) => room.roomName === roomName)) {
-      alert("Room name already exists.");
-      return;
-    }
-
-    setRooms((prevRooms) => [...prevRooms, { roomType, roomName }]);
-    setErrors({ roomType: "", roomName: "" });
-    roomTypeInputRef.current.value = "";
-    roomNameInputRef.current.value = "";
-    setNewRoom(false);
-  };
-
-  // Submit hotel form
-  const submitHandler = async (event) => {
-    event.preventDefault();
-
-    const name = nameInputRef.current.value.trim();
-    const location = locationInputRef.current.value.trim();
-    const availableRooms = availableRoomsInputRef.current.value.trim();
-    const hotelRating = hotelRatingInputRef.current.value.trim();
-    const price = priceInputRef.current.value.trim();
-    const image = imageUrl; // Image URL or file path
-    const regionId = regionSelectRef.current.value;
-
-    // Validate the main form fields
-    if (
-      !name ||
-      !location ||
-      !availableRooms ||
-      !hotelRating ||
-      !price ||
-      !regionId
-    ) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-
-    // Payload for hotel creation
-    const payload = {
-      name,
-      location,
-      availableRooms,
-      hotelRating,
-      price,
-      image,
-      regionId,
-      rooms, // Include the added rooms
-    };
-
-    try {
-      const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/hotel/admin/create`, // Endpoint for creating hotel
+      const res = await fetch(
+        `http://${data_file.ip}:${data_file.port}/hotel/create`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${storedToken}`,
           },
-          body: JSON.stringify(payload),
+          body: JSON.stringify(hotelPayload),
         }
       );
 
-      const result = await response.json();
+      if (!res.ok) throw new Error("Failed to create hotel");
 
-      if (response.ok) {
-        alert("Hotel created successfully.");
-        navigate("/hotels"); // Navigate to hotel list page
-      } else {
-        alert(result.message || "Failed to create hotel.");
-      }
-    } catch (error) {
-      console.error("Error creating hotel:", error);
-      alert("Server error.");
+      const hotelData = await res.json().hotelId;
+      navigate(`/admin/hotels/${hotelData.hotelId}`, {
+        state: { newHotel: true },
+      });
+    } catch (err) {
+      setError(err);
     }
   };
 
   return (
-    <section className="hotel-section" id="hotel-block">
-      <div className="hotel-container">
-        <h2 id="hotel_title">Create Hotel</h2>
-        <form onSubmit={submitHandler}>
-          <div className="form-group">
-            {/* Hotel Name */}
-            <div className="input-container">
-              <i className="fa fa-building"></i>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                placeholder=" "
-                required
-                ref={nameInputRef}
-                aria-label="Hotel Name"
-              />
-              <label htmlFor="name">Hotel Name</label>
-            </div>
+    <div id="admin-hotel">
+      {error && <p className="error">Error: {error.message}</p>}
 
-            {/* Location */}
-            <div className="input-container">
-              <i className="fa fa-map-marker"></i>
-              <input
-                type="text"
-                id="location"
-                name="location"
-                placeholder=" "
-                required
-                ref={locationInputRef}
-                aria-label="Location"
-              />
-              <label htmlFor="location">Location</label>
-            </div>
+      <div className="card room">
+        <h2 className="title">Create New Hotel</h2>
+        <p>
+          <p>
+            <strong>Name:</strong>{" "}
+          </p>
 
-            {/* Available Rooms */}
-            <div className="input-container">
-              <i className="fa fa-bed"></i>
-              <input
-                type="number"
-                id="availableRooms"
-                name="availableRooms"
-                placeholder=" "
-                required
-                ref={availableRoomsInputRef}
-                aria-label="Available Rooms"
-              />
-              <label htmlFor="availableRooms">Available Rooms</label>
-            </div>
+          <input
+            type="text"
+            value={newHotel.name}
+            onChange={(e) => setNewHotel({ ...newHotel, name: e.target.value })}
+          />
+        </p>
+        <p>
+          <p>
+            <strong>Location:</strong>{" "}
+          </p>
 
-            {/* Hotel Rating */}
-            <div className="input-container">
-              <i className="fa fa-star"></i>
-              <input
-                type="number"
-                id="hotelRating"
-                name="hotelRating"
-                placeholder=" "
-                min="0"
-                max="5"
-                required
-                ref={hotelRatingInputRef}
-                aria-label="Hotel Rating"
-              />
-              <label htmlFor="hotelRating">Hotel Rating (0-5)</label>
-            </div>
+          <input
+            type="text"
+            value={newHotel.location}
+            onChange={(e) =>
+              setNewHotel({ ...newHotel, location: e.target.value })
+            }
+          />
+        </p>
+        <p>
+          <p>
+            <strong>Price:</strong>{" "}
+          </p>
 
-            {/* Price */}
-            <div className="input-container">
-              <i className="fa fa-dollar-sign"></i>
-              <input
-                type="number"
-                id="price"
-                name="price"
-                placeholder=" "
-                required
-                ref={priceInputRef}
-                aria-label="Price per Night"
-              />
-              <label htmlFor="price">Price per Night</label>
-            </div>
+          <input
+            type="number"
+            value={newHotel.price}
+            onChange={(e) =>
+              setNewHotel({ ...newHotel, price: +e.target.value })
+            }
+          />
+        </p>
+        <p>
+          <p>
+            <strong>Rating:</strong>{" "}
+          </p>
 
-            {/* Hotel Image */}
-            <div className="input-container">
-              <i className="fa fa-image"></i>
-              <input
-                type="file"
-                id="image"
-                name="image"
-                onChange={handleImageChange}
-                accept="image/*"
-                aria-label="Upload Hotel Image"
-              />
-              <label htmlFor="image">Hotel Image</label>
-            </div>
+          <input
+            type="number"
+            value={newHotel.hotelRating}
+            onChange={(e) =>
+              setNewHotel({ ...newHotel, hotelRating: +e.target.value })
+            }
+          />
+        </p>
+        <p>
+          <p>
+            <strong>Description:</strong>{" "}
+          </p>
 
-            {/* Image Preview */}
-            {showImagePreview && (
-              <div className="image-preview">
-                <img src={imageUrl} alt="Image Preview" />
-                <button onClick={() => setShowImagePreview(false)}>
-                  Remove Image
+          <textarea
+            value={newHotel.description}
+            onChange={(e) =>
+              setNewHotel({ ...newHotel, description: e.target.value })
+            }
+          />
+        </p>
+
+        <div className="region-select">
+          <div>
+            <strong>Region:</strong>
+            <button
+              className="add-room"
+              onClick={() => setCreatingNewRegion(true)}
+            >
+              <span>+ New Region</span>
+            </button>
+          </div>
+
+          {!creatingNewRegion ? (
+            <>
+              <div>
+                <select
+                  value={newHotel.regionId}
+                  onChange={(e) =>
+                    setNewHotel({ ...newHotel, regionId: e.target.value })
+                  }
+                  className="select-region"
+                >
+                  <option value="">-- Select Region --</option>
+                  {regions.map((region) => (
+                    <option key={region.regionId} value={region.regionId}>
+                      {region.regionName} - {region.countryName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </>
+          ) : (
+            <div>
+              <p>
+                <strong>Region Name:</strong>{" "}
+                <input
+                  type="text"
+                  value={newRegion.regionName}
+                  onChange={(e) =>
+                    setNewRegion({ ...newRegion, regionName: e.target.value })
+                  }
+                />
+              </p>
+              <p>
+                <strong>Country:</strong>{" "}
+                <input
+                  type="text"
+                  value={newRegion.countryName}
+                  onChange={(e) =>
+                    setNewRegion({ ...newRegion, countryName: e.target.value })
+                  }
+                />
+              </p>
+              <div className="add-room-container">
+                <button
+                  className="add-room cancel"
+                  type="button"
+                  onClick={() => setCreatingNewRegion(false)}
+                >
+                  <span>Cancel</span>
+                </button>
+                <button className="add-room">
+                  <span>Done</span>
                 </button>
               </div>
-            )}
+            </div>
+          )}
+        </div>
+      </div>
 
-            {/* Region Select */}
-            <div className="input-container">
-              <i className="fa fa-cogs"></i>
-              <select
-                name="regionId"
-                id="regionId"
-                ref={regionSelectRef}
-                required
-                aria-label="Select Region"
-              >
-                <option value="">Select Region</option>
-                {regions.map((region) => (
-                  <option key={region.id} value={region.id}>
-                    {region.countryName}
+      <div className="card">
+        <h3 className="title">Rooms</h3>
+        {rooms.map((room, index) => (
+          <div key={index} className="room">
+            <i
+              className="fa fa-trash"
+              onClick={() => handleRemoveRoom(index)}
+            ></i>
+            <p>
+              <strong>Type:</strong> {room.roomType}
+            </p>
+            <p>
+              <strong>Name:</strong> {room.roomName}
+            </p>
+            <p>
+              <strong>Capacity:</strong> {room.capacity}
+            </p>
+            <p>
+              <strong>Base Price:</strong> ${room.basePrice}
+            </p>
+            <p>
+              <strong>Quantity:</strong> {room.quantity}
+            </p>
+          </div>
+        ))}
+
+        {addRoom ? (
+          <form className="room" onSubmit={handleAddRoom}>
+            <p>
+              <strong>Room Type:</strong>{" "}
+              <select ref={roomTypeRef}>
+                <option value="">-- Select Room Type --</option>
+                {roomTypes.map(({ roomId, roomType, roomName }, i) => (
+                  <option value={roomId}>
+                    {roomName}, {roomType}
                   </option>
                 ))}
               </select>
+            </p>
+            <p>
+              <strong>Room Type:</strong>{" "}
+              <input ref={roomTypeRef} type="text" required />
+            </p>
+            <p>
+              <strong>Room Name:</strong>{" "}
+              <input ref={roomNameRef} type="text" required />
+            </p>
+            <p>
+              <strong>Capacity:</strong>{" "}
+              <input ref={capacityRef} type="number" required />
+            </p>
+            <p>
+              <strong>Base Price:</strong>{" "}
+              <input ref={basePriceRef} type="number" step="0.01" required />
+            </p>
+            <p>
+              <strong>Quantity:</strong>{" "}
+              <input ref={quantityRef} type="number" required />
+            </p>
+            <div className="add-room-container">
+              <button
+                className="add-room cancel"
+                type="button"
+                onClick={() => setAddRoom(false)}
+              >
+                <span>Cancel</span>
+              </button>
+              <button className="add-room" type="submit">
+                <span>Add Room</span>
+              </button>
             </div>
-
-            <div className="room-section">
-              <h3 className="rooms-add-title">
-                Rooms Added
-                <i
-                  className="fa fa-plus-square"
-                  onClick={() => setNewRoom(true)}
-                ></i>
-              </h3>
-
-              <div className="added-rooms">
-                {newRoom && (
-                  <div className="room_container">
-                    <span className="cancel-room-icon">
-                      <i
-                        className="fa fa-minus"
-                        onClick={() => setNewRoom(false)}
-                      ></i>
-                    </span>
-
-                    {/* Room Type */}
-                    <div className="input-container">
-                      <i className="fa fa-bed"></i>
-                      <input
-                        type="text"
-                        id="roomType"
-                        name="roomType"
-                        placeholder=" "
-                        required
-                        ref={roomTypeInputRef}
-                        aria-label="Room Type"
-                      />
-                      <label htmlFor="roomType">Room Type</label>
-                      {errors.roomType && (
-                        <span className="error">{errors.roomType}</span>
-                      )}
-                    </div>
-
-                    {/* Room Name */}
-                    <div className="input-container">
-                      <i className="fa fa-hotel"></i>
-                      <input
-                        type="text"
-                        id="roomName"
-                        name="roomName"
-                        placeholder=" "
-                        required
-                        ref={roomNameInputRef}
-                        aria-label="Room Name"
-                      />
-                      <label htmlFor="roomName">Room Name</label>
-                      {errors.roomName && (
-                        <span className="error">{errors.roomName}</span>
-                      )}
-                    </div>
-
-                    <div className="room_buttons">
-                      <button
-                        type="button"
-                        onClick={() => setNewRoom(false)}
-                        className="cancel-room-button"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleAddRoom}
-                        className="add-room-button"
-                      >
-                        Add Room
-                      </button>
-                    </div>
-                  </div>
-                )}
-                {rooms.length > 0 && (
-                  <ul>
-                    {rooms.map((room, index) => (
-                      <li key={index}>
-                        <div>
-                          {room.roomType} - {room.roomName}
-                        </div>
-                        <i className="fa fa-minus"></i>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <button type="submit" className="hotel_button">
-              Create Hotel
-            </button>
-          </div>
-        </form>
+          </form>
+        ) : (
+          <button className="add-room" onClick={() => setAddRoom(true)}>
+            <span>Add Room</span>
+          </button>
+        )}
       </div>
-    </section>
+
+      <div className="save-hotel-wrap">
+        <button className="save-hotel" onClick={handleCreateHotel}>
+          <span>Save Hotel</span>
+        </button>
+      </div>
+    </div>
   );
 }
 

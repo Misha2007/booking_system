@@ -2,14 +2,17 @@ import { useState, useEffect } from "react";
 import data_file from "../../data.json";
 import { useNavigate } from "react-router-dom";
 
-export default function useHotelById(props) {
+export default function useHotelById({ route, method, enabled = true }) {
   const [response, setResponse] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const storedToken = localStorage.getItem("authToken");
 
   useEffect(() => {
+    console.log(!!enabled);
+    if (!enabled) return;
+
     const fetchData = async () => {
       if (!storedToken) {
         navigate("/login");
@@ -18,9 +21,9 @@ export default function useHotelById(props) {
 
       try {
         const res = await fetch(
-          `http://${data_file.ip}:${data_file.port}${props.route}`,
+          `http://${data_file.ip}:${data_file.port}${route}`,
           {
-            method: props.method,
+            method: method,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${storedToken}`,
@@ -55,7 +58,7 @@ export default function useHotelById(props) {
       }
     };
 
-    if (props.route && props.method) {
+    if (route && method) {
       fetchData();
     }
   }, []);

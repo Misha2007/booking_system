@@ -57,10 +57,6 @@ Hotel.init(
     price: {
       type: DataTypes.INTEGER,
     },
-    image: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     regionId: {
       type: DataTypes.INTEGER,
       allowNull: false,

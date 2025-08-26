@@ -11,6 +11,7 @@ function Sidebar(props) {
   const [hotelId, setHotelId] = useState(params.hotelId);
   const navigate = useNavigate();
   const storedToken = localStorage.getItem("authToken");
+  const newHotel = props.newHotel;
 
   const sections = [
     {
@@ -40,16 +41,31 @@ function Sidebar(props) {
   return (
     <div id="admin-hotel-wrap" className="sidebar">
       <div className="sidebar-details">
-        {sections.map((section) => (
-          <h2
-            key={section.key}
-            className={props.openSection === section.key ? "main" : ""}
-            onClick={() => props.setOpenSection(section.key)}
-            style={{ cursor: "pointer" }}
-          >
-            {section.label}
-          </h2>
-        ))}
+        {sections.map((section) =>
+          newHotel ? (
+            <h2
+              key={section.key}
+              className={props.openSection === section.key ? "main" : ""}
+              onClick={() => props.setOpenSection(section.key)}
+              style={{ cursor: "pointer" }}
+            >
+              {section.label}
+            </h2>
+          ) : (
+            <>
+              {section.key === "HotelInfo" && (
+                <h2
+                  key={section.key}
+                  className={props.openSection === section.key ? "main" : ""}
+                  onClick={() => props.setOpenSection(section.key)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {section.label}
+                </h2>
+              )}
+            </>
+          )
+        )}
       </div>
     </div>
   );

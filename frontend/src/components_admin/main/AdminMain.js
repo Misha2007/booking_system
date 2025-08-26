@@ -119,7 +119,10 @@ function AdminMain() {
                               <div key={subIndex}>
                                 <p>
                                   <h2>Status:</h2>
-                                  {status}
+                                  {status
+                                    ? String(status).charAt(0).toUpperCase() +
+                                      String(status).slice(1)
+                                    : "None"}
                                 </p>
                                 <p>
                                   <h2>Count:</h2>
@@ -134,7 +137,8 @@ function AdminMain() {
                               <div key={subIndex}>
                                 <p>
                                   <h2>Role:</h2>
-                                  {role}
+                                  {String(role).charAt(0).toUpperCase() +
+                                    String(role).slice(1)}
                                 </p>
                                 <p>
                                   <h2>Count:</h2>

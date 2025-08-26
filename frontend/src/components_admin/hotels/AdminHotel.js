@@ -1,20 +1,25 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useHotelById from "../hooks/useHotelById";
 import Sidebar from "./Sidebar";
 import AddImage from "./AddImage";
 import "./AdminHotel.css";
 import HotelInfo from "./HotelInfo";
 import Gallery from "./Gallery";
+import NewHotel from "./NewHotel";
 
 function AdminHotel() {
   const navigate = useNavigate();
   const { hotelId } = useParams();
+  const newHotel = !!hotelId;
 
   const { response, loading, error } = useHotelById({
     route: `/hotel-admin/${hotelId}`,
     method: "GET",
+    enabled: newHotel,
   });
+
+  console.log(response, loading, error);
 
   const [openSection, setOpenSection] = useState("HotelInfo");
 
@@ -48,6 +53,7 @@ function AdminHotel() {
         <Sidebar
           setOpenSection={setOpenSectionFunction}
           openSection={openSection}
+          newHotel={newHotel}
         />
         <div className="hotel-info-wrap">
           <div className="close">
@@ -57,11 +63,19 @@ function AdminHotel() {
             ></i>
           </div>
           <h1>Admin Panel - Hotel Details</h1>
-          {openSection === "HotelInfo" && <HotelInfo />}
-          {openSection === "checkDates" && <p>Coming soon...</p>}
-          {openSection === "AddImage" && <AddImage hotel={response.hotel} />}
-          {openSection === "Gallery" && (
-            <Gallery hotelId={response.hotel.hotelId} />
+          {newHotel ? (
+            <>
+              {openSection === "HotelInfo" && <HotelInfo />}
+              {openSection === "checkDates" && <p>Coming soon...</p>}
+              {openSection === "AddImage" && (
+                <AddImage hotel={response ? response.hotel : ""} />
+              )}
+              {openSection === "Gallery" && (
+                <Gallery hotelId={response ? response.hotel.hotelId : ""} />
+              )}
+            </>
+          ) : (
+            <NewHotel></NewHotel>
           )}
         </div>
       </div>

@@ -23,7 +23,7 @@ class hotelController {
             where: {
               isCover: true,
             },
-            required: true,
+            required: false,
           },
         ],
       });
@@ -197,6 +197,47 @@ class hotelController {
       res.json({ image: image });
     } catch (err) {
       console.error("Error creating image", err);
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
+  };
+
+  createHotel = async (req, res) => {
+    try {
+      const {
+        name,
+        location,
+        price,
+        hotelRating,
+        description,
+        regionId,
+        rooms,
+      } = req.body;
+      const hotel = await Hotel.create({
+        name,
+        location,
+        price,
+        hotelRating,
+        description,
+        regionId,
+      });
+      await Promise.all(
+        rooms.map(async (room) => {
+          const createdRoom = await Room.create({
+            roomType: room.roomType,
+            roomName: room.roomName,
+          });
+          await RoomInfo.create({
+            roomId: createdRoom.roomId,
+            hotelId: hotel.hotelId,
+            quantity: room.quantity,
+            capacity: room.capacity,
+            basePrice: room.basePrice,
+          });
+        })
+      );
+      res.json({ hotel: hotel });
+    } catch (err) {
+      console.error("Error creating hotel", err);
       res.status(500).json({ message: "Server error", error: err.message });
     }
   };
