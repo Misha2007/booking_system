@@ -25,7 +25,7 @@ function AdminMain() {
   };
 
   const { response, isLoading, error } = useHotelById({
-    route: "/admin/getHeaderData",
+    route: "admin/getHeaderData",
     method: "GET",
   });
 
