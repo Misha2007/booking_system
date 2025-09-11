@@ -14,7 +14,7 @@ function AdminHotel() {
   const newHotel = !!hotelId;
 
   const { response, loading, error } = useHotelById({
-    route: `/hotel-admin/${hotelId}`,
+    route: `hotel-admin/${hotelId}`,
     method: "GET",
     enabled: newHotel,
   });

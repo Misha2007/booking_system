@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import PaymentForm from "./PaymentForm";
-import data_file from "../../data.json";
-
 import { useLocation } from "react-router-dom";
 
-const stripePromise = loadStripe(data_file.PUBLIC_KEY);
+const REACT_APP_PUBLIC_KEY = process.env.REACT_APP_PUBLIC_KEY;
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
+
+const stripePromise = loadStripe(REACT_APP_PUBLIC_KEY);
 
 const PaymentWrapper = () => {
   const [clientSecret, setClientSecret] = useState(null);
@@ -15,17 +16,14 @@ const PaymentWrapper = () => {
 
   useEffect(() => {
     const fetchClientSecret = async () => {
-      const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/payment/create`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            customerEmail: user.email,
-            bookingData: bookingData,
-          }),
-        }
-      );
+      const response = await fetch(`${REACT_APP_API_URL}payment/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerEmail: user.email,
+          bookingData: bookingData,
+        }),
+      });
       const { clientSecret } = await response.json();
       setClientSecret(clientSecret);
     };

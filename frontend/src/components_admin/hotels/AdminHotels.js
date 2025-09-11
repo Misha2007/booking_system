@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import data_file from "../../data.json";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 function AdminHotels() {
   const [hotels, setHotels] = useState([]); // Default to an empty array
@@ -21,16 +22,13 @@ function AdminHotels() {
   // Fetch hotel data from the server
   const fetchHotelData = async () => {
     try {
-      const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/hotels`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
+      const response = await fetch(`${REACT_APP_API_URL}hotels`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -58,16 +56,13 @@ function AdminHotels() {
   // Handle delete hotel
   const handleDeleteSubmit = async (id) => {
     try {
-      const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/hotels/delete/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
+      const response = await fetch(`${REACT_APP_API_URL}hotels/delete/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Failed to delete hotel");

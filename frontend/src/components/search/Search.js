@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "./Search.css";
 import Calendar from "../UI/Calendar.js";
 
-const API_URL = "http://localhost:3003";
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 const Search = () => {
   const [hotels, setHotels] = useState([]);
@@ -54,7 +54,7 @@ const Search = () => {
     ).padStart(2, "0")}-2025`;
     try {
       const response = await fetch(
-        `${API_URL}/hotels/available?from=${from}&to=${to}&country=${selectedLocation}`
+        `${REACT_APP_API_URL}hotels/available?from=${from}&to=${to}&country=${selectedLocation}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");

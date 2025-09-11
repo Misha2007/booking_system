@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import data_file from "../../data.json";
 import "./Users.css";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 function Users() {
   const [clients, setClients] = useState(null);
@@ -26,7 +27,7 @@ function Users() {
     const fetchUserData = async () => {
       try {
         const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/user/admin/getAllUsers`,
+          `${REACT_APP_API_URL}user/admin/getAllUsers`,
           {
             method: "GET",
             headers: {
@@ -93,17 +94,14 @@ function Users() {
     };
 
     try {
-      const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/user/admin/create`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`${REACT_APP_API_URL}user/admin/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
       const result = await response.json();
 

@@ -1,9 +1,13 @@
-import data_file from "../../data.json";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./AdminHotel.css";
 import { ImageConfig } from "./ImageConfig";
 import "./AddImage.css";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
+const REACT_APP_UnsignedUploadPreset =
+  process.env.REACT_APP_UnsignedUploadPreset;
+const REACT_APP_CloudName = process.env.REACT_APP_CloudName;
 
 function AddImage(props) {
   const [loading, setLoading] = useState(false);
@@ -69,10 +73,10 @@ function AddImage(props) {
       const uploadPromises = fileList.map(async (file) => {
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("upload_preset", data_file.unsignedUploadPreset);
+        formData.append("upload_preset", REACT_APP_UnsignedUploadPreset);
 
         const res = await fetch(
-          `https://api.cloudinary.com/v1_1/${data_file.cloudName}/upload`,
+          `https://api.cloudinary.com/v1_1/${REACT_APP_CloudName}/upload`,
           {
             method: "POST",
             body: formData,
@@ -97,7 +101,7 @@ function AddImage(props) {
           payload.roomInfoId = selectedRoomId;
         }
 
-        return fetch(`http://${data_file.ip}:${data_file.port}/images/upload`, {
+        return fetch(`${REACT_APP_API_URL}images/upload`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

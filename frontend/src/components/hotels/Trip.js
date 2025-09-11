@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import Error from "../UI/Error";
 import Calendar from "../UI/Calendar";
-import data_file from "../../data.json";
 import { FaUsers } from "react-icons/fa";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 const Trip = (props) => {
   const [error, setError] = useState(null);
@@ -43,7 +44,7 @@ const Trip = (props) => {
 
       try {
         const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/rooms/hotel/${props.hotel.hotelId}/available?from=${from}&to=${to}`
+          `${REACT_APP_API_URL}rooms/hotel/${props.hotel.hotelId}/available?from=${from}&to=${to}`
         );
         const data = await response.json();
 

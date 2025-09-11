@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./Hotels.css";
-import data_file from "../../data.json";
 import { useNavigate } from "react-router-dom";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 const Hotels = () => {
   const [hotels, setHotels] = useState([]);
@@ -10,9 +11,7 @@ const Hotels = () => {
   useEffect(() => {
     const fetchHotels = async () => {
       try {
-        const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/hotels`
-        );
+        const response = await fetch(`${REACT_APP_API_URL}hotels`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

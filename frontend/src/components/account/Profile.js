@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import Error from "../UI/Error";
 import { useNavigate } from "react-router-dom";
-import data_file from "../../data.json";
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 const Profile = () => {
   const [error, setError] = useState(null);
@@ -38,16 +38,13 @@ const Profile = () => {
       }
 
       try {
-        const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/user/profile`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${storedToken}`,
-            },
-          }
-        );
+        const response = await fetch(`${REACT_APP_API_URL}user/profile`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
+          },
+        });
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -140,17 +137,14 @@ const Profile = () => {
     }
 
     try {
-      const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/user/profile/edit`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(updatedData),
-        }
-      );
+      const response = await fetch(`${REACT_APP_API_URL}user/profile/edit`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updatedData),
+      });
 
       if (!response.ok) {
         throw new Error(response.statusText);

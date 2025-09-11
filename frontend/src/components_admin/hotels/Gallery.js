@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import data_file from "../../data.json";
 import "./Gallery.css";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 function Gallery({ hotelId }) {
   const [images, setImages] = useState([]);
@@ -14,7 +15,7 @@ function Gallery({ hotelId }) {
     setError(null);
     try {
       const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/images/get-by-hotelId/${hotelId}`,
+        `${REACT_APP_API_URL}images/get-by-hotelId/${hotelId}`,
         {
           method: "GET",
           headers: {
@@ -40,15 +41,12 @@ function Gallery({ hotelId }) {
   const handleDelete = async (imageId) => {
     alert("Are you sure you want to delete this image?");
     try {
-      const res = await fetch(
-        `http://${data_file.ip}:${data_file.port}/images/delete/${imageId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
+      const res = await fetch(`${REACT_APP_API_URL}images/delete/${imageId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
       if (!res.ok) throw new Error("Failed to delete image");
       setImages((prev) => prev.filter((img) => img.id !== imageId));
       fetchImages();
@@ -60,7 +58,7 @@ function Gallery({ hotelId }) {
   const handleSetCover = async (imageId) => {
     try {
       const res = await fetch(
-        `http://${data_file.ip}:${data_file.port}/images/set-cover/${imageId}`,
+        `${REACT_APP_API_URL}images/set-cover/${imageId}`,
         {
           method: "PATCH",
           headers: {

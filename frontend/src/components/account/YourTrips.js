@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "../home/Hotels.css";
-import data_file from "../../data.json";
 import "./YourTrips.css";
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 const YourTrips = () => {
   const [trips, setTrips] = useState([]);
@@ -13,16 +13,13 @@ const YourTrips = () => {
       const storedToken = localStorage.getItem("authToken");
 
       try {
-        const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/user/profile`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${storedToken}`,
-            },
-          }
-        );
+        const response = await fetch(`${REACT_APP_API_URL}user/profile`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
+          },
+        });
 
         if (!response.ok) return;
 
@@ -40,7 +37,7 @@ const YourTrips = () => {
     const fetchTrips = async () => {
       try {
         const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/trips/get/${userData}`
+          `${REACT_APP_API_URL}trips/get/${userData}`
         );
         if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();

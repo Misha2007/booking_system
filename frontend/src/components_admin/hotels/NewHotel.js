@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import data_file from "../../data.json";
 import "./NewHotel.css";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 function NewHotel() {
   const [newHotel, setNewHotel] = useState({
@@ -43,10 +44,10 @@ function NewHotel() {
   const fetchInitialData = async () => {
     try {
       const [regionRes, roomTypeRes] = await Promise.all([
-        fetch(`http://${data_file.ip}:${data_file.port}/countries/all`, {
+        fetch(`${REACT_APP_API_URL}countries/all`, {
           headers: { Authorization: `Bearer ${storedToken}` },
         }),
-        fetch(`http://${data_file.ip}:${data_file.port}/rooms/room-types`, {
+        fetch(`${REACT_APP_API_URL}rooms/room-types`, {
           headers: { Authorization: `Bearer ${storedToken}` },
         }),
       ]);
@@ -100,17 +101,14 @@ function NewHotel() {
       let regionId = newHotel.regionId;
 
       if (creatingNewRegion && newRegion.regionName && newRegion.countryName) {
-        const regionRes = await fetch(
-          `http://${data_file.ip}:${data_file.port}/regions/create`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${storedToken}`,
-            },
-            body: JSON.stringify(newRegion),
-          }
-        );
+        const regionRes = await fetch(`${REACT_APP_API_URL}regions/create`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
+          },
+          body: JSON.stringify(newRegion),
+        });
 
         if (!regionRes.ok) throw new Error("Failed to create new region");
 
@@ -124,17 +122,14 @@ function NewHotel() {
         rooms,
       };
 
-      const res = await fetch(
-        `http://${data_file.ip}:${data_file.port}/hotel/create`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify(hotelPayload),
-        }
-      );
+      const res = await fetch(`${REACT_APP_API_URL}hotel/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+        body: JSON.stringify(hotelPayload),
+      });
 
       if (!res.ok) throw new Error("Failed to create hotel");
 

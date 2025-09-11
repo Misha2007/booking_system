@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import data_file from "../../data.json";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 const SuccessfulPage = () => {
   const navigate = useNavigate();
@@ -14,17 +15,14 @@ const SuccessfulPage = () => {
       if (!bookingData || !token) return;
 
       try {
-        const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/trips/create`,
-          {
-            method: "POST",
-            body: JSON.stringify(bookingData),
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${REACT_APP_API_URL}trips/create`, {
+          method: "POST",
+          body: JSON.stringify(bookingData),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
           const errorMessage = await response.text();

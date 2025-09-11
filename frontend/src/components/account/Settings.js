@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import data_file from "../../data.json";
 import "./Settings.css";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -35,16 +36,13 @@ const Settings = () => {
     setDeleting(true);
     setError(null);
     try {
-      const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/user/delete`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`http://${REACT_APP_API_URL}/user/delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.ok) {
         localStorage.removeItem("authToken");
         navigate("/login");

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import "./Countries.css";
-import data_file from "../../data.json";
 import Result from "./Result";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 const Countries = () => {
   const [countries, setCountries] = useState([]);
@@ -15,9 +16,7 @@ const Countries = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/countries/all`
-        );
+        const response = await fetch(`${REACT_APP_API_URL}countries/all`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

@@ -1,7 +1,8 @@
-import data_file from "../../data.json";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./AdminHotel.css";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 function HotelInfo() {
   const params = useParams();
@@ -23,7 +24,7 @@ function HotelInfo() {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/hotel-admin/${hotelId}`,
+        `${REACT_APP_API_URL}hotel-admin/${hotelId}`,
         {
           method: "GET",
           headers: {
@@ -92,17 +93,14 @@ function HotelInfo() {
     };
 
     try {
-      const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/rooms/hotel/add-room`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify(room),
-        }
-      );
+      const response = await fetch(`${REACT_APP_API_URL}rooms/hotel/add-room`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+        body: JSON.stringify(room),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -134,7 +132,7 @@ function HotelInfo() {
   const handleDeleteRoom = async (roomId) => {
     try {
       const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/rooms/delete/${roomId}`,
+        `${REACT_APP_API_URL}rooms/delete/${roomId}`,
         {
           method: "DELETE",
           headers: {

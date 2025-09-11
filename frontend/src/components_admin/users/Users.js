@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import data_file from "../../data.json";
 import "./Users.css";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 function Users() {
   const [clients, setClients] = useState(null);
@@ -23,7 +24,7 @@ function Users() {
   const fetchUserData = async () => {
     try {
       const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/user/admin/getAllUsers`,
+        `${REACT_APP_API_URL}user/admin/getAllUsers`,
         {
           method: "GET",
           headers: {
@@ -66,7 +67,7 @@ function Users() {
   const handleDeleteSubmit = async (id) => {
     try {
       const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/user/admin/delete/${id}`,
+        `${REACT_APP_API_URL}user/admin/delete/${id}`,
         {
           method: "DELETE",
           headers: {

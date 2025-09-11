@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import data_file from "../../data.json";
 import { useNavigate } from "react-router-dom";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 export default function useHotelById({ route, method, enabled = true }) {
   const [response, setResponse] = useState(null);
@@ -20,16 +21,13 @@ export default function useHotelById({ route, method, enabled = true }) {
       }
 
       try {
-        const res = await fetch(
-          `http://${data_file.ip}:${data_file.port}${route}`,
-          {
-            method: method,
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${storedToken}`,
-            },
-          }
-        );
+        const res = await fetch(`${REACT_APP_API_URL}${route}`, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
+          },
+        });
 
         const data = await res.json();
 

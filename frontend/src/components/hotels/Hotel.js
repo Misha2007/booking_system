@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import data_file from "../../data.json";
 import Trip from "./Trip";
 import "./Hotel.css";
 import NotFound from "../UI/NotFound";
 import "./Gallery.css";
+
+const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 const Result = (props) => {
   const navigate = useNavigate();
@@ -33,9 +34,7 @@ const Result = (props) => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch(
-          `http://${data_file.ip}:${data_file.port}/hotel/${hotelId}`
-        );
+        const response = await fetch(`${REACT_APP_API_URL}hotel/${hotelId}`);
 
         if (response.status === 404) {
           setNotFound(true);
@@ -72,16 +71,13 @@ const Result = (props) => {
   const onSubmitTrip = async (tripData) => {
     const storedToken = localStorage.getItem("authToken");
     try {
-      const response = await fetch(
-        `http://${data_file.ip}:${data_file.port}/user/profile`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
+      const response = await fetch(`${REACT_APP_API_URL}/user/profile`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
 
       if (!response.ok) {
         setError({
