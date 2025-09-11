@@ -1,0 +1,7 @@
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "REACT_APP_API_FRONTEND_PORT,REACT_APP_API_IP,REACT_APP_API_URL,REACT_APP_PUBLIC_KEY,REACT_APP_CloudName,REACT_APP_UnsignedUploadPreset"
+
+[[redirects]]
+from = "/*"
+to = "index.html"
+status = 200
