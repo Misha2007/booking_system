@@ -58,7 +58,11 @@ Trip.init(
         model: "Rooms",
         key: "Room",
       },
-    }, 
+    },
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
   },
   {
     sequelize,

@@ -6,7 +6,7 @@ import {
 } from "@stripe/react-stripe-js";
 import "./Payment.css";
 
-const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
+const REACT_APP_FRONT_URL = process.env.REACT_APP_FRONT_URL;
 
 const PaymentForm = ({ clientSecret }) => {
   const stripe = useStripe();
@@ -24,7 +24,7 @@ const PaymentForm = ({ clientSecret }) => {
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements, // this includes the PaymentElement input
       confirmParams: {
-        return_url: `${REACT_APP_API_URL}payment-success`,
+        return_url: `${REACT_APP_FRONT_URL}payment-success`,
       },
     });
 

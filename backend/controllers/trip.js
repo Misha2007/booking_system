@@ -8,10 +8,18 @@ class tripController {
   }
 
   createTrip = async (req, res) => {
-    console.log("Req body222:", req.body);
+    console.log("Creating trip with price:", req.body.price);
+
     try {
-      const { departureDate, arrivalDate, clientId, hotelId, regionId, roomId } =
-        req.body;
+      const {
+        departureDate,
+        arrivalDate,
+        clientId,
+        hotelId,
+        regionId,
+        roomId,
+        price,
+      } = req.body;
 
       const newTrip = await models.Trip.create({
         clientId,
@@ -20,6 +28,7 @@ class tripController {
         roomId,
         hotelId,
         regionId,
+        price,
         metadata: {
           product_name: "Deluxe Hotel Room",
           product_id: "abc123",
@@ -34,7 +43,7 @@ class tripController {
 
       console.log(`[Server]: New trip "${newTrip}" created`);
     } catch (err) {
-      console.log(err.message);
+      console.error(err);
 
       res.status(500).json({
         message: "Error creating trip",
