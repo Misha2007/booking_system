@@ -71,7 +71,7 @@ const Result = (props) => {
   const onSubmitTrip = async (tripData) => {
     const storedToken = localStorage.getItem("authToken");
     try {
-      const response = await fetch(`${REACT_APP_API_URL}/user/profile`, {
+      const response = await fetch(`${REACT_APP_API_URL}user/profile`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
