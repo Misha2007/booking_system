@@ -236,18 +236,15 @@ const Trip = (props) => {
             <label htmlFor="roomSelect">Room</label>
             <div className="select">
               <i className="fa fa-bed"></i>
-              {console.log(
-                "Selected room:",
-                selectedRoom.available === 0 || rooms.length === 0
-              )}
               <select
                 id="roomSelect"
                 name="roomSelect"
-                value={selectedRoom}
+                value={selectedRoom.roomId || ""}
                 onChange={(e) => {
                   const selectedId = e.target.value;
                   const room = rooms.find((r) => r.roomId == selectedId);
                   setSelectedRoom(room);
+                  console.log("Selected room ", room);
                 }}
                 required
                 style={{
@@ -262,7 +259,6 @@ const Trip = (props) => {
                 </option>
                 {rooms.map((room) => (
                   <option key={room.roomId} value={room.roomId}>
-                    {console.log(room.available === 0 && "red")}
                     {room.details.room.roomName || `Room ${room.roomId}`} -{" "}
                     {room.details.room.roomType}
                   </option>
@@ -274,6 +270,7 @@ const Trip = (props) => {
         {calendarOpen ? <Calendar calendarHandler={calendarHandler} /> : ""}
         {selectedRoom.available === 0 && (
           <p style={{ color: "red" }}>
+            {console.log(selectedRoom.available)}
             Sorry, this type of room is already sold out. Select another room
             type or/and other dates
           </p>
@@ -291,7 +288,24 @@ const Trip = (props) => {
           <span>${calculateTotalPrice()}</span>
         </div>
 
-        <button type="submit" className="login_button">
+        <button
+          type="submit"
+          className="login_button"
+          style={{
+            pointerEvents:
+              rooms.length === 0 ||
+              selectedRoom.available === 0 ||
+              !selectedRoom
+                ? "none"
+                : "auto",
+            opacity:
+              rooms.length === 0 ||
+              selectedRoom.available === 0 ||
+              !selectedRoom
+                ? 0.5
+                : 1,
+          }}
+        >
           Go to Checkout
         </button>
       </div>
