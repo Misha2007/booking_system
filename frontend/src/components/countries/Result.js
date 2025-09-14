@@ -47,9 +47,9 @@ const Result = () => {
     localStorage.setItem("favourites", JSON.stringify(updatedFavourites));
   };
 
-  const userChecker = () => {
+  const userChecker = (id) => {
     if (localStorage.getItem("authToken")) {
-      console.log("User logged in");
+      navigate(`/hotel/${id}`);
     } else {
       alert("You should log in!!!");
     }
@@ -108,26 +108,28 @@ const Result = () => {
                     className="book-now"
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent navigation
-                      userChecker();
+                      userChecker(hotel.hotelId);
                     }}
                   >
                     Book now
                   </button>
-                  <button
-                    className="book-now"
-                    onClick={() => toggleFavourite(hotel.hotelId)}
-                  >
-                    <span>
-                      {favourites.includes(hotel.hotelId)
-                        ? "Remove from favourites"
-                        : "Add to favourites"}{" "}
-                    </span>
-                    <i
-                      className={`fa fa-heart${
-                        favourites.includes(hotel.hotelId) ? " fav" : ""
-                      }`}
-                    ></i>
-                  </button>
+                  {localStorage.getItem("authToken") && (
+                    <button
+                      className="book-now"
+                      onClick={() => toggleFavourite(hotel.hotelId)}
+                    >
+                      <span>
+                        {favourites.includes(hotel.hotelId)
+                          ? "Remove from favourites"
+                          : "Add to favourites"}{" "}
+                      </span>
+                      <i
+                        className={`fa fa-heart${
+                          favourites.includes(hotel.hotelId) ? " fav" : ""
+                        }`}
+                      ></i>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

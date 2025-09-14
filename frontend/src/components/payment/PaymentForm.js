@@ -20,6 +20,7 @@ const PaymentForm = ({ clientSecret }) => {
     if (!stripe || !elements || !clientSecret) return;
 
     setIsProcessing(true);
+    console.log(REACT_APP_FRONT_URL);
 
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements, // this includes the PaymentElement input
