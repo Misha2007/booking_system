@@ -311,24 +311,11 @@ const Result = (props) => {
                   </p>
                   <p>${hotel.price} Starting</p>
                 </div>
-                {/* <div className="buttons-container">
-                  <button
-                    className="book-now"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      userChecker();
-                    }}
-                  >
-                    Book now
-                  </button>
-                  <button
-                    className="book-now"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <span>Add to favourites </span>
-                    <i className="fa fa-heart"></i>
-                  </button>
-                </div> */}
+                {!authorized && (
+                  <p style={{ color: "#f14a4aff" }}>
+                    If you want to book a hotel, you need to authorize.
+                  </p>
+                )}
               </div>
             </div>
             {authorized && (

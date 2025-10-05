@@ -103,17 +103,17 @@ const Result = () => {
                   </p>
                   <p>${hotel.price} Starting</p>
                 </div>
-                <div className="buttons-container">
-                  <button
-                    className="book-now"
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent navigation
-                      userChecker(hotel.hotelId);
-                    }}
-                  >
-                    Book now
-                  </button>
-                  {localStorage.getItem("authToken") && (
+                {localStorage.getItem("authToken") && (
+                  <div className="buttons-container">
+                    <button
+                      className="book-now"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent navigation
+                        userChecker(hotel.hotelId);
+                      }}
+                    >
+                      Book now
+                    </button>
                     <button
                       className="book-now"
                       onClick={() => toggleFavourite(hotel.hotelId)}
@@ -129,8 +129,8 @@ const Result = () => {
                         }`}
                       ></i>
                     </button>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}

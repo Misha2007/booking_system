@@ -38,7 +38,7 @@
 .search-wrapper {
   position: relative;
   display: inline-block;
-  width: 125%;
+  width: 120%;
   z-index: 1;
 }
 
@@ -114,7 +114,7 @@
 
 .hero-images {
   position: relative;
-  width: 50vw;
+  width: 40vw;
   height: 70vh;
   display: flex;
   justify-content: center;
@@ -232,6 +232,58 @@
   margin: 0;
   font-size: 1.8rem;
   font-family: "Courier Prime", Courier, monospace;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading div {
+  width: 20px;
+  height: 20px;
+  margin: 0 5px;
+  background-color: #3c5c46;
+  border-radius: 50%;
+  animation: loading 1s infinite ease-in-out;
+}
+
+.loading div:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.loading div:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.loading div:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes loading {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-8px);
+  }
+  60% {
+    transform: translateY(-4px);
+  }
 }
 
 @media (any-pointer: coarse) {

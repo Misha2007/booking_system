@@ -7,7 +7,6 @@ const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 const Search = () => {
   const [hotels, setHotels] = useState([]);
-  const [query, setQuery] = useState("");
   const [results, setResults] = useState(null);
   const scrollRef = useRef(null);
   const navigate = useNavigate();
@@ -16,6 +15,9 @@ const Search = () => {
   const [selectedDateTo, setSelectedDateTo] = useState(null);
   const [peopleCount, setPeopleCount] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
+  const [countries, setCountries] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isParams, setIsParams] = useState(false);
 
   const location = useLocation();
 
@@ -32,6 +34,7 @@ const Search = () => {
     if (from && to) {
       const [fromMonth, fromDay, fromYear] = from.split("-");
       const [toMonth, toDay, toYear] = to.split("-");
+      console.log(parseInt(fromDay));
       setSelectedDateFrom({
         day: parseInt(fromDay),
         month: parseInt(fromMonth) - 1,
@@ -41,10 +44,28 @@ const Search = () => {
         month: parseInt(toMonth) - 1,
       });
     }
+    if (country && people && from && to) {
+      setIsParams(true);
+    }
   }, [location.search]);
+
+  useEffect(() => {
+    if (
+      isParams &&
+      selectedLocation &&
+      selectedDateFrom &&
+      selectedDateTo &&
+      peopleCount
+    ) {
+      fetchHotels();
+      setIsParams(false);
+    }
+  }, [selectedLocation, selectedDateFrom, selectedDateTo, peopleCount]);
 
   const fetchHotels = async (e) => {
     if (e) e.preventDefault();
+    sessionStorage.removeItem("searchData");
+    setLoading(true);
     const from = `${String(selectedDateFrom.month + 1).padStart(
       2,
       "0"
@@ -67,17 +88,18 @@ const Search = () => {
         : [];
       setHotels(hotelsData);
       setResults(hotelsData);
+
+      sessionStorage.setItem(
+        "searchData",
+        JSON.stringify({ hotelsData: hotelsData })
+      );
       navigate(
         `/search?country=${selectedLocation}&from=${from}&to=${to}&people=${peopleCount}`
       );
-      sessionStorage.setItem(
-        "searchData",
-        JSON.stringify({
-          hotelsData,
-        })
-      );
     } catch (error) {
       console.error("Error fetching hotels:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,10 +107,12 @@ const Search = () => {
     const saved = sessionStorage.getItem("searchData");
     if (saved) {
       const data = JSON.parse(saved);
-      setHotels(data.hotelsData);
-      setResults(data.hotelsData);
+      if (selectedLocation && selectedDateFrom && selectedDateTo) {
+        setHotels(data.hotelsData);
+        setResults(data.hotelsData);
+      }
     }
-  }, []);
+  }, [selectedLocation, selectedDateFrom, selectedDateTo]);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
@@ -137,6 +161,28 @@ const Search = () => {
     setSelectedDateTo(selectedRange.slice(-1)[0]);
   };
 
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch(`${REACT_APP_API_URL}countries/all`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        console.log(data);
+        const uniqueCountries = [
+          ...new Set(data.regions.map((item) => item.countryName)),
+        ];
+
+        setCountries(uniqueCountries);
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+      }
+    };
+
+    fetchCountries();
+  }, []);
+
   return (
     <div>
       <div
@@ -167,9 +213,9 @@ const Search = () => {
                     required
                   >
                     <option value="">Select location</option>
-                    <option value="France">France</option>
-                    <option value="Estonia">Estonia</option>
-                    <option value="Thailand">Thailand</option>
+                    {countries.map((country) => (
+                      <option value={country}>{country}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -250,8 +296,8 @@ const Search = () => {
         <div className="dsa2">
           <div className="header-with-buttons">
             <h2>
-              {results
-                ? `Found in ${selectedLocation}`
+              {results && results.length > 0
+                ? `Found in ${results[0]?.region?.countryName}`
                 : "Popular Destinations"}
             </h2>
             <div className="carousel-buttons">
@@ -263,69 +309,82 @@ const Search = () => {
               </button>
             </div>
           </div>
+          {console.log()}
+
           <div className="destinations" ref={scrollRef}>
-            {results ? (
-              <>
-                {results.map((item) => (
-                  <div
-                    key={item.hotelId}
-                    className="destination-card"
-                    onClick={(e) => {
-                      if (
-                        e.target.tagName.toLowerCase() !== "button" &&
-                        !e.target.closest("button")
-                      ) {
-                        navigate(`/hotel/${item.hotelId}`);
-                      }
-                    }}
-                  >
-                    {console.log(item)}
-                    {item.images?.[0] && (
-                      <div className="img-container">
-                        <img src={item.images[0].url} alt="Preview" />
-                      </div>
-                    )}
-                    <h3>{item.hotelName}</h3>
-                    <div className="detail-container">
-                      <p>${item.price} Starting</p>
-                      <p>
-                        <i className="fa fa-star"></i>
-                        {item.hotelRating}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </>
+            {loading ? (
+              <div className="loading-container">
+                <div className="loading">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
             ) : (
               <>
-                <div className="destination">
-                  <div className="destination-image">
-                    <img src="https://i.natgeofe.com/n/3012ffcc-7361-45f6-98b3-a36d4153f660/colosseum-daylight-rome-italy.jpg" />
-                  </div>
+                {results ? (
+                  <>
+                    {results.map((item) => (
+                      <div
+                        key={item.hotelId}
+                        className="destination-card"
+                        onClick={(e) => {
+                          if (
+                            e.target.tagName.toLowerCase() !== "button" &&
+                            !e.target.closest("button")
+                          ) {
+                            navigate(`/hotel/${item.hotelId}`);
+                          }
+                        }}
+                      >
+                        {item.images?.[0] && (
+                          <div className="img-container">
+                            <img src={item.images[0].url} alt="Preview" />
+                          </div>
+                        )}
+                        <h3>{item.hotelName}</h3>
+                        <div className="detail-container">
+                          <p>${item.price} Starting</p>
+                          <p>
+                            <i className="fa fa-star"></i>
+                            {item.hotelRating}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <div className="destination">
+                      <div className="destination-image">
+                        <img src="https://i.natgeofe.com/n/3012ffcc-7361-45f6-98b3-a36d4153f660/colosseum-daylight-rome-italy.jpg" />
+                      </div>
 
-                  <p>Rome, Italy</p>
-                </div>
-                <div className="destination">
-                  <div className="destination-image">
-                    <img src="https://www.barcelo.com/guia-turismo/wp-content/uploads/2024/06/valle-de-goreme-4.jpg" />
-                  </div>
+                      <p>Rome, Italy</p>
+                    </div>
+                    <div className="destination">
+                      <div className="destination-image">
+                        <img src="https://www.barcelo.com/guia-turismo/wp-content/uploads/2024/06/valle-de-goreme-4.jpg" />
+                      </div>
 
-                  <p>Valleys of Goreme</p>
-                </div>
-                <div className="destination">
-                  <div className="destination-image">
-                    <img src="https://www.cunard.com/content/dam/cunard/inventory-assets/ports/SYD/yqy.jpg" />
-                  </div>
+                      <p>Valleys of Goreme</p>
+                    </div>
+                    <div className="destination">
+                      <div className="destination-image">
+                        <img src="https://www.cunard.com/content/dam/cunard/inventory-assets/ports/SYD/yqy.jpg" />
+                      </div>
 
-                  <p>Sydney, Australia</p>
-                </div>
-                <div className="destination">
-                  <div className="destination-image">
-                    <img src="https://cdn.shopify.com/s/files/1/0319/8721/files/image7_7ed35a4a-edda-494b-8282-dd81737bfaca.jpg?v=1701860752" />
-                  </div>
+                      <p>Sydney, Australia</p>
+                    </div>
+                    <div className="destination">
+                      <div className="destination-image">
+                        <img src="https://cdn.shopify.com/s/files/1/0319/8721/files/image7_7ed35a4a-edda-494b-8282-dd81737bfaca.jpg?v=1701860752" />
+                      </div>
 
-                  <p>London, Greate England</p>
-                </div>
+                      <p>London, Greate England</p>
+                    </div>
+                  </>
+                )}
               </>
             )}
           </div>
