@@ -271,21 +271,22 @@ const Search = () => {
               className="hero-image hero-image-one"
               style={{
                 backgroundImage:
-                  "url('https://aebc975c.delivery.rocketcdn.me/wp-content/uploads/2021/01/la-une-1-croatie.jpg')",
+                  "url('https://res.cloudinary.com/dshalmvbb/image/upload/v1771699877/IMG-399955dd5cab7c479ee5fb5fddc25fa6-V_ajzjcc.jpg')",
               }}
             ></div>
             <div
               className="hero-image hero-image-two"
               style={{
                 backgroundImage:
-                  "url('https://static.vecteezy.com/system/resources/previews/003/023/862/large_2x/in-plane-flight-view-from-window-with-stunning-sunset-background-free-photo.jpg')",
+                  "url('https://res.cloudinary.com/dshalmvbb/image/upload/v1771699853/IMG_20210801_054018_jk753f.jpg')",
+                backgroundPosition: "left",
               }}
             ></div>
             <div
               className="hero-image hero-image-three"
               style={{
                 backgroundImage:
-                  "url('https://a.storyblok.com/f/55469/1792x1342/45b0d67517/city_par_01.jpg/m/filters:format(webp)')",
+                  "url('https://res.cloudinary.com/dshalmvbb/image/upload/v1771699344/IMG_20250803_194658-EFFECTS_ghfcnn.jpg')",
               }}
             ></div>
           </div>
@@ -357,31 +358,31 @@ const Search = () => {
                   <>
                     <div className="destination">
                       <div className="destination-image">
-                        <img src="https://i.natgeofe.com/n/3012ffcc-7361-45f6-98b3-a36d4153f660/colosseum-daylight-rome-italy.jpg" />
+                        <img src="https://res.cloudinary.com/dshalmvbb/image/upload/v1771699865/IMG_20250809_085105_tkocew.jpg" />
                       </div>
 
-                      <p>Rome, Italy</p>
+                      <p>Lindos, Greece</p>
                     </div>
                     <div className="destination">
                       <div className="destination-image">
-                        <img src="https://www.barcelo.com/guia-turismo/wp-content/uploads/2024/06/valle-de-goreme-4.jpg" />
+                        <img src="https://res.cloudinary.com/dshalmvbb/image/upload/v1771703244/IMG-b0981aa6b7e330eaac5c2bf1209158e2-V_miyofd.jpg" />
                       </div>
 
-                      <p>Valleys of Goreme</p>
+                      <p>Ghent, Belgium</p>
                     </div>
                     <div className="destination">
                       <div className="destination-image">
-                        <img src="https://www.cunard.com/content/dam/cunard/inventory-assets/ports/SYD/yqy.jpg" />
+                        <img src="https://res.cloudinary.com/dshalmvbb/image/upload/v1771700520/IMG_20190810_100250_ptnhc8.jpg" />
                       </div>
 
-                      <p>Sydney, Australia</p>
+                      <p>Katun Reževići, Montenegro</p>
                     </div>
                     <div className="destination">
                       <div className="destination-image">
-                        <img src="https://cdn.shopify.com/s/files/1/0319/8721/files/image7_7ed35a4a-edda-494b-8282-dd81737bfaca.jpg?v=1701860752" />
+                        <img src="https://res.cloudinary.com/dshalmvbb/image/upload/v1771699342/IMG-ca60f625c883f82d1a798403408d4b4d-V_qm1wvb.jpg" />
                       </div>
 
-                      <p>London, Greate England</p>
+                      <p>Paris, France</p>
                     </div>
                   </>
                 )}
