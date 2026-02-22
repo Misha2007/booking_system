@@ -278,8 +278,7 @@ const Search = () => {
               className="hero-image hero-image-two"
               style={{
                 backgroundImage:
-                  "url('https://res.cloudinary.com/dshalmvbb/image/upload/v1771699853/IMG_20210801_054018_jk753f.jpg')",
-                backgroundPosition: "left",
+                  "url('https://res.cloudinary.com/dshalmvbb/image/upload/v1771766334/IMG_20260222_151415_458_pcfcjq.jpg')",
               }}
             ></div>
             <div
