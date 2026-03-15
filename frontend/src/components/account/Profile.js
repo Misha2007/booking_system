@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import Error from "../UI/Error";
 import { useNavigate } from "react-router-dom";
+import useIsAdminStore from "../hooks/isAdminHook";
 const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 const Profile = () => {
   const [error, setError] = useState(null);
   const [token, setToken] = useState("");
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useIsAdminStore();
 
   const handleCloseError = () => {
     setError(null);
@@ -57,7 +59,7 @@ const Profile = () => {
 
             navigate(
               "/login" +
-                (errorData.message ? `?error=${errorData.message}` : "")
+                (errorData.message ? `?error=${errorData.message}` : ""),
             );
 
             return;
@@ -89,7 +91,7 @@ const Profile = () => {
       prevFields.map((field) => ({
         ...field,
         value: userData[field.name] || "",
-      }))
+      })),
     );
   }, [userData]);
 
@@ -97,13 +99,15 @@ const Profile = () => {
   const handleChange = (id, newValue) => {
     setFields((prevFields) =>
       prevFields.map((field) =>
-        field.id === id ? { ...field, value: newValue } : field
-      )
+        field.id === id ? { ...field, value: newValue } : field,
+      ),
     );
   };
 
   const logoutHandler = () => {
     setToken("");
+    setIsAdmin(false);
+
     localStorage.removeItem("authToken");
     navigate("/login");
   };
@@ -125,7 +129,7 @@ const Profile = () => {
           ...acc,
           [field.name]: field.value,
         }),
-        {}
+        {},
       ),
     };
 

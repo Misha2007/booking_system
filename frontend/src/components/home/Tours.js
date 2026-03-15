@@ -14,35 +14,36 @@ const Tours = () => {
           title: "Mountain Adventure",
           description: "Explore the breathtaking mountains.",
           image:
-            "https://www.zicasso.com/static/f0a152d1bc93dc1a7b2fd97679e949b2/304cc/f0a152d1bc93dc1a7b2fd97679e949b2.jpg",
+            "https://res.cloudinary.com/dshalmvbb/image/upload/v1773612910/mountains_nsngtc.jpg",
         },
         {
           id: 2,
           title: "Old Town",
           description: "Discover historic landmarks.",
           image:
-            "https://cdn.togethertowherever.com/wp-content/uploads/2024/04/Gates-of-Old-Town-Tallinn.jpeg",
+            "https://res.cloudinary.com/dshalmvbb/image/upload/v1773613075/old_town_t1kjl0.jpg",
         },
         {
           id: 3,
-          title: "Paris Getaway",
-          description: "Experience the magic of Paris.",
+          title: "Retro Vibes",
+          description: "Feel the history within yourself.",
           image:
-            "https://travel.usnews.com/dims4/USNEWS/f6017b9/2147483647/resize/600x400%5E%3E/crop/600x400/quality/85/?url=https%3A%2F%2Ftravel.usnews.com%2Fimages%2FNew_Paris_pic_jw04ZlH.jpg",
+            "https://res.cloudinary.com/dshalmvbb/image/upload/v1773613162/retro_xnlten.jpg",
         },
         {
           id: 4,
-          title: "Pyramids",
-          description: "Discover historic landmarks.",
-          image:
-            "https://afar.brightspotcdn.com/dims4/default/9bb38bd/2147483647/strip/true/crop/2000x1061+0+14/resize/1440x764!/quality/90/?url=https%3A%2F%2Fk3-prod-afar-media.s3.us-west-2.amazonaws.com%2Fbrightspot%2F0f%2F2c%2F6f2efc02b5ba681dadbfa694f856%2Foriginal-egypt.jpg",
-        },
-        {
-          id: 5,
           title: "Paris Getaway",
           description: "Experience the magic of Paris.",
           image:
-            "https://travel.usnews.com/dims4/USNEWS/f6017b9/2147483647/resize/600x400%5E%3E/crop/600x400/quality/85/?url=https%3A%2F%2Ftravel.usnews.com%2Fimages%2FNew_Paris_pic_jw04ZlH.jpg",
+            "https://res.cloudinary.com/dshalmvbb/image/upload/v1773612051/sfnj0tn8p1dhjh14mmih.jpg",
+        },
+
+        {
+          id: 5,
+          title: "Christmas Markets",
+          description: "Celebrate Christmas in a different country.",
+          image:
+            "https://res.cloudinary.com/dshalmvbb/image/upload/v1773613341/christmas_edition_fusldt.jpg",
         },
       ]);
     }, 1000);

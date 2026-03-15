@@ -9,6 +9,7 @@ function Gallery({ hotelId }) {
   const [error, setError] = useState(null);
   const storedToken = localStorage.getItem("authToken");
   const [activeMenu, setActiveMenu] = useState(null);
+  const [selected, setSelected] = useState([]);
 
   const fetchImages = async () => {
     setLoading(true);
@@ -22,7 +23,7 @@ function Gallery({ hotelId }) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${storedToken}`,
           },
-        }
+        },
       );
       if (!response.ok) throw new Error("Failed to fetch images");
       const data = await response.json();
@@ -39,7 +40,6 @@ function Gallery({ hotelId }) {
   }, [hotelId]);
 
   const handleDelete = async (imageId) => {
-    alert("Are you sure you want to delete this image?");
     try {
       const res = await fetch(`${REACT_APP_API_URL}images/delete/${imageId}`, {
         method: "DELETE",
@@ -65,7 +65,7 @@ function Gallery({ hotelId }) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${storedToken}`,
           },
-        }
+        },
       );
       if (!res.ok) throw new Error("Failed to set cover image");
       const updatedImages = images.map((img) => ({
@@ -83,10 +83,36 @@ function Gallery({ hotelId }) {
     setActiveMenu((prev) => (prev === imageId ? null : imageId));
   };
 
+  const deleteAll = () => {
+    if (!window.confirm("Are you sure you want to delete these images?")) {
+      return;
+    }
+
+    selected.forEach((id) => {
+      handleDelete(id);
+    });
+  };
+
   return (
     <div className="gallery-admin">
       <h1>Gallery</h1>
-
+      {selected.length > 0 && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "right",
+            paddingBottom: 20,
+          }}
+        >
+          <button
+            className="add-room cancel"
+            style={{ width: 100 }}
+            onClick={deleteAll}
+          >
+            Delete all
+          </button>
+        </div>
+      )}
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
@@ -97,8 +123,32 @@ function Gallery({ hotelId }) {
             <div className="gallery-item" key={index}>
               <div className="options">
                 <i
+                  className={
+                    selected.includes(image.imageId)
+                      ? "fa fa-check-square"
+                      : "fa fa-square"
+                  }
+                  onClick={() => {
+                    if (!selected.includes(image.imageId)) {
+                      setSelected([...selected, image.imageId]);
+                    } else {
+                      setSelected(selected.filter((i) => i !== image.imageId));
+                    }
+                  }}
+                  title="Delete"
+                ></i>
+                <i
                   className="fa fa-trash"
-                  onClick={() => handleDelete(image.imageId)}
+                  onClick={() => {
+                    if (
+                      !window.confirm(
+                        "Are you sure you want to delete this image?",
+                      )
+                    ) {
+                      return;
+                    }
+                    handleDelete(image.imageId);
+                  }}
                   title="Delete"
                 ></i>
 

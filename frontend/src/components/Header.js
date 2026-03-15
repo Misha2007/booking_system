@@ -1,9 +1,11 @@
 import { useState } from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
+import useIsAdminStore from "./hooks/isAdminHook";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isAdmin] = useIsAdminStore();
 
   const toggleMenuOpen = () => {
     setMenuOpen(true);
@@ -45,6 +47,11 @@ const Header = () => {
         <Link to="/login" className="menuItem">
           Account
         </Link>
+        {isAdmin == "true" && (
+          <Link to="/admin" className="menuItem">
+            Admin
+          </Link>
+        )}
       </nav>
 
       <button id="mobile-menu-btn" onClick={toggleMenuOpen}>

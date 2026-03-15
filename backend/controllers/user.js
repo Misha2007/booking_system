@@ -84,7 +84,7 @@ class userController {
             const token = jwt.sign(
               { clientId: newUser.clientId, role: newUser.role },
               authConfig.secret,
-              { expiresIn: "2h" }
+              { expiresIn: "2h" },
             );
 
             res.status(201).json({
@@ -94,7 +94,7 @@ class userController {
             });
 
             console.log(
-              `[Server]: ${newUser.firstName} (${newUser.role}) signed up`
+              `[Server]: ${newUser.firstName} (${newUser.role}) signed up`,
             );
           })
           .catch((err) => {
@@ -135,7 +135,7 @@ class userController {
               { clientId: newUser.clientId, role: newUser.role },
               authConfig.secret,
 
-              { expiresIn: "2h" }
+              { expiresIn: "2h" },
             );
 
             console.log("login user token", newUser.clientId);
@@ -150,9 +150,9 @@ class userController {
               console.log("[Server]: Passwords do not match! Auth failed.");
               res.status(401).send("Invalid credentials");
             }
-          }
+          },
         );
-      }
+      },
     );
   }
 
@@ -180,7 +180,7 @@ class userController {
             where: {
               clientId: req.params.clientId,
             },
-          }
+          },
         );
       } else {
         updatedRows = await Clients.update(
@@ -194,7 +194,7 @@ class userController {
             where: {
               clientId: req.user.clientId,
             },
-          }
+          },
         );
       }
 

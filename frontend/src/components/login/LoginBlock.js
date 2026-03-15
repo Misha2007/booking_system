@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Register from "./Register";
 import { useLocation, useNavigate } from "react-router-dom";
 import Error from "../UI/Error";
+import useIsAdminStore from "../hooks/isAdminHook";
 
 const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
@@ -12,6 +13,7 @@ const LoginBlock = () => {
   const [error, setError] = useState(null);
   const [token, setToken] = useState("");
   const location = useLocation();
+  const [isAdmin, setIsAdmin] = useIsAdminStore();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -77,6 +79,9 @@ const LoginBlock = () => {
         });
         const data = await response.json();
         localStorage.setItem("authToken", data.accessToken);
+        if (data.user.role === "admin") {
+          setIsAdmin(true);
+        }
 
         if (!response.ok) {
           const errorMessage = await response.text();

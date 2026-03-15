@@ -30,12 +30,11 @@ function AddImage(props) {
   };
 
   const onFileDrop = (e) => {
-    const newFile = e.target.files[0];
-    if (newFile) {
-      const updatedList = [...fileList, newFile];
-      setFileList(updatedList);
-      onFileChange(updatedList);
-    }
+    const newFiles = Array.from(e.target.files);
+    const updatedList = [...fileList, ...newFiles];
+
+    setFileList(updatedList);
+    onFileChange(updatedList);
   };
 
   const fileRemove = (file) => {
@@ -80,7 +79,7 @@ function AddImage(props) {
           {
             method: "POST",
             body: formData,
-          }
+          },
         );
 
         const data = await res.json();
@@ -140,7 +139,7 @@ function AddImage(props) {
         <div className="drop-file-input__label">
           <p>Drag & Drop your files here</p>
         </div>
-        <input type="file" onChange={onFileDrop} />
+        <input type="file" onChange={onFileDrop} name="files" multiple />
       </div>
       {fileList.length > 0 ? (
         <div className="drop-file-preview">
